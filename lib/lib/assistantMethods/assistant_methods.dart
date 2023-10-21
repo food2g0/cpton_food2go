@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:provider/provider.dart';
-
 import '../global/global.dart';
 import 'cart_item_counter.dart';
 
@@ -25,13 +24,19 @@ separateItemIDs()
     //56557657
     String getItemId = (pos != -1) ? item.substring(0, pos) : item;
 
-    print("\nThis is itemID now = " + getItemId);
+    if (kDebugMode) {
+      print("\nThis is itemID now = $getItemId");
+    }
 
     separateItemIDsList.add(getItemId);
   }
 
-  print("\nThis is Items List now = ");
-  print(separateItemIDsList);
+  if (kDebugMode) {
+    print("\nThis is Items List now = ");
+  }
+  if (kDebugMode) {
+    print(separateItemIDsList);
+  }
 
   return separateItemIDsList;
 }
@@ -77,13 +82,19 @@ separateItemQuantities()
     //7
     var quanNumber = int.parse(listItemCharacters[1].toString());
 
-    print("\nThis is Quantity Number = " + quanNumber.toString());
+    if (kDebugMode) {
+      print("\nThis is Quantity Number = $quanNumber");
+    }
 
     separateItemQuantityList.add(quanNumber);
   }
 
-  print("\nThis is Quantity List now = ");
-  print(separateItemQuantityList);
+  if (kDebugMode) {
+    print("\nThis is Quantity List now = ");
+  }
+  if (kDebugMode) {
+    print(separateItemQuantityList);
+  }
 
   return separateItemQuantityList;
 }

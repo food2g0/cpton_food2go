@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/card_design.dart';
 import '../CustomersWidgets/menu_design.dart';
@@ -15,7 +14,7 @@ class MenuScreen extends StatefulWidget {
   final dynamic model;
   final String? sellersUID;
 
-  const MenuScreen({Key? key, this.model, this.sellersUID}) : super(key: key);
+  const MenuScreen({super.key, this.model, this.sellersUID});
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -214,7 +213,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
                   return SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 2,
-                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                    staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
                     itemBuilder: (context, index) {
                       Items item = itemsList[index];
                       return CardDesignWidget(
