@@ -23,10 +23,10 @@ class CustomersDrawer extends StatelessWidget {
               children: [
                 // Header of the drawer
                 Material(
-                  borderRadius: BorderRadius.all(Radius.circular(80)),
+                  borderRadius: const BorderRadius.all(Radius.circular(80)),
                   elevation: 10,
                   child: Padding(
-                    padding: EdgeInsets.all(1.0),
+                    padding: const EdgeInsets.all(1.0),
                     child: SizedBox(
                       height: 100,
                       width: 100,

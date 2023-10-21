@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 
@@ -10,7 +10,7 @@ class MenuDesignWidget extends StatefulWidget {
   final Menus? model;
   final BuildContext? context;
 
-  const MenuDesignWidget({Key? key, this.model, this.context}) : super(key: key);
+  const MenuDesignWidget({super.key, this.model, this.context});
 
   @override
   State<MenuDesignWidget> createState() => _MenuDesignWidgetState();
@@ -26,7 +26,7 @@ class _MenuDesignWidgetState extends State<MenuDesignWidget> {
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0), // Reduce the padding to make it smaller
-        child: Container(
+        child: SizedBox(
           width: 80, // Set a fixed width for the circular container
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -7,7 +7,7 @@ class CartItemDesign extends StatelessWidget {
   final int? quanNumber;
   final BuildContext? context;
 
-  CartItemDesign({
+  const CartItemDesign({super.key,
     this.model,
     this.quanNumber,
     this.context, required ,
@@ -31,14 +31,14 @@ class CartItemDesign extends StatelessWidget {
                   width: 140,
                   height: 120,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
                     image: DecorationImage(
                       image: NetworkImage(model!.thumbnailUrl!),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
 
                 // Title, Quantity, Price
                 Expanded(
@@ -54,7 +54,7 @@ class CartItemDesign extends StatelessWidget {
                           fontFamily: "Poppins",
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
 
                       // Quantity
                       Row(

@@ -42,17 +42,17 @@ class _categoryScreenState extends State<categoryScreen> {
                 background: Image.asset("images/food2.jpg"), // Fixed the Image widget
               ),
             ),
-            SliverToBoxAdapter(),
+            const SliverToBoxAdapter(),
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Card(
                   elevation: 4.0, // Adjust the elevation as needed
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Text(
                       '${widget.model!.menuTitle}',
                       style: const TextStyle(

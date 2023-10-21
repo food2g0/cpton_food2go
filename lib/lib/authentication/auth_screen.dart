@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../CustomersWidgets/custom_text_field.dart';
 import '../CustomersWidgets/error_dialog.dart';
 import '../CustomersWidgets/loading_dialog.dart';
@@ -12,7 +11,7 @@ import '../global/global.dart';
 import '../mainScreen/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
-    const AuthScreen({Key? key}) : super(key: key);
+    const AuthScreen({super.key});
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -21,12 +20,12 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  TextEditingController emailcontroller = TextEditingController();
-  TextEditingController passwordcontroller = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   formValidation() {
-    if (emailcontroller.text.isNotEmpty && passwordcontroller.text.isNotEmpty) {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       //login
       loginNow();
     }
@@ -47,8 +46,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
     User? currentUser;
     await firebaseAuth.signInWithEmailAndPassword(
-      email: emailcontroller.text.trim(),
-      password: passwordcontroller.text.trim(),
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
     ).then((auth)
     {
       currentUser = auth.user!;
@@ -136,7 +135,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ),
-            Form(key: _formkey,
+            Form(key: _formKey,
               child: Column(
 
                 children: [
@@ -144,14 +143,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     data: Icons.email,
                     hintText: "Enter your Email",
                     isObscure: false,
-                    controller: emailcontroller,
+                    controller: emailController,
 
                   ),
                   CustomTextField(
                     data: Icons.password,
                     hintText: "Enter your Password",
                     isObscure : true,
-                    controller: passwordcontroller,
+                    controller: passwordController,
 
                   ),
                 ],
@@ -176,7 +175,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
             SizedBox(height: w * 0.08),
             RichText(text: TextSpan(
-                text: "Don\'t have an account?",
+                text: "Don't have an account?",
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15

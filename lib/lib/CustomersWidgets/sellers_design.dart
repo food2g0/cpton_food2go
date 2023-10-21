@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../mainScreen/menu_screen.dart';
@@ -9,7 +8,7 @@ class InfoDesignWidget extends StatefulWidget {
   final Menus? model;
   final BuildContext? context;
 
-  const InfoDesignWidget({Key? key, this.model, this.context}) : super(key: key);
+  const InfoDesignWidget({super.key, this.model, this.context});
 
   @override
   State<InfoDesignWidget> createState() => _InfoDesignWidgetState();

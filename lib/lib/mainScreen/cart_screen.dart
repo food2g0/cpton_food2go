@@ -15,7 +15,7 @@ import '../splashScreen/splash_screen.dart';
 class CartScreen extends StatefulWidget {
   final String? sellerUID;
 
-  CartScreen({this.sellerUID, required sellersUID});
+  const CartScreen({super.key, this.sellerUID, required sellersUID});
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -95,7 +95,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: cartProvider.count == 0
                         ? Container()
                         : Text(
-                      "Total Price: " + amountProvider.tAmount.toString(),
+                      "Total Price: ${amountProvider.tAmount}",
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,

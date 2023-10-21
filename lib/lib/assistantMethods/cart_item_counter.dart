@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import '../global/global.dart';
 
 

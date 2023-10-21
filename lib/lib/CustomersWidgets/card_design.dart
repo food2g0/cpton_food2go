@@ -78,7 +78,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                     Icon(
                       Icons.money_off,
                       size: Dimensions.font16,
-                      color: Color(0xFF890010),
+                      color: const Color(0xFF890010),
                     ),
                      SizedBox(width: Dimensions.width10),
                     Text(

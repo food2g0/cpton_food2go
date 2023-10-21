@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../assistantMethods/cart_item_counter.dart';
 import '../mainScreen/cart_screen.dart';
 

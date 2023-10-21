@@ -8,13 +8,13 @@ class CustomTextField extends StatelessWidget {
   final bool enabled;    // Mark as final
 
   const CustomTextField({
-    Key? key,
+    super.key,
     this.controller,
     this.data,
     this.hintText,
     this.isObscure = true,
     this.enabled = true,
-  }) : super(key: key);
+  });
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
