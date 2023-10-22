@@ -1,16 +1,12 @@
 import 'dart:math';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../CustomersWidgets/app_bar.dart';
 import '../CustomersWidgets/dimensions.dart';
 import '../assistantMethods/assistant_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../assistantMethods/cart_item_counter.dart';
-import '../models/items.dart';
 import 'cart_screen.dart';
 
 
@@ -56,9 +52,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   Future<void> calculateAndDisplayDistance() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    final String customersUID =
-        "customersUID"; // Replace with the customer's ID
-    final String sellersUID = "sellersUID"; // Replace with the seller's ID
+    const String customersUID =
+        "customersUID"; //
+    const String sellersUID = "sellersUID"; // Replace with the seller's ID
 
     final DocumentSnapshot<Map<String, dynamic>> customerSnapshot =
     await firestore.collection("customer").doc(customersUID).get();
@@ -238,7 +234,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   color: Colors.white,
                   height: 50,
                   child: Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -288,10 +284,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              SizedBox(
                 width: 250,
                 child: NumberInputPrefabbed.roundedButtons(
-                  incDecBgColor: Color(0xFF890010),
+                  incDecBgColor: const Color(0xFF890010),
                   controller: counterTextEditingController,
                   min: 1,
                   max: 5,
@@ -315,7 +311,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       widget.model.productsID, context, itemCounter);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF890010),
+                  backgroundColor: const Color(0xFF890010),
                 ),
                 child: Text(
                   'Add to Cart',
