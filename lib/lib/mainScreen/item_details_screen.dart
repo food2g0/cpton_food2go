@@ -3,17 +3,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../CustomersWidgets/app_bar.dart';
 import '../CustomersWidgets/dimensions.dart';
 import '../assistantMethods/assistant_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../assistantMethods/cart_item_counter.dart';
 import '../models/items.dart';
+import 'cart_screen.dart';
 
 
 class ItemDetailsScreen extends StatefulWidget {
-  final Items model;
-  const ItemDetailsScreen({super.key, required this.model});
+  final dynamic model;
+  final String? sellersUID;
+  const ItemDetailsScreen({super.key, required this.model, this.sellersUID});
 
   @override
   State<ItemDetailsScreen> createState() => _ItemDetailsScreenState();
@@ -80,8 +84,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   @override
   Widget build(BuildContext context) {
 
+    final imageUrl = widget.model?.thumbnailUrl ?? 'default_image_url.jpg';
+
     return Scaffold(
-      appBar: MyAppBar(sellersUID: widget.model.sellersUID),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -93,6 +98,74 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
         child: CustomScrollView(
           slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 200.0,
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: false,
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.center,
+                          colors: [
+                            Colors.black, // Transparent at the top
+                            Colors.black.withOpacity(0.5), // Dark gradient at the bottom
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                Stack(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (c)=> CartScreen(sellersUID: widget.model!.sellersUID)));
+                      },
+                      icon: const Icon(
+                        Icons.shopping_cart_rounded,
+                        color: Colors.white, // Set the icon color
+                      ),
+                    ),
+                    Positioned(
+                      top: 2,
+                      right: 2,
+                      child: Consumer<CartItemCounter>(
+                        builder: (context, counter, c) {
+                          return Container(
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            padding: const EdgeInsets.all(4.0), // Adjust the padding as needed
+                            child: Text(
+                              counter.count.toString(),
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+
+                  ],
+                ),
+              ],
+            ),
             // Add product details here
             SliverList(
               delegate: SliverChildListDelegate([

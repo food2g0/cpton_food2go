@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPreferences = await SharedPreferences.getInstance();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (c)=> CartItemCounter()),
         ChangeNotifierProvider(create: (c)=> TotalAmount()),
       ],
-      child: const GetMaterialApp( // Wrap your app with GetMaterialApp
+      child: const GetMaterialApp(
         title: 'Food To Go',
         debugShowCheckedModeBanner: false,
         home: MySplashScreen(),
