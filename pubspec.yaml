@@ -39,7 +39,7 @@ dependencies:
   firebase_auth: ^4.11.1
   cloud_firestore: ^4.11.0
   firebase_storage: ^11.3.1
-  geolocator: ^10.1.0
+  geolocator: ^7.0.3
   geocoding: ^2.1.1
   shared_preferences: ^2.2.2
   image_picker: ^1.0.4

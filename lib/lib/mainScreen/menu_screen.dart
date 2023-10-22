@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/card_design.dart';
+import '../CustomersWidgets/dimensions.dart';
 import '../CustomersWidgets/menu_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../assistantMethods/cart_item_counter.dart';
@@ -113,8 +114,8 @@ class _MenuScreenState extends State<MenuScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(16.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -122,11 +123,50 @@ class _MenuScreenState extends State<MenuScreen> {
                           'Store Information',
                           style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: 18.0,
+                            fontSize: Dimensions.font20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        // ... Your store information ...
+                        const SizedBox(height: 10,),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.store,
+                              size: Dimensions.font16,
+                              color: Colors.amber,
+                            ),
+                            Text(
+                              ' ${widget.model!.sellersName}',
+                              style: TextStyle(
+                                fontSize: Dimensions.font16,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w700,
+                                overflow: TextOverflow.ellipsis,
+                                fontFamily: "Poppins",
+                              ), // Adjust the text style as needed
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.pin_drop,
+                              size: Dimensions.font16,
+                              color: Colors.red,
+                            ),
+                            Text(
+                              '${widget.model!.sellersAddress}'.substring(0, 37) + '...', // Truncate text to 20 characters
+                              style: TextStyle(
+                                fontSize: Dimensions.font16,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                                overflow: TextOverflow.ellipsis,
+                                fontFamily: "Poppins",
+                              ),
+                            )
+                          ],
+                        )
+
                       ],
                     ),
                   ),

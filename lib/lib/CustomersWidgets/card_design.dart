@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
+import '../assistantMethods/assistant_methods.dart';
 import '../mainScreen/item_details_screen.dart';
 import 'dimensions.dart';
 
@@ -23,15 +25,15 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
           Navigator.push(context, MaterialPageRoute(builder: (c)=> ItemDetailsScreen(model: widget.model,)));
       },
       child: Padding(
-        padding: const EdgeInsets.all(14.0),
+        padding: const EdgeInsets.all(4.0),
         child: Card(
-          elevation: 10,
+          elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0), // Set the border radius here
           ),
           child: Container(
-          color: Colors.black,
-            width: 300,
+          color: Colors.white,
+            width: MediaQuery.of(context).size.width,
             child: Column( // Wrap the contents in a Column
               children: [
                 SizedBox(
@@ -48,49 +50,58 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                 const SizedBox(height: 10), // Add some spacing between the image and text
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        const WidgetSpan(
-                          child: Icon(
-                            Icons.fastfood, // Replace with your desired icon
-                            size: 16, // Adjust the icon size as needed
-                            color: Colors.amber, // Adjust the icon color as needed
+                  child: Container(
+                    alignment: Alignment.centerLeft, // Adjust the alignment as needed
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          const WidgetSpan(
+                            child: Icon(
+                              Icons.fastfood,
+                              size: 16,
+                              color: Colors.amber,
+                            ),
                           ),
-                        ),
-                        TextSpan(
-                          text: ' ${widget.model!.productTitle}', // Display the sellersName with a space
-                          style:  TextStyle(
-                            fontSize: Dimensions.font16,
-                            color: Colors.white,
-                            overflow: TextOverflow.ellipsis,
-                            fontFamily: "Poppins"
-                          ), // Adjust the text style as needed
-                        ),
-                      ],
+                          TextSpan(
+                            text: ' ${widget.model!.productTitle}',
+                            style: TextStyle(
+                              fontSize: Dimensions.font16,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w700,
+                              overflow: TextOverflow.ellipsis,
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: Dimensions.height10),
+
+                SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.money_off,
-                      size: Dimensions.font16,
-                      color: const Color(0xFF890010),
-                    ),
-                     SizedBox(width: Dimensions.width10),
+
                     Text(
-                      "Php. " '${widget.model!.productPrice}',
-                      style:  TextStyle(fontSize: Dimensions.font14, color: Colors.white, fontFamily: "Poppins"),
+                      "Php: "'${widget.model!.productPrice}',
+                      style:  TextStyle(fontSize: Dimensions.font14, color: Colors.black87, fontFamily: "Poppins"),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(width: Dimensions.width10), // Add spacing between price and button
                     ElevatedButton(
                       onPressed: () {
-                        // Your onPressed logic here
+                        int itemCounter = 1;
+
+                        List<String> seperateItemIDsList = separateItemIDs();
+                        seperateItemIDsList.contains(widget.model.productsID)
+                            ? Fluttertoast.showToast(msg: "Item is already in a cart")
+                            :
+
+                        //2.add to cart
+                        addItemToCart(
+                            widget.model.productsID, context, itemCounter);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red[900],

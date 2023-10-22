@@ -13,16 +13,7 @@ class TextWidgetHeader extends SliverPersistentHeaderDelegate
     return InkWell(
       child: Container(
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.cyan,
-                Colors.amber,
-              ],
-              begin:  FractionalOffset(0.0, 0.0),
-              end:  FractionalOffset(1.0, 0.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            )
+           color: Colors.white
         ),
         height: 80.0,
         width: MediaQuery.of(context).size.width,
@@ -33,13 +24,13 @@ class TextWidgetHeader extends SliverPersistentHeaderDelegate
             maxLines: 2,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontFamily: "Signatra",
+              fontFamily: "Poppins",
               fontSize: 30,
-              letterSpacing: 2,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
         ),
+
       ),
     );
   }

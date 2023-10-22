@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../CustomersWidgets/customers_drawer.dart';
 import '../CustomersWidgets/dimensions.dart';
+import '../assistantMethods/cart_item_counter.dart';
+import '../models/menus.dart';
+import 'cart_screen.dart';
 import 'food_page_body.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final dynamic model;
+  final String? sellersUID;
+  final BuildContext? context;
+  const HomeScreen({super.key, this.model, this.sellersUID, this.context});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -13,12 +20,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  List<Widget> _pages = [];
 
-  final List<Widget> _pages = [
-    FoodPageBody(),
-    // Add more pages for other tabs as needed
-    // AnotherPage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the _pages list here
+    _pages = [
+      const FoodPageBody(),
+      CartScreen(sellersUID: widget.sellersUID),
+      // Add more pages for other tabs as needed
+      // AnotherPage(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -54,19 +69,42 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: false,
         automaticallyImplyLeading: true,
         actions: [
-          IconButton(
-            color: Colors.white,
-            icon: const Icon(Icons.favorite_border_outlined),
-            onPressed: () {
-              // Handle favorite button tap
-            },
-          ),
-          IconButton(
-            color: Colors.white,
-            icon: const Icon(Icons.shopping_bag_outlined),
-            onPressed: () {
-              // Handle shopping bag button tap
-            },
+          Stack(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (c) => CartScreen(sellersUID: '',)));
+
+                },
+                icon: const Icon(
+                  Icons.shopping_cart_rounded,
+                  color: Colors.white,
+                ),
+              ),
+              Positioned(
+                top: 2,
+                right: 2,
+                child: Consumer<CartItemCounter>(
+                  builder: (context, counter, c) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      padding: const EdgeInsets.all(4.0), // Adjust the padding as needed
+                      child: Text(
+                        counter.count.toString(),
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
+
+            ],
           ),
         ],
         bottom: PreferredSize(
@@ -128,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'Favorites',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined),
+              icon: Icon(Icons.notifications_on_rounded),
               label: 'Cart',
             ),
             BottomNavigationBarItem(

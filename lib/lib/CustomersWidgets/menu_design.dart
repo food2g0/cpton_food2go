@@ -35,7 +35,7 @@ class _MenuDesignWidgetState extends State<MenuDesignWidget> {
                 // Set the image height to make it circular
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.black, // Set the background color for the circular container
+                  color: Colors.transparent, // Set the background color for the circular container
                 ),
                 child: Center(
                   child: Image.network(

@@ -48,7 +48,8 @@ class _SignUpPageState extends State<SignUpPage> {
     });
   }
 
-  getCurrentLocation() async {
+  getCurrentLocation() async
+  {
     Position newPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -62,10 +63,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
     Placemark pMark = placeMarks![0];
 
-    completeAddress =
-        '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
+    completeAddress = '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
 
-    locationController.text == completeAddress;
+    locationController.text = completeAddress;
   }
 
   Future<void> formValidation() async {
@@ -171,27 +171,27 @@ class _SignUpPageState extends State<SignUpPage> {
       "address": completeAddress,
       "status": "approved",
       "earnings": 0.0,
-      "lat": position!.latitude,
-      "lng": position!.longitude,
-      "userCart" : ['garbageValue'],
+      "lat": position?.latitude ?? 0.0, // Handle null position gracefully
+      "lng": position?.longitude ?? 0.0, // Handle null position gracefully
+      "userCart": ['garbageValue'],
     });
 
-
-    //save data locally
-    SharedPreferences? sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.setString("phone", phoneController.toString());
-    await sharedPreferences.setString("uid", currentUser.uid);
-    await sharedPreferences.setString("lat", position!.latitude.toString());
-    await sharedPreferences.setString("email", currentUser.email.toString());
-    await sharedPreferences.setString("name", nameController.text.trim());
-    await sharedPreferences.setString("photoUrl", customerImageUrl);
-    await sharedPreferences.setString("address", completeAddress);
-    await sharedPreferences.setStringList("userCart", ['garbageValue']);
-
-
-
-
+    // Save data locally
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString("phone", phoneController.text);
+    sharedPreferences.setString("uid", currentUser.uid);
+    sharedPreferences.setString("address", completeAddress);
+    sharedPreferences.setString("lat", (position?.latitude ?? 0.0).toString());
+    sharedPreferences.setString("email", currentUser.email.toString());
+    sharedPreferences.setString("name", nameController.text.trim());
+    sharedPreferences.setString("photoUrl", customerImageUrl);
+    sharedPreferences.setStringList("userCart", ['garbageValue']);
   }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {

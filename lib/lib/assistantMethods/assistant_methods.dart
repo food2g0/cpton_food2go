@@ -58,7 +58,24 @@ addItemToCart(String? foodItemId, BuildContext context, int itemCounter)
     Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
   });
 }
+addItemToCartnoItemCounter(String? foodItemId, BuildContext context)
+{
+  List<String>? tempList = sharedPreferences!.getStringList("userCart");
+  tempList!.add(foodItemId!); //56557657:7
 
+  FirebaseFirestore.instance.collection("users")
+      .doc(firebaseAuth.currentUser!.uid).update({
+    "userCart": tempList,
+  }).then((value)
+  {
+    Fluttertoast.showToast(msg: "Item Added Successfully.");
+
+    sharedPreferences!.setStringList("userCart", tempList);
+
+    //update the badge
+    Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
+  });
+}
 separateItemQuantities()
 {
   List<int> separateItemQuantityList=[];

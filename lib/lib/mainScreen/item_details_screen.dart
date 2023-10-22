@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import '../assistantMethods/assistant_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../assistantMethods/cart_item_counter.dart';
 import 'cart_screen.dart';
-
 
 class ItemDetailsScreen extends StatefulWidget {
   final dynamic model;
@@ -21,65 +21,11 @@ class ItemDetailsScreen extends StatefulWidget {
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   TextEditingController counterTextEditingController = TextEditingController();
-
-  int cartItemCount = 2;
-  double deliveryDistance = 0.0; // Declare the deliveryDistance variable
-
-  // Function to calculate the distance using Haversine formula
-  double calculateDistance(double customerLatitude, double customerLongitude,
-      double sellerLatitude, double sellerLongitude) {
-    const int earthRadius = 6371; // Radius of the Earth in kilometers
-    double lat1Rad = degreesToRadians(customerLatitude);
-    double lng1Rad = degreesToRadians(customerLongitude);
-    double lat2Rad = degreesToRadians(sellerLatitude);
-    double lng2Rad = degreesToRadians(sellerLongitude);
-
-    double latDiff = lat2Rad - lat1Rad;
-    double lngDiff = lng2Rad - lng1Rad;
-
-    double a = pow(sin(latDiff / 2), 2) +
-        cos(lat1Rad) * cos(lat2Rad) * pow(sin(lngDiff / 2), 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return earthRadius * c; // Distance in kilometers
-  }
-
-  // Function to convert degrees to radians
-  double degreesToRadians(double degrees) {
-    return degrees * pi / 180;
-  }
-
-  Future<void> calculateAndDisplayDistance() async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    const String customersUID =
-        "customersUID"; //
-    const String sellersUID = "sellersUID"; // Replace with the seller's ID
-
-    final DocumentSnapshot<Map<String, dynamic>> customerSnapshot =
-    await firestore.collection("customer").doc(customersUID).get();
-
-    final DocumentSnapshot<Map<String, dynamic>> sellerSnapshot =
-    await firestore.collection("sellers").doc(sellersUID).get();
-
-    final customerLatitude = customerSnapshot.get("lat");
-    final customerLongitude = customerSnapshot.get("lng");
-
-    final sellerLatitude = sellerSnapshot.get("lat");
-    final sellerLongitude = sellerSnapshot.get("lng");
-
-    // Calculate the distance
-    deliveryDistance = calculateDistance(
-      customerLatitude.toDouble(),
-      customerLongitude.toDouble(),
-      sellerLatitude.toDouble(),
-      sellerLongitude.toDouble(),
-    );
-  }
+  bool isCartEmpty = separateItemIDs().isEmpty;
+  int cartItemCount = 0;
 
   @override
   Widget build(BuildContext context) {
-
     final imageUrl = widget.model?.thumbnailUrl ?? 'default_image_url.jpg';
 
     return Scaffold(
@@ -91,7 +37,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             colors: [Colors.grey, Colors.white],
           ),
         ),
-
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
@@ -115,7 +60,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           end: Alignment.center,
                           colors: [
                             Colors.black, // Transparent at the top
-                            Colors.black.withOpacity(0.5), // Dark gradient at the bottom
+                            Colors.black.withOpacity(
+                                0.5), // Dark gradient at the bottom
                           ],
                         ),
                       ),
@@ -128,11 +74,15 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (c)=> CartScreen(sellersUID: widget.model!.sellersUID)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (c) => CartScreen(
+                                    sellersUID: widget.model!.sellersUID)));
                       },
                       icon: const Icon(
                         Icons.shopping_cart_rounded,
-                        color: Colors.white, // Set the icon color
+                        color: Colors.white,
                       ),
                     ),
                     Positioned(
@@ -145,7 +95,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               shape: BoxShape.circle,
                               color: Colors.white,
                             ),
-                            padding: const EdgeInsets.all(4.0), // Adjust the padding as needed
+                            padding: const EdgeInsets.all(
+                                4.0), // Adjust the padding as needed
                             child: Text(
                               counter.count.toString(),
                               style: const TextStyle(
@@ -157,7 +108,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         },
                       ),
                     )
-
                   ],
                 ),
               ],
@@ -179,14 +129,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    '\$${widget.model.productPrice?.toStringAsFixed(2)}',
+                    '\Php: ${widget.model.productPrice?.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontFamily: "Poppins",
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
                     ),
                   ),
                 ),
@@ -233,20 +183,21 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 Container(
                   color: Colors.white,
                   height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Delivery Cost",
+                        Icon(Icons.delivery_dining),
+                        Text(
+                          "  Cost ",
                           style: TextStyle(
                             fontFamily: "Poppins",
                           ),
                         ),
                         Text(
-                          '${deliveryDistance.toStringAsFixed(2)} km',
-                          style: const TextStyle(
+                          ' Php: 50',
+                          style: TextStyle(
                             fontFamily: "Poppins",
                           ),
                         ),
@@ -254,6 +205,32 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: Dimensions.height10,
+                ),
+                // Product Description
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      widget.model.productDescription!,
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: Dimensions.font16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                    child: Text("Product Reviews", style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: Dimensions.font16,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold
+                    ),)),
                 SizedBox(
                   height: Dimensions.height10,
                 ),
@@ -298,7 +275,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               ElevatedButton(
                 onPressed: () {
                   int itemCounter =
-                  int.parse(counterTextEditingController.text);
+                      int.parse(counterTextEditingController.text);
 
                   //1.check if item exist already in cart
                   List<String> seperateItemIDsList = separateItemIDs();
@@ -306,9 +283,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       ? Fluttertoast.showToast(msg: "Item is already in a cart")
                       :
 
-                  //2.add to cart
-                  addItemToCart(
-                      widget.model.productsID, context, itemCounter);
+                      //2.add to cart
+                      addItemToCart(
+                          widget.model.productsID, context, itemCounter);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF890010),
