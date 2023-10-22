@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'assistantMethods/address_changer.dart';
 import 'assistantMethods/cart_item_counter.dart';
 import 'assistantMethods/total_ammount.dart';
 import 'global/global.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (c)=> CartItemCounter()),
         ChangeNotifierProvider(create: (c)=> TotalAmount()),
+        ChangeNotifierProvider(create: (c)=> AddressChanger()),
       ],
       child: const GetMaterialApp(
         title: 'Food To Go',

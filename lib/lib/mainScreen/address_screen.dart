@@ -1,4 +1,5 @@
 import 'package:cpton_foodtogo/lib/CustomersWidgets/dimensions.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/add_address.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../global/global.dart';
@@ -24,7 +25,6 @@ class _AddressScreenState extends State<AddressScreen>
 
   @override
   Widget build(BuildContext context) {
-    print(sharedPreferences!.getKeys());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF890010),
@@ -37,7 +37,9 @@ class _AddressScreenState extends State<AddressScreen>
 
         color: Colors.black12,
         child:  InkWell(
-          onTap: (){},
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (c)=>addAddress()));
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
