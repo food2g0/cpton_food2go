@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -24,19 +23,19 @@ separateItemIDs()
     //56557657
     String getItemId = (pos != -1) ? item.substring(0, pos) : item;
 
-    if (kDebugMode) {
-      print("\nThis is itemID now = $getItemId");
-    }
+    // if (kDebugMode) {
+    //   print("\nThis is itemID now = $getItemId");
+    // }
 
     separateItemIDsList.add(getItemId);
   }
 
-  if (kDebugMode) {
-    print("\nThis is Items List now = ");
-  }
-  if (kDebugMode) {
-    print(separateItemIDsList);
-  }
+  // if (kDebugMode) {
+  //   print("\nThis is Items List now = ");
+  // }
+  // if (kDebugMode) {
+  //   print(separateItemIDsList);
+  // }
 
   return separateItemIDsList;
 }
@@ -44,7 +43,7 @@ separateItemIDs()
 addItemToCart(String? foodItemId, BuildContext context, int itemCounter)
 {
   List<String>? tempList = sharedPreferences!.getStringList("userCart");
-  tempList!.add(foodItemId! + ":$itemCounter"); //56557657:7
+  tempList!.add("${foodItemId!}:$itemCounter"); //56557657:7
 
   FirebaseFirestore.instance.collection("users")
       .doc(firebaseAuth.currentUser!.uid).update({
@@ -82,19 +81,19 @@ separateItemQuantities()
     //7
     var quanNumber = int.parse(listItemCharacters[1].toString());
 
-    if (kDebugMode) {
-      print("\nThis is Quantity Number = $quanNumber");
-    }
+    // if (kDebugMode) {
+    //   print("\nThis is Quantity Number = $quanNumber");
+    // }
 
     separateItemQuantityList.add(quanNumber);
   }
 
-  if (kDebugMode) {
-    print("\nThis is Quantity List now = ");
-  }
-  if (kDebugMode) {
-    print(separateItemQuantityList);
-  }
+  // if (kDebugMode) {
+  //   print("\nThis is Quantity List now = ");
+  // }
+  // if (kDebugMode) {
+  //   print(separateItemQuantityList);
+  // }
 
   return separateItemQuantityList;
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/CustomersWidgets/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,10 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    double defaultShippingFee = 10.0;
+    double totalAmount = Provider.of<TotalAmount>(context).tAmount + defaultShippingFee;
+
     return Scaffold(
       appBar: AppBar(
         // Add your app bar content here
@@ -154,6 +159,120 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ],
       ),
+
+        bottomNavigationBar: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, -15),
+                blurRadius: 20,
+                color: Color(0xFFDADADA).withOpacity(0.15),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // Subtotal Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Sub Total:",
+                      style: TextStyle(
+                        fontSize: Dimensions.font16,
+                        color: Colors.black54,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                    Text(
+                      "${Provider.of<TotalAmount>(context).tAmount}",
+                      style: TextStyle(
+                        fontSize: Dimensions.font16,
+                        color: Colors.black54,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                  ],
+                ),
+                // Shipping Fee Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Shipping Fee:",
+                      style: TextStyle(
+                        fontSize: Dimensions.font16,
+                        color: Colors.black54,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                    Text(
+                      "${defaultShippingFee.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: Dimensions.font16,
+                        color: Colors.black54,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                  ],
+                ),
+                // Total Amount Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Total Amount:",
+                      style: TextStyle(
+                        fontSize: Dimensions.font20,
+                        color: Colors.black,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                    Text(
+                      "${totalAmount.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: Dimensions.font20,
+                        color: Colors.black,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20,),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add your checkout logic here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF890010),
+                      minimumSize: Size(300, 50),
+                    ),
+                    child: Text(
+                      "Check Out",
+                      style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+
+
+
+
+
     );
+
   }
 }
