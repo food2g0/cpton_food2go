@@ -43,9 +43,6 @@ class SaveAddressScreen extends StatelessWidget {
     _city.text = '${pMark.postalCode}';
     _completeAddress.text = fullAddress;
 
-
-
-
   }
 
   @override

@@ -4,7 +4,7 @@ class Sellers{
   String? sellersAddress;
   String? sellersImageUrl;
 
-  Sellers({
+  Sellers( {
     this.sellersName,
     this.sellersUID,
     this.sellersAddress,

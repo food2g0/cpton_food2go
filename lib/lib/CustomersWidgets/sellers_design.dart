@@ -26,7 +26,7 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
         color: Colors.white,
         child: InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (c) => MenuScreen(model: widget.model,)));
+            Navigator.push(context, MaterialPageRoute(builder: (c) => MenuScreen(model: widget.model, sellersName: widget.model!.sellersName,)));
           },
           child: Padding(
             padding: const EdgeInsets.all(13.0),

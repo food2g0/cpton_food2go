@@ -83,7 +83,7 @@ class _AuthScreenState extends State<AuthScreen> {
             await sharedPreferences!.setStringList("userCart", userCartList );
 
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (c)=> const HomeScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (c)=>  HomeScreen()));
 
           }
           else

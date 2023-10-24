@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/dimensions.dart';
-import 'package:cpton_foodtogo/lib/mainScreen/address_screen.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/check_out.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
@@ -302,7 +302,7 @@ class _CartScreenState extends State<CartScreen> {
                 )
                     : ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (c)=> AddressScreen(
+                    Navigator.push(context, MaterialPageRoute(builder: (c)=> checkOut(
                       totalAmount: totalAmount.toDouble(),
                       sellersUID: widget.sellersUID,
                     )));

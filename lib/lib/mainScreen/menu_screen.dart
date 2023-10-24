@@ -14,8 +14,9 @@ import 'cart_screen.dart';
 class MenuScreen extends StatefulWidget {
   final dynamic model;
   final String? sellersUID;
+  final String? sellersName;
 
-  const MenuScreen({super.key, this.model, this.sellersUID});
+  const MenuScreen({super.key, this.model, this.sellersUID, this.sellersName});
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -72,7 +73,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (c)=> CartScreen(sellersUID: widget.model!.sellersUID)));
+                        Navigator.push(context, MaterialPageRoute(builder: (c)=>
+                            CartScreen(sellersUID: widget.model!.sellersUID,
+                            )));
                       },
                       icon: const Icon(
                         Icons.shopping_cart_rounded,

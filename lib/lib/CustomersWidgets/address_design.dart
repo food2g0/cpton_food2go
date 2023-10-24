@@ -1,5 +1,6 @@
 import 'package:cpton_foodtogo/lib/CustomersWidgets/dimensions.dart';
 import 'package:cpton_foodtogo/lib/assistantMethods/address_changer.dart';
+import 'package:cpton_foodtogo/lib/maps/maps.dart';
 import 'package:cpton_foodtogo/lib/models/address.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class AddressDesign extends StatefulWidget
-{
+class AddressDesign extends StatefulWidget {
   final Address? model;
   final int? currentIndex;
   final int? value;
@@ -23,8 +23,7 @@ class AddressDesign extends StatefulWidget
     this.addressId,
     this.totalAmount,
     this.sellersUID,
-});
-
+  });
 
   @override
   State<AddressDesign> createState() => _AddressDesignState();
@@ -33,9 +32,10 @@ class AddressDesign extends StatefulWidget
 class _AddressDesignState extends State<AddressDesign> {
   @override
   Widget build(BuildContext context) {
+    final isAddressSelected = widget.value == Provider.of<AddressChanger>(context).count;
+
     return InkWell(
-      onTap: ()
-      {
+      onTap: () {
         Provider.of<AddressChanger>(context, listen: false).displayResult(widget.value);
       },
       child: Card(
@@ -48,9 +48,7 @@ class _AddressDesignState extends State<AddressDesign> {
                   groupValue: widget.currentIndex,
                   value: widget.value,
                   activeColor: AppColors().startColor,
-                  onChanged: (val)
-                  {
-                    //provider
+                  onChanged: (val) {
                     Provider.of<AddressChanger>(context, listen: false).displayResult(val);
                     print(val);
                   },
@@ -60,28 +58,24 @@ class _AddressDesignState extends State<AddressDesign> {
                   children: [
                     Container(
                       padding: EdgeInsets.all(10),
-                      width: MediaQuery.of(context).size.width* 0.8,
+                      width: MediaQuery.of(context).size.width * 0.8,
                       child: Table(
                         children: [
                           TableRow(
                             children: [
-                              Text("Name:",
-                                  style: TextStyle(color: Colors.black87,fontFamily: "Poppins", fontSize: Dimensions.font16),),
                               Text(widget.model!.name.toString()),
                             ],
                           ),
                           TableRow(
                             children: [
-                              Text("Phone Number:",
-                                style: TextStyle(color: Colors.black87,fontFamily: "Poppins", fontSize: Dimensions.font16),),
+
                               Text(widget.model!.phoneNumber.toString()),
                             ],
                           ),
                           TableRow(
                             children: [
-                              Text("Address:",
-                                style: TextStyle(color: Colors.black87,fontFamily: "Poppins", fontSize: Dimensions.font16),),
-                              Text(widget.model!.fullAddress.toString()),
+                               Text(widget.model!.fullAddress.toString()),
+
                             ],
                           ),
                         ],
@@ -91,20 +85,33 @@ class _AddressDesignState extends State<AddressDesign> {
                 )
               ],
             ),
-
-            widget.value == Provider.of<AddressChanger>(context).count
-            ? ElevatedButton(onPressed: (){},
-                child: Text("Proceed"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors().startColor,
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    MapsUtil.openMapWithPosition(widget.model!.lat!, widget.model!.lng!);
+                  },
+                  child: Text("Check on map"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle Proceed button action for the selected address.
+                  },
+                  child: Text("Proceed"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors().startColor,
+                  ),
+                ),
+              ],
             )
-                : Container(),
 
           ],
         ),
       ),
-
     );
   }
 }

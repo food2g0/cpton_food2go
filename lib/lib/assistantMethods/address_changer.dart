@@ -11,3 +11,12 @@ class AddressChanger extends ChangeNotifier
     notifyListeners();
   }
 }
+
+class SelectedAddress with ChangeNotifier {
+  int? selectedAddressIndex;
+
+  void selectAddress(int index) {
+    selectedAddressIndex = index;
+    notifyListeners();
+  }
+}
