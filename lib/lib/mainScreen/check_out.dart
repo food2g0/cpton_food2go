@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/address_design.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/dimensions.dart';
 import 'package:cpton_foodtogo/lib/assistantMethods/address_changer.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/payment_screen.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/save_address_screen.dart';
 import 'package:cpton_foodtogo/lib/models/address.dart';
 import 'package:flutter/cupertino.dart';
@@ -104,7 +105,12 @@ class _checkOutState extends State<checkOut> {
             ),
             SizedBox(height: 8),
             InkWell(
-              onTap: () {},
+              onTap: ()
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return PaymentScreen();
+                }));
+              },
               child: Container(
                 color: Colors.white,
                 width: MediaQuery.of(context).size.width * 1,
@@ -122,7 +128,7 @@ class _checkOutState extends State<checkOut> {
                           ),
                           SizedBox(width: 8), // Add some space between the icon and text
                           Text(
-                            "Choose Payment Method:",
+                            "Pay with Gcash:",
                             style: TextStyle(
                               color: Colors.black87,
                               fontFamily: "Poppins",

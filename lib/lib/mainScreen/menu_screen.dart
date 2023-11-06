@@ -158,7 +158,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               color: Colors.red,
                             ),
                             Text(
-                              '${widget.model!.sellersAddress}'.substring(0, 37) + '...', // Truncate text to 20 characters
+                              '${'${widget.model!.sellersAddress}'.substring(0, 30)}...', // Truncate text to 20 characters
                               style: TextStyle(
                                 fontSize: Dimensions.font16,
                                 color: Colors.black87,
@@ -241,34 +241,69 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection("items")
-                  .where("sellersUID", isEqualTo: widget.model?.sellersUID)
+                  .collection('sellers')
+                  .doc(widget.model?.sellersUID)
+                  .collection('menus')
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return SliverToBoxAdapter(
                     child: Center(child: circularProgress()),
                   );
-                } else {
-                  List<Items> itemsList = snapshot.data!.docs.map((doc) {
-                    return Items.fromJson(doc.data() as Map<String, dynamic>);
-                  }).toList();
-
-                  return SliverStaggeredGrid.countBuilder(
-                    crossAxisCount: 2,
-                    staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
-                    itemBuilder: (context, index) {
-                      Items item = itemsList[index];
-                      return CardDesignWidget(
-                        model: item,
-                        context: context,
-                      );
-                    },
-                    itemCount: itemsList.length,
+                } else if (snapshot.hasError) {
+                  return SliverToBoxAdapter(
+                    child: Center(child: Text('Error: ${snapshot.error}')),
                   );
                 }
+
+                final menuDocs = snapshot.data!.docs;
+
+                return SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                        (context, menuIndex) {
+                      final menuDoc = menuDocs[menuIndex];
+                      return StreamBuilder<QuerySnapshot>(
+                        stream: menuDoc.reference.collection('items').orderBy("publishedDate", descending: false).snapshots(),
+                        builder: (context, itemSnapshot) {
+                          if (itemSnapshot.connectionState == ConnectionState.waiting) {
+                            return circularProgress();
+                          } else if (itemSnapshot.hasError) {
+                            return Text('Error: ${itemSnapshot.error}');
+                          }
+
+                          final itemDocs = itemSnapshot.data!.docs;
+                          if (itemDocs.isEmpty) {
+                            return Center(child: Text('No items available in this menu'));
+                          }
+
+                          return SingleChildScrollView(
+                            child: Wrap(
+                              spacing: 8,
+                              children: itemDocs
+                                  .map((itemDoc) {
+                                final item = Items.fromJson(itemDoc.data() as Map<String, dynamic>);
+                                return CardDesignWidget(
+                                  model: item,
+                                  context: context,
+                                );
+                              })
+                                  .toList(),
+                            ),
+                          );
+
+
+
+                        },
+                      );
+                    },
+                    childCount: menuDocs.length,
+                  ),
+                );
               },
-            ),
+            )
           ],
         ),
       ),
