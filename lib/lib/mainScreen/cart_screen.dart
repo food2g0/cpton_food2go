@@ -302,7 +302,7 @@ class _CartScreenState extends State<CartScreen> {
                 )
                     : ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (c)=> checkOut(
+                    Navigator.push(context, MaterialPageRoute(builder: (c)=> CheckOut(
                       totalAmount: totalAmount.toDouble(),
                       sellersUID: widget.sellersUID,
                     )));

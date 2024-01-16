@@ -3,6 +3,7 @@ class Address
   String? name;
   String? phoneNumber;
   String? flatNumber;
+  String? paymentMode;
   String? city;
   String? state;
   String? fullAddress;
@@ -11,6 +12,7 @@ class Address
 
   Address({
    this.name,
+    this.paymentMode,
     this.phoneNumber,
     this.flatNumber,
     this.city,
@@ -23,6 +25,7 @@ class Address
   Address.fromJson(Map<String, dynamic> json)
   {
     name = json['name'];
+    paymentMode = json['paymentMode'];
     phoneNumber = json['phoneNumber'];
     flatNumber = json['flatNumber'];
     city = json['city'];
@@ -39,6 +42,7 @@ class Address
   {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = name;
+    data['paymentMode'] = paymentMode;
     data['phoneNumber'] = phoneNumber;
     data['flatNumber'] = flatNumber;
     data['city'] = city;

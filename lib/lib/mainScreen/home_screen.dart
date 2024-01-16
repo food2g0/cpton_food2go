@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              sharedPreferences!.getString("address")!,
+              sharedPreferences!.getString("name")!,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: Dimensions.font16,
