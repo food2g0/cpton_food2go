@@ -302,10 +302,15 @@ class _CartScreenState extends State<CartScreen> {
                 )
                     : ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (c)=> checkOut(
-                      totalAmount: totalAmount.toDouble(),
-                      sellersUID: widget.sellersUID,
-                    )));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) => CheckOut(
+                          totalAmount: totalAmount.toDouble(),
+                          sellersUID: widget.sellersUID, // Access sellersUID from widget
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF890010),
@@ -316,6 +321,7 @@ class _CartScreenState extends State<CartScreen> {
                     style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
                   ),
                 ),
+
               ),
             ],
           ),

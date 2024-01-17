@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../CustomersWidgets/customers_drawer.dart';
 import '../CustomersWidgets/dimensions.dart';
 import '../assistantMethods/cart_item_counter.dart';
+import '../global/global.dart';
 import '../models/menus.dart';
 import 'cart_screen.dart';
 import 'food_page_body.dart';
@@ -29,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // Initialize the _pages list here
     _pages = [
       const FoodPageBody(),
-      CartScreen(sellersUID: widget.sellersUID),
       // Add more pages for other tabs as needed
       // AnotherPage(),
     ];
@@ -52,16 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Color(0xFF890010),
           ),
         ),
-        title: const Align(
+        title:  Align(
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "asd",
+              sharedPreferences!.getString("name")!,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
-                fontFamily: "Roboto",
+                fontSize: Dimensions.font16,
+                fontFamily: "Poppins",
               ),
             ),
           ),
@@ -143,6 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
+
           Expanded(
             child: SingleChildScrollView(
               child: _pages[_selectedIndex],
@@ -153,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar:  Theme(
         data: Theme.of(context).copyWith(
           canvasColor:
-          Color(0xFF890010),
+          const Color(0xFF890010),
         ),// Set the background color here
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -167,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications_on_rounded),
-              label: 'Cart',
+              label: 'Notification',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.chat_bubble_outline),
@@ -175,13 +177,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xFFFBCD42),
+          selectedItemColor: const Color(0xFFFBCD42),
           unselectedItemColor: Colors.white,
-          selectedLabelStyle: TextStyle(
+          selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.bold,
             fontFamily: "Poppins",
           ),
-          unselectedLabelStyle: TextStyle(
+          unselectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.normal,
             fontFamily: "Poppins",
           ),

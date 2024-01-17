@@ -1,5 +1,6 @@
 import 'package:cpton_foodtogo/lib/CustomersWidgets/dimensions.dart';
 import 'package:cpton_foodtogo/lib/assistantMethods/address_changer.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/check_out.dart';
 import 'package:cpton_foodtogo/lib/maps/maps.dart';
 import 'package:cpton_foodtogo/lib/models/address.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
@@ -100,8 +101,13 @@ class _AddressDesignState extends State<AddressDesign> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle Proceed button action for the selected address.
+                    Navigator.push(context, MaterialPageRoute(builder: (c)=> CheckOut(
+                      addressId: widget.addressId,
+                      sellersUID: widget.sellersUID,
+                      totalAmount: widget.totalAmount,
+                    )));
                   },
-                  child: Text("Proceed"),
+                  child: Text("Choose"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors().startColor,
                   ),

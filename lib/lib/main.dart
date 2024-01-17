@@ -11,6 +11,7 @@ import 'assistantMethods/total_ammount.dart';
 import 'global/global.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   sharedPreferences = await SharedPreferences.getInstance();
   await Firebase.initializeApp();

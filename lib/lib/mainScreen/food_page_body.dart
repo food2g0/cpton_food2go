@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import '../CustomersWidgets/dimensions.dart';
+import '../CustomersWidgets/menu_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../CustomersWidgets/sellers_design.dart';
 import '../models/menus.dart';
 
 class FoodPageBody extends StatefulWidget {
-  const FoodPageBody({Key? key}) : super(key: key);
+  final String? sellersUID;
+  final dynamic model;
+  const FoodPageBody({Key? key, this.sellersUID, this.model}) : super(key: key);
 
   @override
   State<FoodPageBody> createState() => _FoodPageBodyState();
@@ -109,6 +112,52 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                     );
 
                     return InfoDesignWidget(
+                      model: model,
+                      context: context,
+                    );
+                  },
+                ),
+              );
+            }
+          },
+        ),
+        SizedBox(height: Dimensions.height10),
+        Container(
+          margin: EdgeInsets.only(left: Dimensions.width25),
+          child: Row(
+            children: [
+              Text(
+                "Category",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: Dimensions.font14,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection("menus")
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: circularProgress());
+            } else {
+              final data = snapshot.data!.docs;
+              return SizedBox(
+                height: 200, // Adjust the height as needed
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: data.length, // Adjust the count as needed
+                  itemBuilder: (context, index) {
+                    Menus model = Menus.fromJson(
+                      data[index].data()! as Map<String, dynamic>,
+                    );
+
+                    return MenuDesignWidget(
                       model: model,
                       context: context,
                     );
