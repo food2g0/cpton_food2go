@@ -2,12 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/address_design.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/dimensions.dart';
 import 'package:cpton_foodtogo/lib/assistantMethods/address_changer.dart';
+import 'package:cpton_foodtogo/lib/assistantMethods/assistant_methods.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/payment_screen.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/placed_order_screen.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/save_address_screen.dart';
 import 'package:cpton_foodtogo/lib/models/address.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../global/global.dart';
@@ -16,7 +20,7 @@ import '../models/menus.dart';
 class CheckOut extends StatefulWidget {
   final double? totalAmount;
   final String? sellersUID;
-  final Menus? model;
+  final dynamic model;
   final String? addressId;
   final String? paymentMode;
 
@@ -28,6 +32,61 @@ class CheckOut extends StatefulWidget {
 
 class _CheckOutState extends State<CheckOut> {
   String? selectedPaymentMethod;
+
+  String orderId = DateTime.now().millisecondsSinceEpoch.toString();
+
+  addOrderDetails()
+  {
+    writeOrderDetailsForUser({
+      "addressID": widget.addressId,
+      "totalAmount": widget.totalAmount,
+      "orderBy": sharedPreferences!.getString("uid"),
+      "productsIDs": sharedPreferences!.getStringList("userCart"),
+      "paymentDetails": widget.paymentMode,
+      "orderTime": orderId,
+      "isSuccess": "isSuccess",
+      "sellerUID": widget.sellersUID,
+      "riderUID": "",
+      "status": "normal",
+      "orderId": orderId,
+    });
+    writeOrderDetailsForSeller({
+      "addressID": widget.addressId,
+      "totalAmount": widget.totalAmount,
+      "orderBy": sharedPreferences!.getString("uid"),
+      "productsIDs": sharedPreferences!.getStringList("userCart"),
+      "paymentDetails": widget.paymentMode,
+      "orderTime": orderId,
+      "isSuccess": "isSuccess",
+      "sellerUID": widget.sellersUID,
+      "riderUID": "",
+      "status": "normal",
+      "orderId": orderId,
+    }).whenComplete((){
+      clearCartNow(context);
+      setState(() {
+        orderId="";
+        Navigator.push(context,MaterialPageRoute(builder: (context)=> PlacedOrderScreen()));
+        Fluttertoast.showToast(msg: "Congratulations, order placed successfully! ");
+      });
+  });
+  }
+
+  Future writeOrderDetailsForUser(Map<String, dynamic> data) async
+  {
+    await FirebaseFirestore.instance.collection("users")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("orders")
+        .doc(orderId)
+        .set(data);
+  }
+  Future writeOrderDetailsForSeller(Map<String, dynamic> data) async
+  {
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(orderId)
+        .set(data);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +233,7 @@ class _CheckOutState extends State<CheckOut> {
                sellerUID: widget.sellersUID,
                paymentMode: widget.paymentMode,
              )));
+             addOrderDetails();
             },
             child: Text("Place Order"),
           ),
