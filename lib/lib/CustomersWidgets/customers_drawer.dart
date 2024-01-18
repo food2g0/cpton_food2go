@@ -1,3 +1,4 @@
+import 'package:cpton_foodtogo/lib/mainScreen/my_order_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../authentication/auth_screen.dart';
@@ -76,7 +77,7 @@ class CustomersDrawer extends StatelessWidget {
             ),
             title: const Text("Orders"),
             onTap: () {
-              // Handle the Settings item tap
+              Navigator.push(context, MaterialPageRoute(builder: (c)=> MyOrderScreen()));
             },
           ),
           ListTile(
