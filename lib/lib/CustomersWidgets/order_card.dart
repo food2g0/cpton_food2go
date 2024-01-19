@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/order_details_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../models/items.dart';
 
-class OrderCard extends StatelessWidget
-{
+class OrderCard extends StatelessWidget {
   final int? itemCount;
   final List<DocumentSnapshot>? data;
   final String? orderID;
@@ -21,33 +20,28 @@ class OrderCard extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: ()
-      {
-        //todo
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (c)=>OrderDetailsScreen(orderID: orderID)));
       },
       child: Container(
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.black12,
-                Colors.white54,
-              ],
-              begin:  FractionalOffset(0.0, 0.0),
-              end:  FractionalOffset(1.0, 0.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            )
+          gradient: LinearGradient(colors: [Colors.black87,Colors.black])
         ),
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         margin: const EdgeInsets.all(10),
-        height: itemCount! * 125,
+        height: itemCount! * 170, // Adjusted height
         child: ListView.builder(
           itemCount: itemCount,
           physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index)
-          {
-            Items model = Items.fromJson(data![index].data()! as Map<String, dynamic>);
-            return placedOrderDesignWidget(model, context, seperateQuantitiesList![index]);
+          itemBuilder: (context, index) {
+            Items model =
+            Items.fromJson(data![index].data()! as Map<String, dynamic>);
+            return placedOrderDesignWidget(
+              model,
+              context,
+              seperateQuantitiesList![index],
+              orderID,
+            );
           },
         ),
       ),
@@ -55,85 +49,104 @@ class OrderCard extends StatelessWidget
   }
 }
 
+Widget placedOrderDesignWidget(
+    Items model,
+    BuildContext context,
+    String separateQuantities,
+    String? orderID,
+    ) {
+  num productPrice = model.productPrice ?? 0.0;
+  int quantity = int.tryParse(separateQuantities) ?? 0;
 
+  num totalAmount = productPrice * quantity;
 
-
-Widget placedOrderDesignWidget(Items model, BuildContext context, seperateQuantitiesList)
-{
   return Container(
-    width: MediaQuery.of(context).size.width,
-    height: 120,
-    color: Colors.grey[200],
-    child: Row(
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    padding: const EdgeInsets.all(10.0),
+    decoration: BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(12.0),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.network(model.thumbnailUrl!, width: 120,),
-        const SizedBox(width: 10.0,),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              const SizedBox(
-                height: 20,
+        Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                model.thumbnailUrl!,
+                width: 120,
+                height: 100,
+                fit: BoxFit.cover,
               ),
-
-              Row(
-                mainAxisSize: MainAxisSize.max,
+            ),
+            const SizedBox(width: 16.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      model.productTitle,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontFamily: "Acme",
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    "€ ",
-                    style: TextStyle(fontSize: 16.0, color: Colors.blue),
-                  ),
                   Text(
-                    model.productPrice.toString(),
+                    model.productTitle,
                     style: const TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18.0,
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-
-              Row(
-                children: [
-                  const Text(
-                    "x ",
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      seperateQuantitiesList,
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontSize: 30,
-                        fontFamily: "Acme",
+                  const SizedBox(height: 8.0),
+                  Row(
+                    children: [
+                      Text(
+                        "Php ${model.productPrice.toString()}",
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      const Spacer(),
+                      Text(
+                        "x $separateQuantities",
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16,
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    children: [
+                      const Text(
+                        "Total: ",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        "Php ${totalAmount.toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-
-            ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 8.0),
+        Text(
+          'Order ID: $orderID',
+          style: const TextStyle(
+            color: Colors.black87,
+            fontSize: 16.0,
           ),
         ),
       ],
