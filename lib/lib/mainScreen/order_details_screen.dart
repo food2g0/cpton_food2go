@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/progress_bar.dart';
+import 'package:cpton_foodtogo/lib/CustomersWidgets/statusBanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class OrderDetailsScreen extends StatefulWidget {
 
   final String? orderID;
 
-  OrderDetailsScreen({this.orderID}),
+  OrderDetailsScreen({this.orderID});
 
   @override
   State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
@@ -30,7 +31,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         .get(),
     builder: (c, snapshot)
     {
-      Map dataMap;
+      Map? dataMap;
       if(snapshot.hasData)
         {
           dataMap = snapshot.data!.data()! as Map<String, dynamic>;
@@ -39,6 +40,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       return snapshot.hasData ?  Container(
         child: Column(
           children: [
+            StatusBanner(
+              status: dataMap!["isSuccess"],
+              orderStatus: orderStatus,
+            )
 
           ],
         ),

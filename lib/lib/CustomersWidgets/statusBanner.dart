@@ -51,6 +51,18 @@ class StatusBanner extends StatelessWidget
           ),
           const SizedBox(width: 5,),
 
+          CircleAvatar(
+            radius: 8,
+            backgroundColor: Colors.black,
+            child: Center(
+              child: Icon(
+                iconData,
+                color: Colors.white,
+                size: 14,
+              ),
+            ),
+          )
+
         ],
       ),
     );
