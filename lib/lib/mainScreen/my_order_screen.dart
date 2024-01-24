@@ -21,7 +21,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFF890010),
           title: const Text(
-            "Checkout",
+            "Orders",
             style: TextStyle(fontFamily: "Poppins"),
           ),
         ),
