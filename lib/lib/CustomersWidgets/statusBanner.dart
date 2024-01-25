@@ -6,7 +6,9 @@ class StatusBanner extends StatelessWidget
 {
 
   final bool? status;
+
   final String? orderStatus;
+
 
   StatusBanner({this.orderStatus,this.status});
 
@@ -21,11 +23,14 @@ class StatusBanner extends StatelessWidget
 
     status! ? message = "successful"  : message = "unsuccessful";
     return Container(margin: const EdgeInsets.symmetric(vertical: 10),
+
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: Colors.red,
         borderRadius: BorderRadius.circular(12.0),
       ),
+
+                     
       height: 40,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +42,9 @@ class StatusBanner extends StatelessWidget
             },
             child: Icon(
               Icons.arrow_back,
+
               color: Colors.black,
+
             ),
           ),
           SizedBox(width: 20,),
@@ -45,7 +52,9 @@ class StatusBanner extends StatelessWidget
             orderStatus == "ended" ? "Parcel Delivered $message"
                 : "Order Placed $message",
             style: TextStyle(
+
                 color: Colors.white
+
             ),
 
           ),
@@ -53,11 +62,13 @@ class StatusBanner extends StatelessWidget
 
           CircleAvatar(
             radius: 8,
+
             backgroundColor: Colors.green,
             child: Center(
               child: Icon(
                 iconData,
                 color: Colors.black,
+
                 size: 14,
               ),
             ),
@@ -67,4 +78,6 @@ class StatusBanner extends StatelessWidget
       ),
     );
   }
+
 }
+

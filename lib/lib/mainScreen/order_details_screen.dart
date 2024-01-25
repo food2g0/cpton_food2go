@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,21 +11,26 @@ import '../global/global.dart';
 import '../models/address.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
+
   final String? orderID;
 
   OrderDetailsScreen({this.orderID});
 
   @override
+
   _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   String orderStatus = "";
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+
         child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
               .collection("users")
@@ -125,6 +131,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 : Center(child: circularProgress());
           },
         ),
+
+     
       ),
     );
   }
