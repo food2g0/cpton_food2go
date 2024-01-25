@@ -26,6 +26,7 @@ class OrderCard extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [Colors.black87,Colors.black])
+
         ),
         padding: const EdgeInsets.all(5),
         margin: const EdgeInsets.all(10),
