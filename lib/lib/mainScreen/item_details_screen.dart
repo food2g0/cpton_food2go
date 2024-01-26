@@ -262,7 +262,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 250,
+                width: 160,
                 child: NumberInputPrefabbed.roundedButtons(
                   incDecBgColor: const Color(0xFF890010),
                   controller: counterTextEditingController,
@@ -272,6 +272,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   buttonArrangement: ButtonArrangement.incRightDecLeft,
                 ),
               ),
+              SizedBox(width: 10,),
               ElevatedButton(
                 onPressed: () {
                   int itemCounter =
@@ -294,8 +295,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   'Add to Cart',
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: Dimensions.font14,
+                    fontSize: Dimensions.font12,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white
                   ),
                 ),
               ),

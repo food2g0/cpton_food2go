@@ -123,7 +123,7 @@ class _CheckOutState extends State<CheckOut> {
                 child: const Row(
                   children: [
                     Icon(Icons.add_location_alt_outlined),
-                    Text("Add new address"),
+                    Text("Add address"),
                   ],
                 ),
               ),
