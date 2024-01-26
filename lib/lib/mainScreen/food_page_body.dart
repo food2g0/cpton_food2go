@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/CustomersWidgets/Category_design_widget.dart';
+import 'package:cpton_foodtogo/lib/CustomersWidgets/card_design.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../CustomersWidgets/dimensions.dart';
+import '../CustomersWidgets/item_design.dart';
 import '../CustomersWidgets/menu_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../CustomersWidgets/sellers_design.dart';
+import '../models/items.dart';
 import '../models/menus.dart';
 
 class FoodPageBody extends StatefulWidget {
@@ -41,136 +46,144 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          color: Colors.white,
-          height: 250.h,
-          child: Stack(
-            children: [
-              PageView.builder(
-                controller: pageController,
-                itemCount: 5,
-                itemBuilder: (context, position) {
-                  return _buildPageItem(position);
-                },
-              ),
-              Positioned(
-                bottom: 10, // Adjust the position as needed
-                left: 0,
-                right: 0,
-                child: DotsIndicator(
-                  dotsCount: 5,
-                  position: _currPageValue.toInt(),
-                  decorator: DotsDecorator(
-                    size: const Size(9, 9),
-                    color: Colors.black,
-                    activeColor: Colors.red,
-                    activeSize: const Size(18, 9),
-                    activeShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            height: 250.h,
+            child: Stack(
+              children: [
+                PageView.builder(
+                  controller: pageController,
+                  itemCount: 5,
+                  itemBuilder: (context, position) {
+                    return _buildPageItem(position);
+                  },
+                ),
+                Positioned(
+                  bottom: 10, // Adjust the position as needed
+                  left: 0,
+                  right: 0,
+                  child: DotsIndicator(
+                    dotsCount: 5,
+                    position: _currPageValue.toInt(),
+                    decorator: DotsDecorator(
+                      size: const Size(9, 9),
+                      color: Colors.black,
+                      activeColor: Colors.red,
+                      activeSize: const Size(18, 9),
+                      activeShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 25.w),
-        Container(
-          margin: EdgeInsets.only(left: 25.w),
-          child: Row(
-            children: [
-              Text(
-                "Restaurants near me",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.sp,
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.bold,
+          SizedBox(height: 25.w),
+          Container(
+            margin: EdgeInsets.only(left: 25.w),
+            child: Row(
+              children: [
+                Text(
+                  "Restaurants near me",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.sp,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 10.h),
-        // List of restaurants
-        StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: circularProgress());
-            } else {
-              final data = snapshot.data!.docs;
-              return SizedBox(
-                height: 210.h, // Adjust the height as needed
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length, // Adjust the count as needed
+          SizedBox(height: 10.h),
+          // List of restaurants
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: circularProgress());
+              } else {
+                final data = snapshot.data!.docs;
+                return SizedBox(
+                  height: 210.h, // Adjust the height as needed
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data.length, // Adjust the count as needed
+                    itemBuilder: (context, index) {
+                      Menus model = Menus.fromJson(
+                        data[index].data()! as Map<String, dynamic>,
+                      );
+
+                      return InfoDesignWidget(
+                        model: model,
+                        context: context,
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+          SizedBox(height: Dimensions.height10),
+          Container(
+            margin: EdgeInsets.only(left: 25.w),
+            child: Row(
+              children: [
+                Text(
+                  "All Products",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.sp,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+SizedBox(height: 10.h,),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection("items")
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: circularProgress());
+              } else {
+                final data = snapshot.data!.docs;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Number of items in each row
+                    crossAxisSpacing: 8.0, // Spacing between items horizontally
+                    mainAxisSpacing: 8.0,
+                    childAspectRatio: 0.8,
+                    // Spacing between items vertically
+                  ),
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
                     Menus model = Menus.fromJson(
                       data[index].data()! as Map<String, dynamic>,
                     );
-
-                    return InfoDesignWidget(
+                    return CategoryDesignWidget(
                       model: model,
                       context: context,
                     );
                   },
-                ),
-              );
-            }
-          },
-        ),
-        SizedBox(height: Dimensions.height10),
-        Container(
-          margin: EdgeInsets.only(left: 25.w),
-          child: Row(
-            children: [
-              Text(
-                "Category",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.sp,
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+                );
+    }
+            },
           ),
-        ),
-        StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection("menus")
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: circularProgress());
-            } else {
-              final data = snapshot.data!.docs;
-              return SizedBox(
-                height: 200.h, // Adjust the height as needed
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length, // Adjust the count as needed
-                  itemBuilder: (context, index) {
-                    Menus model = Menus.fromJson(
-                      data[index].data()! as Map<String, dynamic>,
-                    );
-
-                    return MenuDesignWidget(
-                      model: model,
-                      context: context,
-                    );
-                  },
-                ),
-              );
-            }
-          },
-        ),
-      ],
+        ],
+      ),
     );
   }
+
 
   Widget _buildPageItem(int index) {
     Matrix4 matrix = Matrix4.identity();

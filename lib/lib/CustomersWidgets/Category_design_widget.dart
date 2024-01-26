@@ -7,17 +7,17 @@ import '../mainScreen/item_details_screen.dart';
 
 
 
-class ItemsDesignWidget extends StatefulWidget {
+class CategoryDesignWidget extends StatefulWidget {
   final dynamic model;
   final BuildContext? context;
 
-  const ItemsDesignWidget({super.key, this.model, this.context});
+  const CategoryDesignWidget({super.key, this.model, this.context});
 
   @override
-  State<ItemsDesignWidget> createState() => _ItemsDesignWidgetState();
+  State<CategoryDesignWidget> createState() => _CategoryDesignWidgetState();
 }
 
-class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
+class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -35,13 +35,13 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
           child: Column(
             children: [
               SizedBox(
-                height: 150.h,
-                width: MediaQuery.of(context).size.width,
+                height: 100.h,
+                width: 200.w,
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
                   child: Image.network(
                     widget.model!.thumbnailUrl!,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

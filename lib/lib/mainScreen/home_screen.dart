@@ -133,17 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.all(16.0.w),
-            child: Text(
-              'Popular Restaurant',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Poppins",
-              ),
-            ),
-          ),
+          SizedBox(height: 20.h,),
+
 
 
           Expanded(

@@ -30,7 +30,6 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0.w),
             border: Border.all(color: Color(0xFF890010), width: 1.0), // Add border styling
           ),
           width: MediaQuery.of(context).size.width,
@@ -43,7 +42,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                   aspectRatio: 3 / 4,
                   child: Image.network(
                     widget.model!.thumbnailUrl!,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),

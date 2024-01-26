@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../CustomersWidgets/item_design.dart';
 
@@ -80,20 +81,32 @@ class _categoryScreenState extends State<categoryScreen> {
                     child: Center(child: circularProgress()),
                   );
                 } else {
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        Items item = Items.fromJson(
-                          snapshot.data!.docs[index].data()! as Map<String, dynamic>,
-                        );
-                        return ItemsDesignWidget(
-                          model: item,
-                          context: context,
-                        );
-                      },
-                      childCount: snapshot.data!.docs.length,
-                    ),
+                  return SliverStaggeredGrid.countBuilder(
+                    crossAxisCount: 2,
+                    staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
+                    itemBuilder: (context, index) {
+                      Items item = Items.fromJson( snapshot.data!.docs[index].data()! as Map<String, dynamic>,);
+                      return ItemsDesignWidget(
+                                  model: item,
+                                  context: context,
+                                );
+                    },
+                    itemCount: snapshot.data!.docs.length,
                   );
+                  // return SliverList(
+                  //   delegate: SliverChildBuilderDelegate(
+                  //         (context, index) {
+                  //       Items item = Items.fromJson(
+                  //         snapshot.data!.docs[index].data()! as Map<String, dynamic>,
+                  //       );
+                  //       return ItemsDesignWidget(
+                  //         model: item,
+                  //         context: context,
+                  //       );
+                  //     },
+                  //     childCount: snapshot.data!.docs.length,
+                  //   ),
+                  // );
                 }
               },
             ),
