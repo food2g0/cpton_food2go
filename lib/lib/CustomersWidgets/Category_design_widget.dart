@@ -65,15 +65,17 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                           ),
                         ),
                         TextSpan(
-                          text: ' ${widget.model!.productTitle}',
+                          text: (widget.model!.productTitle.length > 13)
+                              ? ' ${widget.model!.productTitle.substring(0, 13)}...'
+                              : ' ${widget.model!.productTitle}',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black87,
                             fontWeight: FontWeight.w700,
-                            overflow: TextOverflow.ellipsis,
                             fontFamily: "Poppins",
                           ),
                         ),
+
                       ],
                     ),
                   ),

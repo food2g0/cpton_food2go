@@ -140,25 +140,32 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         // Product Title
                         Row(
                           children: [
-                            Icon(Icons.fastfood_outlined, size: 20.0.sp, color:Color(0xFF890010),),
+                            Icon(Icons.fastfood_outlined, size: 20.0.sp, color: Color(0xFF890010)),
                             SizedBox(width: 10.0),
-                            Text(
-                              widget.model.productTitle.toString(),
-                              style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                            Expanded(
+                              child: Text(
+                                (widget.model!.productTitle.length > 20)
+                                    ? ' ${widget.model!.productTitle.substring(0, 20)}...'
+                                    : ' ${widget.model!.productTitle}',
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
-                            SizedBox(width: 200.w,),
-                            Icon(
-                              Icons.favorite_border,
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Icon(
+                                Icons.favorite_border,
                                 size: 30.0.sp,
-                                color: Colors.red
-                            )
+                                color: Colors.red,
+                              ),
+                            ),
                           ],
                         ),
+
                         SizedBox(height: 10.0),
                         // Product Price
                         Row(
