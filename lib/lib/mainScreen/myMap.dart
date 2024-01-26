@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
 
@@ -45,28 +45,61 @@ class _MyMapState extends State<MyMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('location').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return GoogleMap(
-            mapType: MapType.satellite,
-            markers: createMarkers(context, snapshot),
-            polylines: createPolylines(snapshot),
-            initialCameraPosition: CameraPosition(
-              target: LatLng(
-                snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['latitude'],
-                snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['longitude'],
-              ),
-              zoom: 14.47,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF890010),
+        title: Text(
+          "Track Order",
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance.collection('location').snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                return GoogleMap(
+                  mapType: MapType.satellite,
+                  markers: createMarkers(context, snapshot),
+                  polylines: createPolylines(snapshot),
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['latitude'],
+                      snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['longitude'],
+                    ),
+                    zoom: 14.47,
+                  ),
+                  onMapCreated: (GoogleMapController controller) async {
+                    setState(() {
+                      _controller = controller;
+                      _added = true;
+                    });
+                  },
+                );
+              },
             ),
-            onMapCreated: (GoogleMapController controller) async {
-              setState(() {
-                _controller = controller;
-                _added = true;
-              });
-            },
-          );
-        },
+          ),
+          Card(
+            elevation: 5.0,
+            margin: EdgeInsets.all(16.0),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "Rider's Name: John Doe",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Poppins"
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

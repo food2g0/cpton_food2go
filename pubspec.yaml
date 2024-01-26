@@ -54,10 +54,17 @@ dependencies:
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
   permission_handler: ^11.2.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "images/appIcon.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

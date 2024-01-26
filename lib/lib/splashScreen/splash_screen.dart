@@ -52,32 +52,31 @@ class _MySplashScreenState extends State<MySplashScreen>
   @override
   Widget build(BuildContext context) {
     return Material(
-
       child: Container(
         color: Colors.black,
         child: Center(
-
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset("images/logo.png"),
+                child: Image.asset(
+                  "images/appIcon.png",
+                  width: 150, // Adjust the width as needed
+                  height: 150, // Adjust the height as needed
+                ),
               ),
-
-              const   SizedBox(height: 10,),
-
+              const SizedBox(height: 10,),
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  "Order Food Online with Food to Go",
+                  "Welcome To Food2Go ",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                    fontFamily: "Roboto",
-
+                    color: Color(0xFF890010),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "Poppins",
                   ),
                 ),
               ),

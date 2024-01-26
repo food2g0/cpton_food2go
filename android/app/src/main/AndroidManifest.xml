@@ -10,7 +10,7 @@
 
     <application
 
-        android:label="cpton_foodtogo"
+        android:label="Food2Go"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

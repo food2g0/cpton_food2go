@@ -5,6 +5,7 @@ import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 
 import '../mainScreen/myMap.dart';
+import '../mainScreen/my_order_screen.dart';
 import '../models/address.dart';
 import '../splashScreen/splash_screen.dart';
 
@@ -39,7 +40,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
             padding: EdgeInsets.all(10.0),
             child: Text(
               'Shipping Details:',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.black,fontFamily: "Poppins", fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(
@@ -56,7 +57,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                       "Name",
                       style: TextStyle(color: Colors.black),
                     ),
-                    Text(widget.model!.name!),
+                    Text(widget.model!.name!,style: TextStyle(fontFamily: "Poppins"),),
                   ],
                 ),
                 TableRow(
@@ -65,7 +66,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                       "Phone Number",
                       style: TextStyle(color: Colors.black),
                     ),
-                    Text(widget.model!.phoneNumber!),
+                    Text(widget.model!.phoneNumber!,style: TextStyle(fontFamily: "Poppins"),),
                   ],
                 ),
               ],
@@ -79,54 +80,40 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
             child: Text(
               widget.model!.fullAddress!,
               textAlign: TextAlign.justify,
+              style: TextStyle(fontFamily: "Poppins"),
             ),
           ),
+          Divider(thickness: 4,),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(5.0),
             child: Center(
               child: InkWell(
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MySplashScreen()));
+                          builder: (context) =>  MyOrderScreen()));
                 },
                 child: Container(
                   decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.cyan, Colors.amber],
-                        begin: FractionalOffset(0.0, 0.0),
-                        end: FractionalOffset(1.0, 0.0),
-                        stops: [0.0, 1.0],
-                        tileMode: TileMode.clamp,
-                      )),
+                      color: Color(0xFF890010),),
                   width: MediaQuery.of(context).size.width - 40,
                   height: 50,
                   child: const Center(
                     child: Text(
                       "Go Back",
-                      style: TextStyle(color: Colors.white, fontSize: 15.0),
+                      style: TextStyle(color: Colors.white, fontSize: 15.0,
+                      fontFamily: "Poppins"),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-          TextButton(
-              onPressed: () {
-                _getLocation();
-              },
-              child: Text('add my location')),
-          TextButton(
-              onPressed: () {
-                _listenLocation();
-              },
-              child: Text('enable live location')),
-          TextButton(
-              onPressed: () {
-                _stopListening();
-              },
-              child: Text('stop live location')),
+
+
+
+
           StreamBuilder(
               stream: FirebaseFirestore.instance.collection('location').snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -161,23 +148,13 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                   },
                 );
               }),
+
+
         ],
       ),
     );
   }
 
-  _getLocation() async {
-    try {
-      final loc.LocationData _locationResult = await location.getLocation();
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
-        'latitude': _locationResult.latitude,
-        'longitude': _locationResult.longitude,
-        'name': 'john'
-      }, SetOptions(merge: true));
-    } catch (e) {
-      print(e);
-    }
-  }
 
   Future<void> _listenLocation() async {
     _locationSubscription = location.onLocationChanged.handleError((onError) {
@@ -190,17 +167,13 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
       await FirebaseFirestore.instance.collection('location').doc('user1').set({
         'latitude': currentlocation.latitude,
         'longitude': currentlocation.longitude,
-        'name': 'john'
+
       }, SetOptions(merge: true));
     });
   }
 
-  _stopListening() {
-    _locationSubscription?.cancel();
-    setState(() {
-      _locationSubscription = null;
-    });
-  }
+
+
 
   _requestPermission() async {
     var status = await Permission.location.request();
