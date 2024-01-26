@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'cart_screen.dart';
 class ItemDetailsScreen extends StatefulWidget {
   final dynamic model;
   final String? sellersUID;
-  const ItemDetailsScreen({super.key, required this.model, this.sellersUID});
+  const ItemDetailsScreen({Key? key, required this.model, this.sellersUID}) : super(key: key);
 
   @override
   State<ItemDetailsScreen> createState() => _ItemDetailsScreenState();
@@ -40,35 +41,42 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              expandedHeight: 200.0,
+              expandedHeight: 200.0.h,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.center,
-                          colors: [
-                            Colors.black, // Transparent at the top
-                            Colors.black.withOpacity(
-                                0.5), // Dark gradient at the bottom
-                          ],
-                        ),
-                      ),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 2),
                     ),
                   ],
                 ),
+                child: FlexibleSpaceBar(
+                  centerTitle: false,
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+
+
               actions: [
                 Stack(
                   children: [
@@ -95,12 +103,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               shape: BoxShape.circle,
                               color: Colors.white,
                             ),
-                            padding: const EdgeInsets.all(
-                                4.0), // Adjust the padding as needed
+                            padding: EdgeInsets.all(
+                                4.0.w), // Adjust the padding as needed
                             child: Text(
                               counter.count.toString(),
                               style: const TextStyle(
-                                color: Colors.red,
+                                color: Color(0xFF890010),
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
@@ -115,137 +123,204 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             // Add product details here
             SliverList(
               delegate: SliverChildListDelegate([
-                // Product Title
+                // Product Title, Price, and Ratings
+                SizedBox(height: 15.0.h),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    widget.model.productTitle.toString(),
-                    style: const TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color:Color(0xFF890010), width: 1.0 ),
+                      borderRadius: BorderRadius.circular(10.0), // Adjust the value as needed
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    '\Php: ${widget.model.productPrice?.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
-                // Star Ratings and Items Sold
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          for (int i = 0; i < 5; i++)
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Product Title
+                        Row(
+                          children: [
+                            Icon(Icons.fastfood_outlined, size: 20.0.sp, color:Color(0xFF890010),),
+                            SizedBox(width: 10.0),
+                            Text(
+                              widget.model.productTitle.toString(),
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(width: 200.w,),
                             Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: Dimensions.height15,
-                            ),
-                          SizedBox(width: Dimensions.height10),
-                          const Text(
-                            '4.5',
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        '5,000 Sold',
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: Dimensions.font14,
-                          color: Colors.black54,
+                              Icons.favorite_border,
+                                size: 30.0.sp,
+                                color: Colors.red
+                            )
+                          ],
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 10.0),
+                        // Product Price
+                        Row(
+                          children: [
+                            Icon(Icons.php, size: 20.0, color: Colors.green,),
+                            SizedBox(width: 10.0),
+                            Text(
+                              ' ${widget.model.productPrice?.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14.0.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.0.h),
+                        // Star Ratings and Items Sold
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.amber, size: 15.h),
+                                Icon(Icons.star, color: Colors.amber, size: 15.h),
+                                Icon(Icons.star, color: Colors.amber, size: 15.h),
+                                Icon(Icons.star, color: Colors.amber, size: 15.h),
+                                Icon(Icons.star, color: Colors.amber, size: 15.h),
+                                SizedBox(width: Dimensions.height10),
+                                Text(
+                                  '4.5',
+                                  style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 12.0.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '5,000 Sold',
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 12.sp,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: Dimensions.height20,
-                ),
+                SizedBox(height: 20.h,),
                 Container(
                   color: Colors.white,
-                  height: 50,
-                  child: const Padding(
+                  height: 50.h,
+                  child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(Icons.delivery_dining),
+                        Icon(Icons.delivery_dining,size: 24.sp,color:Color(0xFF890010)),
                         Text(
                           "  Cost ",
                           style: TextStyle(
                             fontFamily: "Poppins",
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black
                           ),
                         ),
                         Text(
                           ' Php: 50',
                           style: TextStyle(
                             fontFamily: "Poppins",
+                            fontSize: 12.sp,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: Dimensions.height10,
-                ),
+                SizedBox(height: 20.sp,),
                 // Product Description
                 Container(
                   color: Colors.white,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      widget.model.productDescription!,
-                      style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: Dimensions.font16,
-                        color: Colors.grey[700],
-                      ),
+                    padding:  EdgeInsets.all(16.0.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.description, size: 20.0.sp),
+                            SizedBox(width: 10.0.w),
+                            Text(
+                              "Product Description",
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                                  color:Color(0xFF890010)
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.0.h),
+                        SingleChildScrollView(
+                          child: Text(
+                            widget.model.productDescription!,
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 10.sp,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+
+                // Product Reviews
                 Padding(
-                  padding: EdgeInsets.all(10),
-                    child: Text("Product Reviews", style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: Dimensions.font16,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.bold
-                    ),)),
-                SizedBox(
-                  height: Dimensions.height10,
+                  padding: EdgeInsets.all(10.w),
+                  child: Row(
+                    children: [
+                      Icon(Icons.reviews, size: 20.0.sp),
+                      SizedBox(width: 10.0.w),
+                      Text(
+                        "Product Reviews",
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 12.sp,
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                // Product Description
+                // Product Description (Reviews)
                 Container(
                   color: Colors.white,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      widget.model.productDescription!,
-                      style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: Dimensions.font16,
-                        color: Colors.grey[700],
-                      ),
+                    padding:  EdgeInsets.all(16.0.w),
+                    child: Row(
+                      children: [
+                        Icon(Icons.description, size: 20.0.sp),
+                        SizedBox(width: 10.0.w),
+                        Text(
+                          "so good!!",
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: Dimensions.font16,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -256,13 +331,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
-          height: 60, // Adjust the height as needed
+          height: 60.h, // Adjust the height as needed
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 160,
+                width: 190.w,
                 child: NumberInputPrefabbed.roundedButtons(
                   incDecBgColor: const Color(0xFF890010),
                   controller: counterTextEditingController,
@@ -276,7 +351,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               ElevatedButton(
                 onPressed: () {
                   int itemCounter =
-                      int.parse(counterTextEditingController.text);
+                  int.parse(counterTextEditingController.text);
 
                   //1.check if item exist already in cart
                   List<String> seperateItemIDsList = separateItemIDs();
@@ -284,9 +359,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       ? Fluttertoast.showToast(msg: "Item is already in a cart")
                       :
 
-                      //2.add to cart
-                      addItemToCart(
-                          widget.model.productsID, context, itemCounter);
+                  //2.add to cart
+                  addItemToCart(
+                      widget.model.productsID, context, itemCounter);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF890010),
@@ -294,10 +369,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 child: Text(
                   'Add to Cart',
                   style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: Dimensions.font12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
+                      fontFamily: "Poppins",
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
                   ),
                 ),
               ),

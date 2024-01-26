@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -92,7 +93,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               shape: BoxShape.circle,
                               color: Colors.white,
                             ),
-                            padding: const EdgeInsets.all(4.0), // Adjust the padding as needed
+                            padding:  EdgeInsets.all(4.0.w), // Adjust the padding as needed
                             child: Text(
                               counter.count.toString(),
                               style: const TextStyle(
@@ -111,14 +112,17 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Card(
-                  elevation: 4.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+                padding: EdgeInsets.all(16.0.w),
+                child: Container(
+
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.w),
+                    border: Border.all(color: Color(0xFF890010), width: 1),
+
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -126,22 +130,22 @@ class _MenuScreenState extends State<MenuScreen> {
                           'Store Information',
                           style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: Dimensions.font20,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 10,),
+                      SizedBox(height: 10.h,),
                         Row(
                           children: [
                             Icon(
                               Icons.store,
-                              size: Dimensions.font16,
+                              size: 16.sp,
                               color: Colors.amber,
                             ),
                             Text(
                               ' ${widget.model!.sellersName}',
                               style: TextStyle(
-                                fontSize: Dimensions.font16,
+                                fontSize: 14.sp,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w700,
                                 overflow: TextOverflow.ellipsis,
@@ -154,13 +158,13 @@ class _MenuScreenState extends State<MenuScreen> {
                           children: [
                             Icon(
                               Icons.pin_drop,
-                              size: Dimensions.font16,
+                              size: 16.sp,
                               color: Colors.red,
                             ),
                             Text(
-                              '${widget.model!.sellersAddress}'.substring(0, 32) + '...', // Truncate text to 20 characters
+                              '${widget.model!.sellersAddress}'.substring(0, 30) + '...', // Truncate text to 20 characters
                               style: TextStyle(
-                                fontSize: Dimensions.font12,
+                                fontSize: 12.sp,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w500,
                                 overflow: TextOverflow.ellipsis,
@@ -176,16 +180,16 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ),
             ),
-            const SliverToBoxAdapter(
+      SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.w),
                 child: Text(
                   'Category',
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 16.sp,
                   ),
                 ),
               ),
@@ -205,7 +209,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 } else {
                   return SliverToBoxAdapter(
                     child: SizedBox(
-                      height: 120,
+                      height: 150.h,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal, // Set horizontal scroll direction
                         itemCount: snapshot.data!.docs.length,
@@ -225,16 +229,16 @@ class _MenuScreenState extends State<MenuScreen> {
                 }
               },
             ),
-            const SliverToBoxAdapter(
+         SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.w),
                 child: Text(
                   'Items',
                   style: TextStyle(
                     fontFamily: "Poppins",
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 18.sp,
                   ),
                 ),
               ),

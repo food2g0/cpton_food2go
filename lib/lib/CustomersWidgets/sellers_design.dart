@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../mainScreen/menu_screen.dart';
 import '../models/menus.dart';
@@ -29,7 +30,7 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
             Navigator.push(context, MaterialPageRoute(builder: (c) => MenuScreen(model: widget.model, sellersName: widget.model!.sellersName,)));
           },
           child: Padding(
-            padding: const EdgeInsets.all(13.0),
+            padding:  EdgeInsets.all(13.0.w),
             child: SizedBox(
               width: containerWidth,
               height: containerHeight,
@@ -49,17 +50,17 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                     ),
                     Center(
                       child: Container(
-                        padding: const EdgeInsets.all(8.0),
+                        padding:  EdgeInsets.all(8.0.w),
                         color: Colors.white,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
+                          Icon(
                               Icons.fastfood, // Replace with your desired icon
                               color: Color(0xFF890010),
-                              size: 12,
+                              size: 12.sp,
                             ),
-                            const SizedBox(width: 4), // Add spacing between the icon and text
+                           SizedBox(width: 4.w), // Add spacing between the icon and text
                             Expanded(
                               child: Text(
                                 widget.model!.sellersName!,
@@ -67,7 +68,7 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                                   color: Colors.black,
                                   fontFamily: "Poppins",
                                   fontWeight: FontWeight.bold,
-                                  fontSize: Dimensions.font12,
+                                  fontSize: 12.sp,
                                 ),
                                 overflow: TextOverflow.ellipsis, // Add ellipsis when text overflows
                               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
@@ -22,105 +23,137 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (c)=> ItemDetailsScreen(model: widget.model,)));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model,)));
       },
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Card(
-          elevation: 1,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), // Set the border radius here
+        padding: EdgeInsets.all(4.0.w),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0.w),
+            border: Border.all(color: Color(0xFF890010), width: 1.0), // Add border styling
           ),
-          child: Container(
-          color: Colors.white,
-            width: MediaQuery.of(context).size.width,
-            child: Column( // Wrap the contents in a Column
-              children: [
-                SizedBox(
-                  height: Dimensions.height150,
-                  width: MediaQuery.of(context).size.width, // Set a fixed width for the image container
-                  child: AspectRatio(
-                    aspectRatio: 3 / 4, // Set the aspect ratio you desire
-                    child: Image.network(
-                      widget.model!.thumbnailUrl!,
-                      fit: BoxFit.cover, // Preserve aspect ratio and cover the available space
-                    ),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 150.h,
+                width: MediaQuery.of(context).size.width,
+                child: AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: Image.network(
+                    widget.model!.thumbnailUrl!,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(height: 10), // Add some spacing between the image and text
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Container(
-                    alignment: Alignment.centerLeft, // Adjust the alignment as needed
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          const WidgetSpan(
+              ),
+              SizedBox(height: 10.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 4.0),
                             child: Icon(
                               Icons.fastfood,
-                              size: 16,
+                              size: 16.sp,
                               color: Colors.amber,
                             ),
                           ),
-                          TextSpan(
-                            text: ' ${widget.model!.productTitle}',
-                            style: TextStyle(
-                              fontSize: Dimensions.font16,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w700,
-                              overflow: TextOverflow.ellipsis,
-                              fontFamily: "Poppins",
+                        ),
+                        TextSpan(
+                          text: ' ${widget.model!.productTitle}',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w700,
+                            overflow: TextOverflow.ellipsis,
+                            fontFamily: "Poppins",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 10.0),
+                            child: Icon(
+                              Icons.currency_ruble,
+                              size: 16.sp,
+                              color: Colors.green,
                             ),
                           ),
-                        ],
+                        ),
+                        TextSpan(
+                          text: "Php: " + '${widget.model!.productPrice}',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.black45,
+                            fontWeight: FontWeight.w700,
+                            overflow: TextOverflow.ellipsis,
+                            fontFamily: "Poppins",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.h,),
+              Padding(
+                padding: EdgeInsets.all(8.0.w),
+                child: Container(
+                  height: 40.h,
+                  width: 150.w,
+                  child: InkWell(
+                    onTap: () {
+                      int itemCounter = 1;
+
+                      List<String> separateItemIDsList = separateItemIDs();
+                      if (separateItemIDsList.contains(widget.model.productsID)) {
+                        Fluttertoast.showToast(msg: "Item is already in the cart");
+                      } else {
+                        // Add to cart
+                        addItemToCart(widget.model.productsID, context, itemCounter);
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red[900],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.shopping_cart,
+                          size: 20.sp,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-
-                    Text(
-                      "Php: "'${widget.model!.productPrice}',
-                      style:  TextStyle(fontSize: Dimensions.font14, color: Colors.black87, fontFamily: "Poppins"),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(width: Dimensions.width10), // Add spacing between price and button
-                    ElevatedButton(
-                      onPressed: () {
-                        int itemCounter = 1;
-
-                        List<String> seperateItemIDsList = separateItemIDs();
-                        seperateItemIDsList.contains(widget.model.productsID)
-                            ? Fluttertoast.showToast(msg: "Item is already in a cart")
-                            :
-
-                        //2.add to cart
-                        addItemToCart(
-                            widget.model.productsID, context, itemCounter);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[900],
-                      ),
-                      child: Icon(
-                        Icons.shopping_cart,
-                        size: Dimensions.font20, // Set the icon size
-                      ),
-                    )
-
-
-                  ],
-                ),
-
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
+
   }
 }

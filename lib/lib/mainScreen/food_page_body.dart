@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../CustomersWidgets/dimensions.dart';
 import '../CustomersWidgets/menu_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
@@ -44,7 +45,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
       children: [
         Container(
           color: Colors.white,
-          height: 245,
+          height: 250.h,
           child: Stack(
             children: [
               PageView.builder(
@@ -75,16 +76,16 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             ],
           ),
         ),
-        SizedBox(height: Dimensions.height25),
+        SizedBox(height: 25.w),
         Container(
-          margin: EdgeInsets.only(left: Dimensions.width25),
+          margin: EdgeInsets.only(left: 25.w),
           child: Row(
             children: [
               Text(
                 "Restaurants near me",
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: Dimensions.font14,
+                  fontSize: 12.sp,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.bold,
                 ),
@@ -92,7 +93,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             ],
           ),
         ),
-        SizedBox(height: Dimensions.height10),
+        SizedBox(height: 10.h),
         // List of restaurants
         StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
@@ -102,7 +103,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             } else {
               final data = snapshot.data!.docs;
               return SizedBox(
-                height: 200, // Adjust the height as needed
+                height: 210.h, // Adjust the height as needed
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: data.length, // Adjust the count as needed
@@ -123,14 +124,14 @@ class _FoodPageBodyState extends State<FoodPageBody> {
         ),
         SizedBox(height: Dimensions.height10),
         Container(
-          margin: EdgeInsets.only(left: Dimensions.width25),
+          margin: EdgeInsets.only(left: 25.w),
           child: Row(
             children: [
               Text(
                 "Category",
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: Dimensions.font14,
+                  fontSize: 12.sp,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.bold,
                 ),
@@ -148,7 +149,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             } else {
               final data = snapshot.data!.docs;
               return SizedBox(
-                height: 200, // Adjust the height as needed
+                height: 200.h, // Adjust the height as needed
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: data.length, // Adjust the count as needed
@@ -202,10 +203,10 @@ class _FoodPageBodyState extends State<FoodPageBody> {
       child: Stack(
         children: [
           Container(
-            height: 170,
+            height: 170.h,
             margin: EdgeInsets.only(left: 5, right: 5),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(30.w),
               color: Colors.black,
               image: const DecorationImage(
                 fit: BoxFit.cover,
@@ -216,8 +217,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 100,
-              margin: EdgeInsets.only(left: 40, right: 40, bottom: 40,),
+              height: 110.h,
+              margin: EdgeInsets.only(left: 40.w, right: 40.w, bottom: 40.h,),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 color: Colors.white,
@@ -238,7 +239,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                       "Test12",
                       style: TextStyle(
                         color: Colors.cyan,
-                        fontSize: Dimensions.font16,
+                        fontSize: 14.sp,
                       ),
                     ),
                     SizedBox(height: Dimensions.height10),
@@ -251,7 +252,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         );
                       }),
                     ),
-                    SizedBox(height: Dimensions.height10),
+                    SizedBox(height: 10.h),
                   ],
                 ),
               ),

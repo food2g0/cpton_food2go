@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 import '../mainScreen/category_screen.dart';
@@ -25,9 +26,9 @@ class _MenuDesignWidgetState extends State<MenuDesignWidget> {
        Navigator.push(context, MaterialPageRoute(builder: (c)=> categoryScreen(model: widget.model)));
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0), // Reduce the padding to make it smaller
+        padding:  EdgeInsets.all(8.0.w), // Reduce the padding to make it smaller
         child: SizedBox(
-          width: 80, // Set a fixed width for the circular container
+          width: 80.w, // Set a fixed width for the circular container
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -40,13 +41,13 @@ class _MenuDesignWidgetState extends State<MenuDesignWidget> {
                 child: Center(
                   child: Image.network(
                     widget.model!.thumbnailUrl!,
-                    width: 50,
-                    height: 50,
+                    width: 50.w,
+                    height: 50.h,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              const SizedBox(height: 8), // Add some spacing between the image and text
+              SizedBox(height: 8.h), // Add some spacing between the image and text
               Text(
                 widget.model!.menuTitle!,
                 style:  TextStyle(

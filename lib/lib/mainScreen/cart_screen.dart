@@ -4,6 +4,7 @@ import 'package:cpton_foodtogo/lib/mainScreen/check_out.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/cart_item_design.dart';
@@ -40,7 +41,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double defaultShippingFee = 10.0;
+    double defaultShippingFee = 50.0;
     double totalAmount = Provider.of<TotalAmount>(context).tAmount + defaultShippingFee;
 
     // Check if the cart is empty
@@ -48,11 +49,12 @@ class _CartScreenState extends State<CartScreen> {
     bool isCartEmpty = separateItemQuantities().isEmpty;
 
     return Scaffold(
+      backgroundColor: Colors.white70 ,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF890010),
-        title: const Text(
+        backgroundColor: Color(0xFF890010),
+        title:  Text(
           "Shopping Cart",
-          style: TextStyle(fontFamily: "Poppins"),
+          style: TextStyle(fontFamily: "Poppins", color: Colors.white, fontSize: 14.sp),
         ),
         actions: <Widget>[
           TextButton(
@@ -63,9 +65,9 @@ class _CartScreenState extends State<CartScreen> {
             },
             child: Text(
               isEditing ? "Done" : "Edit",
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 14.sp,
               ),
             ),
           ),
@@ -80,15 +82,15 @@ class _CartScreenState extends State<CartScreen> {
                 alignment: Alignment.center,
                 child: Column(
                   children: [
-                    const Text(
+                     Text(
                       "Your cart is empty.",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         fontFamily: "Poppins",
                       ),
                     ),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 20.h),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -96,7 +98,7 @@ class _CartScreenState extends State<CartScreen> {
                           begin: Alignment.topLeft, // Define the start point of the gradient
                           end: Alignment.bottomRight, // Define the end point of the gradient
                         ),
-                        borderRadius: BorderRadius.circular(8.0), // Add border radius for rounded corners
+                        borderRadius: BorderRadius.circular(8.0.r), // Add border radius for rounded corners
                       ),
                       child: ElevatedButton(
                         onPressed: () {
@@ -104,11 +106,11 @@ class _CartScreenState extends State<CartScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.transparent, // Set the button's background to transparent
-                          minimumSize: const Size(180, 50),
+                          minimumSize: Size(180.w, 50.h),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Continue Shopping",
-                          style: TextStyle(fontSize: 16, fontFamily: "Poppins", color: Colors.white),
+                          style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: Colors.white),
                         ),
                       ),
                     )
@@ -169,25 +171,16 @@ class _CartScreenState extends State<CartScreen> {
       ),
 
       bottomNavigationBar: isCartEmpty
-          ? null // Set to null when the cart is empty
+          ? Container() // Set to null when the cart is empty
           : Container(
-        height: 200,
+        height: 200.h,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, -15),
-              blurRadius: 20,
-              color: Color(0xFFDADADA).withOpacity(0.15),
-            ),
-          ],
+          border: Border.all(color: Color(0xFF890010), width: 1)
+
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(19.w),
           child: Column(
             children: [
               if (!isCartEmpty)
@@ -201,22 +194,24 @@ class _CartScreenState extends State<CartScreen> {
                         Text(
                           "Sub Total:",
                           style: TextStyle(
-                            fontSize: Dimensions.font16,
-                            color: Colors.black54,
+                            fontSize: 12.sp,
+                            color: Colors.black,
                             fontFamily: "Poppins",
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
                           "${Provider.of<TotalAmount>(context).tAmount}",
                           style: TextStyle(
-                            fontSize: Dimensions.font16,
-                            color: Colors.black54,
+                            fontSize: 12.sp,
+                            color: Colors.black,
                             fontFamily: "Poppins",
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
-
+                   SizedBox(height: 6.h,),
                     // Shipping Fee Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,46 +219,51 @@ class _CartScreenState extends State<CartScreen> {
                         Text(
                           "Shipping Fee:",
                           style: TextStyle(
-                            fontSize: Dimensions.font16,
-                            color: Colors.black54,
+                            fontSize: 12.sp,
+                            color: Colors.black,
                             fontFamily: "Poppins",
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
+
                         Text(
                           "${defaultShippingFee.toStringAsFixed(2)}",
                           style: TextStyle(
-                            fontSize: Dimensions.font16,
-                            color: Colors.black54,
+                            fontSize: 12.sp,
+                            color: Colors.black,
                             fontFamily: "Poppins",
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              // Total Amount Row (unchanged)
+              SizedBox(height: 6.h,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Total Amount:",
                     style: TextStyle(
-                      fontSize: Dimensions.font20,
+                      fontSize: 12.sp,
                       color: Colors.black,
                       fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     totalAmount.toStringAsFixed(2),
                     style: TextStyle(
-                      fontSize: Dimensions.font20,
+                      fontSize: 12.sp,
                       color: Colors.black,
                       fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 10.h),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: isEditing
@@ -277,12 +277,13 @@ class _CartScreenState extends State<CartScreen> {
                         Fluttertoast.showToast(msg: "Cart has been cleared.");
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        minimumSize: const Size(140, 50),
+                        backgroundColor: Colors.amber,
+                        minimumSize:  Size(140.w, 50.h),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Clear All",
-                        style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+                        style: TextStyle(
+                            fontSize: 14.sp, fontFamily: "Poppins", color: Colors.white),
                       ),
                     ),
                     ElevatedButton(
@@ -290,12 +291,12 @@ class _CartScreenState extends State<CartScreen> {
                         // Handle the logic when "Clear Selected" is pressed
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        minimumSize: const Size(140, 50),
+                        backgroundColor: Color(0xFF890010),
+                        minimumSize:  Size(110.w, 50.h),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Delete Selected",
-                        style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+                        style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins",color: Colors.white),
                       ),
                     ),
                   ],
@@ -314,11 +315,11 @@ class _CartScreenState extends State<CartScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF890010),
-                    minimumSize: const Size(300, 50),
+                    minimumSize:  Size(300.w, 50.h),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Check Out",
-                    style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+                    style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: Colors.white),
                   ),
                 ),
 

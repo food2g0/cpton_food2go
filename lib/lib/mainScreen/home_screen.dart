@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/customers_drawer.dart';
 import '../CustomersWidgets/dimensions.dart';
@@ -55,12 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title:  Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Text(
               sharedPreferences!.getString("name")!,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: Dimensions.font16,
+                fontSize: 16.sp,
                 fontFamily: "Poppins",
               ),
             ),
@@ -91,11 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: BoxShape.circle,
                         color: Colors.white,
                       ),
-                      padding: const EdgeInsets.all(4.0), // Adjust the padding as needed
+                      padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
                       child: Text(
                         counter.count.toString(),
                         style: const TextStyle(
-                          color: Colors.red,
+                          color:  Color(0xFF890010),
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -108,17 +109,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
+          preferredSize: Size.fromHeight(80.h),
           child: Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(10),
+            margin:  EdgeInsets.all(7.w),
+            padding:  EdgeInsets.all(7.w),
             child: TextFormField(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 fillColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(vertical: 16),
+                contentPadding: EdgeInsets.symmetric(vertical: 16.h),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  borderRadius: BorderRadius.all(Radius.circular(30.w)),
                   borderSide: BorderSide(color: Colors.white),
                 ),
                 hintText: "Search...",
@@ -133,11 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.w),
             child: Text(
               'Popular Restaurant',
               style: TextStyle(
-                fontSize: Dimensions.font14,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
                 fontFamily: "Poppins",
               ),
