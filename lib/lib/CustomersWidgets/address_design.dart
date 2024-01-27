@@ -69,14 +69,12 @@ class _AddressDesignState extends State<AddressDesign> {
                           ),
                           TableRow(
                             children: [
-
                               Text(widget.model!.phoneNumber.toString()),
                             ],
                           ),
                           TableRow(
                             children: [
-                               Text(widget.model!.fullAddress.toString()),
-
+                              Text(widget.model!.fullAddress.toString()),
                             ],
                           ),
                         ],
@@ -89,32 +87,41 @@ class _AddressDesignState extends State<AddressDesign> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
+
                 ElevatedButton(
                   onPressed: () {
-                    MapsUtil.openMapWithPosition(widget.model!.lat!, widget.model!.lng!);
+                    if (widget.addressId != null) {
+                      // Call the deleteAddress method when the delete button is pressed
+                      Provider.of<AddressChanger>(context, listen: false)
+                          .deleteAddress(widget.addressId!);
+                    }
                   },
-                  child: Text("Check on map"),
+                  child: Text("Delete", style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber,
+                    backgroundColor: AppColors().red,
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     // Handle Proceed button action for the selected address.
-                    Navigator.push(context, MaterialPageRoute(builder: (c)=> CheckOut(
-                      addressId: widget.addressId,
-                      sellersUID: widget.sellersUID,
-                      totalAmount: widget.totalAmount,
-                    )));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (c) => CheckOut(
+                              addressId: widget.addressId,
+                              sellersUID: widget.sellersUID,
+                              totalAmount: widget.totalAmount,
+                            )));
                   },
-                  child: Text("Choose"),
+                  child: Text("Choose", style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors().startColor,
+                    backgroundColor: Colors.green,
                   ),
                 ),
+
               ],
             )
-
           ],
         ),
       ),

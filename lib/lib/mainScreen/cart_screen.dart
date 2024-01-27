@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
 import '../CustomersWidgets/cart_item_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
 
@@ -26,7 +27,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   bool isEditing = false;
-  List<int>? separateItemQuantityList;
+  List<int>? seperateItemQuantityList;
   num totalAmount = 0;
 
   @override
@@ -36,7 +37,7 @@ class _CartScreenState extends State<CartScreen> {
     totalAmount = 0;
     Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(0);
 
-    separateItemQuantityList = separateItemQuantities();
+    seperateItemQuantityList = separateItemQuantities();
   }
 
   @override
@@ -45,14 +46,13 @@ class _CartScreenState extends State<CartScreen> {
     double totalAmount = Provider.of<TotalAmount>(context).tAmount + defaultShippingFee;
 
     // Check if the cart is empty
-
     bool isCartEmpty = separateItemQuantities().isEmpty;
 
     return Scaffold(
-      backgroundColor: Colors.white70 ,
+      backgroundColor: Colors.white70,
       appBar: AppBar(
         backgroundColor: Color(0xFF890010),
-        title:  Text(
+        title: Text(
           "Shopping Cart",
           style: TextStyle(fontFamily: "Poppins", color: Colors.white, fontSize: 14.sp),
         ),
@@ -82,7 +82,7 @@ class _CartScreenState extends State<CartScreen> {
                 alignment: Alignment.center,
                 child: Column(
                   children: [
-                     Text(
+                    Text(
                       "Your cart is empty.",
                       style: TextStyle(
                         fontSize: 20.sp,
@@ -90,22 +90,22 @@ class _CartScreenState extends State<CartScreen> {
                         fontFamily: "Poppins",
                       ),
                     ),
-                     SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [AppColors().startColor, AppColors().endColor], // Define your gradient colors
-                          begin: Alignment.topLeft, // Define the start point of the gradient
-                          end: Alignment.bottomRight, // Define the end point of the gradient
+                          colors: [AppColors().startColor, AppColors().endColor],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(8.0.r), // Add border radius for rounded corners
+                        borderRadius: BorderRadius.circular(8.0.r),
                       ),
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (c) => HomeScreen()));
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent, // Set the button's background to transparent
+                          primary: Colors.transparent,
                           minimumSize: Size(180.w, 50.h),
                         ),
                         child: Text(
@@ -114,13 +114,10 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                     )
-
                   ],
                 ),
               ),
             )
-
-
           else
           // Display cart items with quantity number
             StreamBuilder<QuerySnapshot>(
@@ -144,9 +141,9 @@ class _CartScreenState extends State<CartScreen> {
 
                         if (index == 0) {
                           totalAmount = 0;
-                          totalAmount += (model.productPrice! * separateItemQuantityList![index]);
+                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]);
                         } else {
-                          totalAmount += (model.productPrice! * separateItemQuantityList![index]);
+                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]);
                         }
 
                         if (snapshot.data!.docs.length - 1 == index) {
@@ -158,7 +155,7 @@ class _CartScreenState extends State<CartScreen> {
                         return CartItemDesign(
                           model: model,
                           context: context,
-                          quanNumber: separateItemQuantityList![index],
+                          quanNumber: seperateItemQuantityList![index],
                         );
                       },
                       childCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
@@ -169,25 +166,21 @@ class _CartScreenState extends State<CartScreen> {
             ),
         ],
       ),
-
       bottomNavigationBar: isCartEmpty
-          ? Container() // Set to null when the cart is empty
+          ? Container()
           : Container(
         height: 200.h,
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Color(0xFF890010), width: 1)
-
+          border: Border.all(color: Color(0xFF890010), width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.all(19.w),
           child: Column(
             children: [
               if (!isCartEmpty)
-              // Show cart total and buttons
                 Column(
                   children: [
-                    // Subtotal Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -211,8 +204,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ],
                     ),
-                   SizedBox(height: 6.h,),
-                    // Shipping Fee Row
+                    SizedBox(height: 6.h,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -225,7 +217,6 @@ class _CartScreenState extends State<CartScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-
                         Text(
                           "${defaultShippingFee.toStringAsFixed(2)}",
                           style: TextStyle(
@@ -278,12 +269,11 @@ class _CartScreenState extends State<CartScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.amber,
-                        minimumSize:  Size(140.w, 50.h),
+                        minimumSize: Size(140.w, 50.h),
                       ),
                       child: Text(
                         "Clear All",
-                        style: TextStyle(
-                            fontSize: 14.sp, fontFamily: "Poppins", color: Colors.white),
+                        style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins", color: Colors.white),
                       ),
                     ),
                     ElevatedButton(
@@ -292,11 +282,11 @@ class _CartScreenState extends State<CartScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF890010),
-                        minimumSize:  Size(110.w, 50.h),
+                        minimumSize: Size(110.w, 50.h),
                       ),
                       child: Text(
                         "Delete Selected",
-                        style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins",color: Colors.white),
+                        style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins", color: Colors.white),
                       ),
                     ),
                   ],
@@ -308,21 +298,20 @@ class _CartScreenState extends State<CartScreen> {
                       MaterialPageRoute(
                         builder: (c) => CheckOut(
                           totalAmount: totalAmount.toDouble(),
-                          sellersUID: widget.sellersUID, // Access sellersUID from widget
+                          sellersUID: widget.sellersUID,
                         ),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF890010),
-                    minimumSize:  Size(300.w, 50.h),
+                    minimumSize: Size(300.w, 50.h),
                   ),
                   child: Text(
                     "Check Out",
                     style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: Colors.white),
                   ),
                 ),
-
               ),
             ],
           ),
