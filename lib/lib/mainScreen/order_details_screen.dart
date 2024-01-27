@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -14,7 +16,8 @@ class OrderDetailsScreen extends StatefulWidget {
 
   final String? orderID;
 
-  OrderDetailsScreen({this.orderID});
+
+  OrderDetailsScreen({this.orderID, });
 
   @override
 
@@ -30,7 +33,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-
         child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
               .collection("users")
@@ -117,6 +119,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     builder: (context, snapshot) {
                       return snapshot.hasData
                           ? ShipmentAddressDesign(
+                        orderID: widget.orderID,
                         model: Address.fromJson(
                           snapshot.data!.data()!
                           as Map<String, dynamic>,

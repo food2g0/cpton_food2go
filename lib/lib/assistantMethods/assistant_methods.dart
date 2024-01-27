@@ -23,13 +23,12 @@ separateOrderItemIDs(orderId)
     //56557657
     String getItemId = (pos != -1) ? item.substring(0, pos) : item;
 
-    print("\nThis is itemID now = " + getItemId);
+
 
     separateItemIDsList.add(getItemId);
   }
 
-  print("\nThis is Items List now = ");
-  print(separateItemIDsList);
+
 
   return separateItemIDsList;
 }

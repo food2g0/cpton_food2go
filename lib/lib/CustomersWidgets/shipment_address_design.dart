@@ -1,6 +1,9 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 
@@ -11,8 +14,26 @@ import '../splashScreen/splash_screen.dart';
 
 class ShipmentAddressDesign extends StatefulWidget {
   final Address? model;
+  String? purchaserId;
+  String? sellerId;
+  String? orderID;
+  String? purchaserAddress;
+  double? purchaserLat;
 
-  ShipmentAddressDesign({this.model});
+  double? purchaserLng;
+  String? riderName;
+
+  ShipmentAddressDesign({
+    this.model,
+    this.purchaserId,
+    this.sellerId,
+    this.orderID,
+    this.purchaserAddress,
+    this.purchaserLat,
+
+    this.riderName,
+    this.purchaserLng,
+  });
 
   @override
   State<ShipmentAddressDesign> createState() => _ShipmentAddressDesignState();
@@ -26,9 +47,21 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
   void initState() {
     super.initState();
     _requestPermission();
-    // location.changeSettings(interval: 300, accuracy: loc.LocationAccuracy.high);
-    // location.enableBackgroundMode(enable: true);
   }
+
+  // Future<Map<String, dynamic>> fetchRiderLocation() async {
+  //   try {
+  //     DocumentSnapshot snapshot = await FirebaseFirestore.instance
+  //         .collection('orders')
+  //         .doc(widget.orderID!) // Assuming 'orderID' is the document ID
+  //         .get();
+  //
+  //     return snapshot.data() as Map<String, dynamic>;
+  //   } catch (e) {
+  //     print("Error fetching rider location: $e");
+  //     return {};
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +73,11 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
             padding: EdgeInsets.all(10.0),
             child: Text(
               'Shipping Details:',
-              style: TextStyle(color: Colors.black,fontFamily: "Poppins", fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(
@@ -57,7 +94,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                       "Name",
                       style: TextStyle(color: Colors.black),
                     ),
-                    Text(widget.model!.name!,style: TextStyle(fontFamily: "Poppins"),),
+                    Text(widget.model!.name!, style: TextStyle(fontFamily: "Poppins")),
                   ],
                 ),
                 TableRow(
@@ -66,14 +103,14 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                       "Phone Number",
                       style: TextStyle(color: Colors.black),
                     ),
-                    Text(widget.model!.phoneNumber!,style: TextStyle(fontFamily: "Poppins"),),
+                    Text(widget.model!.phoneNumber!, style: TextStyle(fontFamily: "Poppins")),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            height: 10.h,
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -84,96 +121,89 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
             ),
           ),
           Divider(thickness: 4,),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>  MyOrderScreen()));
-                },
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: Color(0xFF890010),),
-                  width: MediaQuery.of(context).size.width - 40,
-                  height: 50,
-                  child: const Center(
-                    child: Text(
-                      "Go Back",
-                      style: TextStyle(color: Colors.white, fontSize: 15.0,
-                      fontFamily: "Poppins"),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
 
-
-
-
-          StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('location').snapshots(),
+          Container(
+            height: 100.h,
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance.collection("location").limit(1).snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
                 return ListView.builder(
-                  shrinkWrap: true, // Set shrinkWrap to true
-                  itemCount: snapshot.data?.docs.length,
-                  itemBuilder: (context, index) {
-
-                    return ListTile(
-                      subtitle: Row(
-                        children: [
-                          Text(snapshot.data!.docs[index]['latitude']
-                              .toString()),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(snapshot.data!.docs[index]['longitude']
-                              .toString()),
-                        ],
-                      ),
-                      trailing: IconButton(
+                    itemCount: snapshot.data?.docs.length ?? 0,
+                    itemBuilder: (context, index) {
+                  if (snapshot.data?.docs == null || index >= snapshot.data!.docs.length) {
+                    return Container(); // or any other widget indicating the absence of data
+                  }
+                  return Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Center(
+                      child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MyMap(snapshot.data!.docs[index].id)));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => MyMap(
+                                user_id: snapshot.data!.docs[index].id,
+                              ),
+                            ),
+                          );
                         },
-                        icon: Icon(Icons.directions),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF31572c),
+                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.navigation_outlined, color: Color(0xFFFFFFFF)),
+                            Text(
+                              "Track Order",
+                              style: TextStyle(color: Colors.white, fontSize: 14.sp, fontFamily: "Poppins"),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                );
-              }),
-
-
+                    ),
+                  );
+                }
+    );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyOrderScreen(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: AppColors().red,
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_back, color: AppColors().white),
+                    Text(
+                      "Go Back",
+                      style: TextStyle(color: Colors.white, fontSize: 14.sp, fontFamily: "Poppins"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
-
-
-  Future<void> _listenLocation() async {
-    _locationSubscription = location.onLocationChanged.handleError((onError) {
-      print(onError);
-      _locationSubscription?.cancel();
-      setState(() {
-        _locationSubscription = null;
-      });
-    }).listen((loc.LocationData currentlocation) async {
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
-        'latitude': currentlocation.latitude,
-        'longitude': currentlocation.longitude,
-
-      }, SetOptions(merge: true));
-    });
-  }
-
-
-
 
   _requestPermission() async {
     var status = await Permission.location.request();

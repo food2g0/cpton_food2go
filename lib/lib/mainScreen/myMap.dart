@@ -6,9 +6,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
 
 class MyMap extends StatefulWidget {
+
+
   final String user_id;
 
-  MyMap(this.user_id);
+  MyMap({
+
+    required this.user_id,
+
+  });
 
   @override
   _MyMapState createState() => _MyMapState();
@@ -16,30 +22,71 @@ class MyMap extends StatefulWidget {
 
 class _MyMapState extends State<MyMap> {
   final loc.Location location = loc.Location();
-  late GoogleMapController _controller;
-  bool _added = false;
+  late double destinationLatitude;
+  late double destinationLongitude;
+  late double originlatitude;
+  late double originlongitude;
+  StreamSubscription<loc.LocationData>? _locationSubscription;
+  GoogleMapController? _googleMapController;
+  Marker? _origin;
 
-  StreamSubscription<QuerySnapshot>? _subscription;
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _subscription;
 
   @override
   void initState() {
     super.initState();
     _subscribeToLocationUpdates();
+    // _fetchLocationData(); // Add this line
   }
 
   @override
   void dispose() {
-    _subscription?.cancel();
+    _locationSubscription?.cancel(); // Add this line
     super.dispose();
   }
 
-  void _subscribeToLocationUpdates() {
-    _subscription = FirebaseFirestore.instance
+  Future<void> _subscribeToLocationUpdates() async {
+    FirebaseFirestore.instance
         .collection('location')
+        .doc(widget.user_id)
         .snapshots()
-        .listen((QuerySnapshot snapshot) {
-      mymap(snapshot);
+        .listen((DocumentSnapshot snapshot) {
+      _updateUserLocationOnMap(snapshot);
     });
+  }
+
+  Future<void> _updateUserLocationOnMap(DocumentSnapshot snapshot) async {
+    double originlatitude = snapshot['latitude1'];
+    double originlongitude = snapshot['longitude1'];
+
+    setState(() {
+      _origin = Marker(
+        markerId: const MarkerId('origin'),
+        infoWindow: const InfoWindow(title: 'Origin'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        position: LatLng(originlatitude, originlongitude),
+      );
+
+      if (_googleMapController != null) {
+        _googleMapController!.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(originlatitude, originlongitude),
+              zoom: 15.0,
+              tilt: 45.0,
+            ),
+          ),
+        );
+      }
+    });
+  }
+  Set<Marker> _getMarkers() {
+    final Set<Marker> markers = {};
+
+    if (_origin != null) markers.add(_origin!);
+
+
+    return markers;
   }
 
   @override
@@ -59,28 +106,16 @@ class _MyMapState extends State<MyMap> {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('location').snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                return GoogleMap(
-                  mapType: MapType.satellite,
-                  markers: createMarkers(context, snapshot),
-                  polylines: createPolylines(snapshot),
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['latitude'],
-                      snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['longitude'],
-                    ),
-                    zoom: 14.47,
-                  ),
-                  onMapCreated: (GoogleMapController controller) async {
-                    setState(() {
-                      _controller = controller;
-                      _added = true;
-                    });
-                  },
-                );
+            child: GoogleMap(
+              mapType: MapType.normal,
+              onMapCreated: (controller) {
+                _googleMapController = controller;
               },
+              markers: _getMarkers(),
+
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(0.0, 0.0),
+              ),
             ),
           ),
           Card(
@@ -94,7 +129,7 @@ class _MyMapState extends State<MyMap> {
                   color: Colors.black,
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
-                  fontFamily: "Poppins"
+                  fontFamily: "Poppins",
                 ),
               ),
             ),
@@ -104,57 +139,32 @@ class _MyMapState extends State<MyMap> {
     );
   }
 
-  Set<Marker> createMarkers(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    if (snapshot == null || !snapshot.hasData || snapshot.data!.docs.isEmpty) {
-      return Set(); // Return an empty set if no data or empty snapshot
-    }
 
-    final latitude = snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['latitude'];
-    final longitude = snapshot.data!.docs.singleWhere((element) => element.id == widget.user_id)['longitude'];
 
-    return {
-      Marker(
-        position: LatLng(latitude, longitude),
-        markerId: MarkerId('id'),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
-      ),
-    };
-  }
 
-  Set<Polyline> createPolylines(AsyncSnapshot<QuerySnapshot> snapshot) {
-    if (snapshot == null || !snapshot.hasData || snapshot.data!.docs.isEmpty) {
-      return Set(); // Return an empty set if no data or empty snapshot
-    }
+  // Future<void> _updateUserLocation(double latitude, double longitude) async {
+  //   try {
+  //     await FirebaseFirestore.instance.collection('location').doc(widget.user_id).set(
+  //       {
+  //         'latitude1': latitude,
+  //         'longitude1': longitude,
+  //       },
+  //       SetOptions(merge: true),
+  //     );
+  //   } catch (e) {
+  //     print("Error updating user location: $e");
+  //   }
+  // }
 
-    List<LatLng> polylinePoints = snapshot.data!.docs.map((doc) {
-      double latitude = doc['latitude'];
-      double longitude = doc['longitude'];
-      return LatLng(latitude, longitude);
-    }).toList();
 
-    final polylineId = PolylineId('route');
-    final polyline = Polyline(
-      polylineId: polylineId,
-      color: Colors.blue,
-      points: polylinePoints,
-    );
 
-    return {polyline};
-  }
-
-  Future<void> mymap(QuerySnapshot snapshot) async {
-    if (_controller != null) {
-      await _controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(
-              snapshot.docs.singleWhere((element) => element.id == widget.user_id)['latitude'],
-              snapshot.docs.singleWhere((element) => element.id == widget.user_id)['longitude'],
-            ),
-            zoom: 20,
-          ),
-        ),
-      );
-    }
-  }
+  // Future<void> _fetchLocationData() async {
+  //   try {
+  //     _locationSubscription = location.onLocationChanged.listen((loc.LocationData currentlocation) async {
+  //       await _updateUserLocation(currentlocation.latitude!, currentlocation.longitude!);
+  //     });
+  //   } catch (e) {
+  //     print("Error fetching location data: $e");
+  //   }
+  // }
 }
