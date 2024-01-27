@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
 
@@ -99,6 +100,7 @@ class _MyMapState extends State<MyMap> {
           style: TextStyle(
             color: Colors.white,
             fontFamily: "Poppins",
+            fontSize: 14.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
