@@ -8,13 +8,14 @@ import '../global/global.dart';
 import '../models/menus.dart';
 import 'cart_screen.dart';
 import 'food_page_body.dart';
-
+import 'chat_screen.dart'; // Import the ChatScreen
 
 class HomeScreen extends StatefulWidget {
   final dynamic model;
   final String? sellersUID;
   final BuildContext? context;
-  const HomeScreen({super.key, this.model, this.sellersUID, this.context});
+  const HomeScreen({Key? key, this.model, this.sellersUID, this.context})
+      : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -31,8 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
     // Initialize the _pages list here
     _pages = [
       const FoodPageBody(),
-      // Add more pages for other tabs as needed
-      // AnotherPage(),
+      PlaceholderWidget(label: 'Favorites'),
+      PlaceholderWidget(label: 'Notifications'),
+      ChatScreen(),
     ];
   }
 
@@ -47,13 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: // Check if it's not the ChatScreen
+           AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             color: Color(0xFF890010),
           ),
         ),
-        title:  Align(
+        title: Align(
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -74,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (c) => CartScreen(sellersUID: '',)));
-
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (c) => CartScreen(sellersUID: '',)));
                 },
                 icon: const Icon(
                   Icons.shopping_cart_rounded,
@@ -96,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         counter.count.toString(),
                         style: const TextStyle(
-                          color:  Color(0xFF890010),
+                          color: Color(0xFF890010),
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -104,15 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               )
-
             ],
           ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(80.h),
           child: Container(
-            margin:  EdgeInsets.all(7.w),
-            padding:  EdgeInsets.all(7.w),
+            margin: EdgeInsets.all(7.w),
+            padding: EdgeInsets.all(7.w),
             child: TextFormField(
               decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -128,27 +130,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
+      ) ,// If it's ChatScreen, set AppBar to null
       drawer: const CustomersDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 20.h,),
-
-
-
           Expanded(
-            child: SingleChildScrollView(
-              child: _pages[_selectedIndex],
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: _pages[_selectedIndex],
+              ),
             ),
           ),
         ],
       ),
-      bottomNavigationBar:  Theme(
+      bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor:
-          const Color(0xFF890010),
-        ),// Set the background color here
+          canvasColor: const Color(0xFF890010),
+        ),
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -181,6 +181,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           onTap: _onItemTapped,
         ),
+      ),
+    );
+
+  }
+}
+class PlaceholderWidget extends StatelessWidget {
+  final String label;
+
+  const PlaceholderWidget({Key? key, required this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Placeholder for $label Page',
+        style: TextStyle(fontSize: 20),
       ),
     );
   }

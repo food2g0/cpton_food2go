@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../mainScreen/order_details_screen.dart';
 import '../models/items.dart';
 
@@ -28,8 +30,8 @@ class OrderCard extends StatelessWidget {
         elevation: 2,
         child: Container(
           color: Colors.white70,
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(10.w),
+          margin: EdgeInsets.all(10.w),
           height: itemCount! * 125,
           child: ListView.builder(
             itemCount: itemCount,
@@ -46,79 +48,77 @@ class OrderCard extends StatelessWidget {
 }
 
 Widget placedOrderDesignWidget(Items model, BuildContext context, String seperateQuantitiesList, String? sellerName) {
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    height: 110,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Display seller's name
-        Row(
-          children: [
-            Image.network(model.thumbnailUrl!, width: 100,),
-            const SizedBox(width: 10.0,),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10,),
-                  Text(
-                    model.productTitle!,
-                    style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 12,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Display seller's name
+      Row(
+        children: [
+          Image.network(model.thumbnailUrl, width: 120.w,
+          fit: BoxFit.cover,),
+           SizedBox(width: 10.0.w,),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  (model!.productTitle.length > 12)
+                      ? ' ${model!.productTitle.substring(0, 12)}...'
+                      : ' ${model!.productTitle}',
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 5,),
+                Text(
+                  sellerName ?? '',
+                  style: const TextStyle(
+                      color: Colors.black45,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Poppins"
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      " Php ",
+                      style: TextStyle(fontSize: 12.sp, color: AppColors().red),
+                    ),
+                    Text(
+                      model.productPrice.toString(),
+                      style: TextStyle(
+                        color: AppColors().red,
+                        fontSize: 12.0.sp,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    const Text(
+                      "qty: x ",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 10,
+                      ),
+                    ),
+                    Text(
+                      seperateQuantitiesList,
+                      style:  TextStyle(
+                        color: Colors.black54,
+                        fontSize: 14.sp,
                         fontFamily: "Poppins",
-                        fontWeight: FontWeight.w600
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5,),
-                  Text(
-                    sellerName ?? '',
-                    style: const TextStyle(
-                        color: Colors.black45,
-                        fontSize: 9,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Poppins"
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        "Price: Php ",
-                        style: TextStyle(fontSize: 10.0, color: Colors.red),
-                      ),
-                      Text(
-                        model.productPrice.toString(),
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 10.0,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      const Text(
-                        "qty: x ",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 10,
-                        ),
-                      ),
-                      Text(
-                        seperateQuantitiesList,
-                        style: const TextStyle(
-                          color: Colors.black54,
-                          fontSize: 10,
-                          fontFamily: "Poppins",
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
-                ],
-              ),
+                  ],
+                ),
+                const SizedBox(height: 10,),
+              ],
             ),
-          ],
-        ),
-      ],
-    ),
+          ),
+        ],
+      ),
+    ],
   );
 }

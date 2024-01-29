@@ -3,11 +3,18 @@ import 'package:cpton_foodtogo/lib/CustomersWidgets/order_card.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/progress_bar.dart';
 import 'package:cpton_foodtogo/lib/assistantMethods/assistant_methods.dart';
 import 'package:cpton_foodtogo/lib/global/global.dart';
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../models/menus.dart';
 
 class MyOrderScreen extends StatefulWidget
 {
+  final Menus? model;
+
+  const MyOrderScreen({super.key, this.model});
   @override
   State<MyOrderScreen> createState() => _MyOrderScreenState();
 }
@@ -20,9 +27,9 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFF890010),
-          title: const Text(
+          title:  Text(
             "Orders",
-            style: TextStyle(fontFamily: "Poppins"),
+            style: TextStyle(fontFamily: "Poppins", fontSize: 16.sp, color: AppColors().white),
           ),
         ),
 
@@ -57,6 +64,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                         ? OrderCard(
                       itemCount: snap.data!.docs.length,
                       data: snap.data!.docs,
+                      sellerName: widget.model?.sellersName,
                       orderID: snapshot.data!.docs[index].id,
                       seperateQuantitiesList: separateOrderItemQuantities((snapshot.data!.docs[index].data()! as Map<String, dynamic>)["productsIDs"]),
                     )

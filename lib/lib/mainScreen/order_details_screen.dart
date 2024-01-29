@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import '../CustomersWidgets/progress_bar.dart';
@@ -26,6 +27,7 @@ class OrderDetailsScreen extends StatefulWidget {
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   String orderStatus = "";
+  int defaultShippingFee = 50;
 
 
 
@@ -55,29 +57,29 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     status: dataMap!["isSuccess"],
                     orderStatus: orderStatus,
                   ),
-                  const SizedBox(height: 10.0),
+                  SizedBox(height: 5.0.h),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding:  EdgeInsets.all(4.0.w),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Total Amount Php " + dataMap["totalAmount"].toString(),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        "Total Amount Php ${(dataMap["totalAmount"] + defaultShippingFee).toStringAsFixed(2)}", // Add defaultShippingFee here
+                        style:  TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w700,
                           fontFamily: "Poppins",
                         ),
                       ),
                     ),
                   ),
                    Padding(
-                     padding: const EdgeInsets.all(8.0),
+                     padding: EdgeInsets.all(4.0.w),
                      child: Align(
                        alignment: Alignment.centerLeft,
                        child: Text(
                           "Order Id = " + widget.orderID!,
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style:  TextStyle(
+                            fontSize: 12.sp,
                             fontFamily: "Poppins",
                           ),
                         ),
@@ -85,7 +87,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                    ),
 
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding:  EdgeInsets.all(4.0.w),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -95,8 +97,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                   int.parse(dataMap["orderTime"]),
                                 ),
                               ),
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style: TextStyle(
+                            fontSize: 12.sp,
                             color: Colors.grey,
                             fontFamily: "Poppins",
                           ),

@@ -19,47 +19,46 @@ class CustomersDrawer extends StatelessWidget {
       child: ListView(
         children: [
           Container(
-            color: Colors.black87, // Set your desired background color here
-            padding:  EdgeInsets.only(top: 25, bottom: 10).r,
+            color: Colors.black87,
+            padding: EdgeInsets.only(top: 25, bottom: 10).r,
             child: Column(
               children: [
-                // Header of the drawer
                 Material(
-                  borderRadius:  BorderRadius.all(Radius.circular(80.w)),
+                  borderRadius: BorderRadius.all(Radius.circular(80.w)),
                   elevation: 10,
                   child: Padding(
-                    padding:  EdgeInsets.all(1.0.w),
+                    padding: EdgeInsets.all(1.0.w),
                     child: SizedBox(
                       height: 100.h,
                       width: 100.w,
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                            sharedPreferences!.getString("photoUrl").toString()
+                          sharedPreferences!.getString("customerImageUrl") ?? 'default_image_url',
                         ),
 
                       ),
                     ),
                   ),
                 ),
-
-                 SizedBox(height: 30.h),
+                SizedBox(height: 30.h),
                 Align(
                   alignment: Alignment.centerLeft,
-                 child: Padding(
-                   padding:  EdgeInsets.symmetric(horizontal: 16.w),
-                 child: Text(
-                  capitalize (sharedPreferences!.getString("name")!),
-                  style:  TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontFamily: "Roboto",
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Text(
+                      capitalize(sharedPreferences!.getString("name")!),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
                   ),
-                ),
-                 )
                 ),
               ],
             ),
           ),
+
           //body drawer
           ListTile(
             leading: const Icon(

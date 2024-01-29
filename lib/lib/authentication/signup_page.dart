@@ -71,12 +71,13 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<void> formValidation() async {
     if (imageXFile == null) {
       showDialog(
-          context: context,
-          builder: (c) {
-            return const ErrorDialog(
-              message: "Please select an image.",
-            );
-          });
+        context: context,
+        builder: (c) {
+          return const ErrorDialog(
+            message: "Please select an image.",
+          );
+        },
+      );
     } else {
       if (passwordController.text == confirmPasswordController.text) {
         if (confirmPasswordController.text.isNotEmpty &&
@@ -84,14 +85,15 @@ class _SignUpPageState extends State<SignUpPage> {
             nameController.text.isNotEmpty &&
             phoneController.text.isNotEmpty &&
             locationController.text.isNotEmpty) {
-          //start uploading image
+          // Start uploading image
           showDialog(
-              context: context,
-              builder: (c) {
-                return const LoadingDialog(
-                  message: "Registering Account",
-                );
-              });
+            context: context,
+            builder: (c) {
+              return const LoadingDialog(
+                message: "Registering Account",
+              );
+            },
+          );
 
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
           fStorage.Reference reference = fStorage.FirebaseStorage.instance
@@ -99,36 +101,47 @@ class _SignUpPageState extends State<SignUpPage> {
               .child("customer")
               .child(fileName);
           fStorage.UploadTask uploadTask =
-              reference.putFile(File(imageXFile!.path));
-          fStorage.TaskSnapshot taskSnapshot =
-              await uploadTask.whenComplete(() {});
-          await taskSnapshot.ref.getDownloadURL().then((url) {
-            customerImageUrl = url;
+          reference.putFile(File(imageXFile!.path));
+          fStorage.TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
 
-            //save info to firestore
+          try {
+            customerImageUrl = await taskSnapshot.ref.getDownloadURL();
+            // Save info to Firestore
             authenticateSellerAndSignUp();
-          });
-        } else {
-          showDialog(
+          } catch (error) {
+            Navigator.pop(context);
+            showDialog(
               context: context,
               builder: (c) {
-                return const ErrorDialog(
-                  message:
-                      "Please write the complete required info for Registration.",
+                return ErrorDialog(
+                  message: "Error uploading image: $error",
                 );
-              });
-        }
-      } else {
-        showDialog(
+              },
+            );
+          }
+        } else {
+          showDialog(
             context: context,
             builder: (c) {
               return const ErrorDialog(
-                message: "Password do not match.",
+                message: "Please write the complete required info for Registration.",
               );
-            });
+            },
+          );
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (c) {
+            return const ErrorDialog(
+              message: "Password do not match.",
+            );
+          },
+        );
       }
     }
   }
+
 
   void authenticateSellerAndSignUp() async {
     User? currentUser;
@@ -166,7 +179,7 @@ class _SignUpPageState extends State<SignUpPage> {
       "customersUID": currentUser.uid,
       "customersEmail": currentUser.email,
       "customersName": nameController.text.trim(),
-      "photoUrl": customerImageUrl,
+      "customerImageUrl": customerImageUrl,
       "phone": phoneController.text.trim(),
       "address": completeAddress,
       "status": "approved",
@@ -177,15 +190,15 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     // Save data locally
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString("phone", phoneController.text);
-    sharedPreferences.setString("uid", currentUser.uid);
-    sharedPreferences.setString("address", completeAddress);
-    sharedPreferences.setString("lat", (position?.latitude ?? 0.0).toString());
-    sharedPreferences.setString("email", currentUser.email.toString());
-    sharedPreferences.setString("name", nameController.text.trim());
-    sharedPreferences.setString("photoUrl", customerImageUrl);
-    sharedPreferences.setStringList("userCart", ['garbageValue']);
+     sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences!.setString("phone", phoneController.text);
+    sharedPreferences!.setString("uid", currentUser.uid);
+    sharedPreferences!.setString("address", completeAddress);
+    sharedPreferences!.setString("lat", (position?.latitude ?? 0.0).toString());
+    sharedPreferences!.setString("email", currentUser.email.toString());
+    sharedPreferences!.setString("name", nameController.text.trim());
+    sharedPreferences!.setString("customerImageUrl", customerImageUrl);
+    sharedPreferences!.setStringList("userCart", ['garbageValue']);
   }
 
 

@@ -72,54 +72,54 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
           const Padding(
             padding: EdgeInsets.all(10.0),
             child: Text(
-              'Shipping Details:',
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: "Poppins",
-                fontWeight: FontWeight.bold,
-              ),
+                'Shipping Details:',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "Poppins")
             ),
           ),
-          const SizedBox(
-            height: 6.0,
+           SizedBox(
+            height: 6.0.h,
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 5),
+            padding:  EdgeInsets.symmetric(horizontal: 30.w, vertical: 5.h),
             width: MediaQuery.of(context).size.width,
             child: Table(
               children: [
                 TableRow(
                   children: [
-                    const Text(
-                      "Name",
-                      style: TextStyle(color: Colors.black),
+                   Text(
+                      "Name : ",
+                      style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),
                     ),
-                    Text(widget.model!.name!, style: TextStyle(fontFamily: "Poppins")),
+                    Text(widget.model!.name!,style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),),
                   ],
                 ),
                 TableRow(
                   children: [
-                    const Text(
-                      "Phone Number",
-                      style: TextStyle(color: Colors.black),
+                     Text(
+                      "Phone Number : ",
+                      style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),
                     ),
-                    Text(widget.model!.phoneNumber!, style: TextStyle(fontFamily: "Poppins")),
+                    Text(widget.model!.phoneNumber!,  style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp), ),
                   ],
                 ),
               ],
             ),
           ),
-          SizedBox(
-            height: 10.h,
+          const SizedBox(
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(
               widget.model!.fullAddress!,
-              textAlign: TextAlign.justify,
-              style: TextStyle(fontFamily: "Poppins"),
+              style: TextStyle(
+                fontFamily: "Poppins",
+                fontSize: 12.sp,
+              ),
             ),
           ),
+
+
           Divider(thickness: 4,),
 
           Container(
@@ -137,7 +137,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                     return Container(); // or any other widget indicating the absence of data
                   }
                   return Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8.w),
                     child: Center(
                       child: ElevatedButton(
                         onPressed: () {
