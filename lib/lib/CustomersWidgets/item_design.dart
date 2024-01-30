@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../assistantMethods/assistant_methods.dart';
 import '../mainScreen/item_details_screen.dart';
+import '../theme/colors.dart';
 
 
 
@@ -28,8 +29,8 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
         padding: EdgeInsets.all(4.0.w),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Color(0xFF890010), width: 1.0), // Add border styling
+            color: AppColors().white,
+            border: Border.all(color: AppColors().red, width: 1.0), // Add border styling
           ),
           width: MediaQuery.of(context).size.width,
           child: Column(
@@ -60,7 +61,7 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
                             child: Icon(
                               Icons.fastfood,
                               size: 16.sp,
-                              color: Colors.amber,
+                              color: AppColors().yellow,
                             ),
                           ),
                         ),
@@ -68,7 +69,7 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
                           text: ' ${widget.model!.productTitle}',
                           style: TextStyle(
                             fontSize: 16.sp,
-                            color: Colors.black87,
+                            color: AppColors().black,
                             fontWeight: FontWeight.w700,
                             overflow: TextOverflow.ellipsis,
                             fontFamily: "Poppins",
@@ -132,11 +133,11 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.red[900],
-                        borderRadius: BorderRadius.circular(8.0),
+                        color: AppColors().red,
+                        borderRadius: BorderRadius.circular(8.0.w),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0.w),
                         child: Icon(
                           Icons.shopping_cart,
                           size: 20.sp,

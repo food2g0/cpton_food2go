@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-
 import '../assistantMethods/assistant_methods.dart';
 import '../mainScreen/item_details_screen.dart';
-import 'dimensions.dart';
+import '../theme/colors.dart';
 
 
 class CardDesignWidget extends StatefulWidget {
@@ -29,8 +27,8 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
         padding: EdgeInsets.all(4.0.w),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Color(0xFF890010), width: 1.0), // Add border styling
+            color: AppColors().white,
+            border: Border.all(color: AppColors().red, width: 1.0), // Add border styling
           ),
           width: MediaQuery.of(context).size.width,
           child: Column(
@@ -42,7 +40,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                   aspectRatio: 3 / 4,
                   child: Image.network(
                     widget.model!.thumbnailUrl!,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -61,7 +59,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                             child: Icon(
                               Icons.fastfood,
                               size: 16.sp,
-                              color: Colors.amber,
+                              color: AppColors().yellow,
                             ),
                           ),
                         ),
@@ -69,7 +67,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                           text: ' ${widget.model!.productTitle}',
                           style: TextStyle(
                             fontSize: 16.sp,
-                            color: Colors.black87,
+                            color: AppColors().black,
                             fontWeight: FontWeight.w700,
                             overflow: TextOverflow.ellipsis,
                             fontFamily: "Poppins",
@@ -94,7 +92,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                             child: Icon(
                               Icons.currency_ruble,
                               size: 16.sp,
-                              color: Colors.green,
+                              color: AppColors().green,
                             ),
                           ),
                         ),
@@ -133,15 +131,15 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.red[900],
-                        borderRadius: BorderRadius.circular(8.0),
+                        color:AppColors().red,
+                        borderRadius: BorderRadius.circular(8.0.w),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0.w),
                         child: Icon(
                           Icons.shopping_cart,
                           size: 20.sp,
-                          color: Colors.white,
+                          color: AppColors().white,
                         ),
                       ),
                     ),

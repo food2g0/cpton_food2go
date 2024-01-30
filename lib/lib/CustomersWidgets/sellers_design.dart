@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../mainScreen/menu_screen.dart';
 import '../models/menus.dart';
+import '../theme/colors.dart';
 import 'dimensions.dart';
 
 class InfoDesignWidget extends StatefulWidget {
@@ -35,7 +36,7 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
               width: containerWidth,
               height: containerHeight,
               child: Container(
-                color: Colors.white,
+                color: AppColors().white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -51,13 +52,13 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                     Center(
                       child: Container(
                         padding:  EdgeInsets.all(8.0.w),
-                        color: Colors.white,
+                        color: AppColors().white,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                           Icon(
                               Icons.fastfood, // Replace with your desired icon
-                              color: Color(0xFF890010),
+                              color: AppColors().red,
                               size: 12.sp,
                             ),
                            SizedBox(width: 4.w), // Add spacing between the icon and text
@@ -65,7 +66,7 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                               child: Text(
                                 widget.model!.sellersName!,
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: AppColors().black,
                                   fontFamily: "Poppins",
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12.sp,

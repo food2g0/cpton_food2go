@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
@@ -24,6 +25,25 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   TextEditingController counterTextEditingController = TextEditingController();
   bool isCartEmpty = separateItemIDs().isEmpty;
   int cartItemCount = 0;
+  late String customersUID; // Declare customersUID without initialization
+
+  @override
+  void initState() {
+    super.initState();
+    customersUID = getCurrentUserUID(); // Initialize customersUID in initState
+    print('Debug: customersUID in initState: $customersUID');
+  }
+
+  String getCurrentUserUID() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.uid;
+    } else {
+      print('Debug: User is not signed in. Returning default UID.');
+      return 'default_uid';
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -155,14 +175,19 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                 ),
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.topRight,
+                            GestureDetector(
+                              onTap: () {
+                                // Add item to favorites when tapped
+                                addToFavorites(widget.model.productsID, customersUID); // Replace 'user123' with the actual user ID
+                                // You can get the user ID from your authentication system
+                              },
                               child: Icon(
                                 Icons.favorite_border,
                                 size: 30.0.sp,
                                 color: Colors.red,
                               ),
                             ),
+
                           ],
                         ),
 
@@ -195,7 +220,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                 Icon(Icons.star, color: Colors.amber, size: 15.h),
                                 Icon(Icons.star, color: Colors.amber, size: 15.h),
                                 Icon(Icons.star, color: Colors.amber, size: 15.h),
-                                SizedBox(width: Dimensions.height10),
+                                SizedBox(width: 10.w),
                                 Text(
                                   '4.5',
                                   style: TextStyle(
@@ -389,4 +414,21 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       ),
     );
   }
+  Future<void> addToFavorites(String productId, String customersUID) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(customersUID)
+          .collection('items')
+          .doc(productId)
+          .set({
+        'productId': productId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      print('Item added to favorites');
+    } catch (e) {
+      print('Error adding item to favorites: $e');
+    }
+  }
+
 }

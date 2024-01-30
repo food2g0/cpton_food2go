@@ -1,11 +1,10 @@
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/customers_drawer.dart';
-import '../CustomersWidgets/dimensions.dart';
 import '../assistantMethods/cart_item_counter.dart';
 import '../global/global.dart';
-import '../models/menus.dart';
 import 'cart_screen.dart';
 import 'food_page_body.dart';
 import 'chat_screen.dart'; // Import the ChatScreen
@@ -52,8 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: // Check if it's not the ChatScreen
            AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFF890010),
+          decoration: BoxDecoration(
+            color: AppColors().red,
           ),
         ),
         title: Align(
@@ -63,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(
               sharedPreferences!.getString("name")!,
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors().white,
                 fontSize: 16.sp,
                 fontFamily: "Poppins",
               ),
@@ -80,9 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (c) => CartScreen(sellersUID: '',)));
                 },
-                icon: const Icon(
+                icon:  Icon(
                   Icons.shopping_cart_rounded,
-                  color: Colors.white,
+                  color: AppColors().white,
                 ),
               ),
               Positioned(
@@ -91,15 +90,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Consumer<CartItemCounter>(
                   builder: (context, counter, c) {
                     return Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white,
+                        color: AppColors().white,
                       ),
                       padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
                       child: Text(
                         counter.count.toString(),
-                        style: const TextStyle(
-                          color: Color(0xFF890010),
+                        style: TextStyle(
+                          color: AppColors().red,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -117,12 +116,12 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.all(7.w),
             child: TextFormField(
               decoration: InputDecoration(
-                fillColor: Colors.white,
+                fillColor: AppColors().white,
                 contentPadding: EdgeInsets.symmetric(vertical: 16.h),
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30.w)),
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: BorderSide(color: AppColors().white,),
                 ),
                 hintText: "Search...",
                 prefixIcon: Icon(Icons.search),
@@ -147,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: const Color(0xFF890010),
+          canvasColor: AppColors().red,
         ),
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -169,8 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: const Color(0xFFFBCD42),
-          unselectedItemColor: Colors.white,
+          selectedItemColor: AppColors().yellow,
+          unselectedItemColor: AppColors().white,
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.bold,
             fontFamily: "Poppins",
@@ -196,7 +195,7 @@ class PlaceholderWidget extends StatelessWidget {
     return Center(
       child: Text(
         'Placeholder for $label Page',
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20.sp),
       ),
     );
   }

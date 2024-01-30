@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import '../models/menus.dart';
-import 'dimensions.dart';
+import '../theme/colors.dart';
 
 class CartItemDesign extends StatelessWidget {
   final Menus? model;
@@ -27,17 +26,17 @@ class CartItemDesign extends StatelessWidget {
           child: Container(
 
             decoration: BoxDecoration(
-              color: Colors.white,
+              color:AppColors().white,
               borderRadius: BorderRadius.circular(10.w),
-              border: Border.all(color: Color(0xFF890010), width: 1), // Add this line for the border
+              border: Border.all(color: AppColors().red, width: 1), // Add this line for the border
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Image
                 Container(
-                  width: 140,
-                  height: 120,
+                  width: 140.w,
+                  height: 120.h,
                   decoration: BoxDecoration(
                     borderRadius:  BorderRadius.only(
                       topLeft: Radius.circular(10.w),
@@ -45,7 +44,7 @@ class CartItemDesign extends StatelessWidget {
                     ),
                     image: DecorationImage(
                       image: NetworkImage(model!.thumbnailUrl!),
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -59,16 +58,19 @@ class CartItemDesign extends StatelessWidget {
                     children: [
                        SizedBox(height: 8.h),
                       Text(
-                        model!.productTitle!,
-                        style:  TextStyle(
+                        model!.productTitle!.length <= 20
+                            ? model!.productTitle!
+                            : model!.productTitle!.substring(0, 20) + '...',
+                        style: TextStyle(
                           color: Colors.black,
                           fontSize: 12.sp,
                           fontFamily: "Poppins",
-                          fontWeight: FontWeight.w700
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
 
-                       SizedBox(height: 5.h),
+
+                      SizedBox(height: 5.h),
                       // Quantity
                       Row(
                         children: [

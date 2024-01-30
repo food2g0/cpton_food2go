@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../CustomersWidgets/item_design.dart';
@@ -9,6 +10,7 @@ import '../CustomersWidgets/item_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../models/items.dart';
 import '../models/menus.dart';
+import '../theme/colors.dart';
 
 class categoryScreen extends StatefulWidget {
   final Menus? model;
@@ -34,7 +36,7 @@ class _categoryScreenState extends State<categoryScreen> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              expandedHeight: 200.0,
+              expandedHeight: 200.0.h,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               pinned: true,
@@ -46,20 +48,20 @@ class _categoryScreenState extends State<categoryScreen> {
             const SliverToBoxAdapter(),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.w),
                 child: Card(
                   elevation: 4.0, // Adjust the elevation as needed
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+                    borderRadius: BorderRadius.circular(12.0.w),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0.w),
                     child: Text(
                       '${widget.model!.menuTitle}',
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color: AppColors().black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 18.sp,
                       ),
                     ),
                   ),

@@ -10,6 +10,7 @@ import '../CustomersWidgets/progress_bar.dart';
 import '../assistantMethods/cart_item_counter.dart';
 import '../models/items.dart';
 import '../models/menus.dart';
+import '../theme/colors.dart';
 import 'cart_screen.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -41,7 +42,7 @@ class _MenuScreenState extends State<MenuScreen> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              expandedHeight: 200.0,
+              expandedHeight: 200.0.h,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               pinned: true,
@@ -89,15 +90,15 @@ class _MenuScreenState extends State<MenuScreen> {
                       child: Consumer<CartItemCounter>(
                         builder: (context, counter, c) {
                           return Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.white,
+                              color: AppColors().white,
                             ),
                             padding:  EdgeInsets.all(4.0.w), // Adjust the padding as needed
                             child: Text(
                               counter.count.toString(),
-                              style: const TextStyle(
-                                color: Colors.red,
+                              style:  TextStyle(
+                                color: AppColors().red,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
@@ -116,9 +117,9 @@ class _MenuScreenState extends State<MenuScreen> {
                 child: Container(
 
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors().white,
                     borderRadius: BorderRadius.circular(10.w),
-                    border: Border.all(color: Color(0xFF890010), width: 1),
+                    border: Border.all(color: AppColors().red, width: 1),
 
                   ),
                   child: Padding(
@@ -140,13 +141,13 @@ class _MenuScreenState extends State<MenuScreen> {
                             Icon(
                               Icons.store,
                               size: 16.sp,
-                              color: Colors.amber,
+                              color: AppColors().yellow,
                             ),
                             Text(
                               ' ${widget.model!.sellersName}',
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: Colors.black87,
+                                color: AppColors().black,
                                 fontWeight: FontWeight.w700,
                                 overflow: TextOverflow.ellipsis,
                                 fontFamily: "Poppins",
@@ -159,13 +160,13 @@ class _MenuScreenState extends State<MenuScreen> {
                             Icon(
                               Icons.pin_drop,
                               size: 16.sp,
-                              color: Colors.red,
+                              color: AppColors().red,
                             ),
                             Text(
                               '${widget.model!.sellersAddress}'.substring(0, 30) + '...', // Truncate text to 20 characters
                               style: TextStyle(
                                 fontSize: 12.sp,
-                                color: Colors.black87,
+                                color: AppColors().black,
                                 fontWeight: FontWeight.w500,
                                 overflow: TextOverflow.ellipsis,
                                 fontFamily: "Poppins",
@@ -187,7 +188,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   'Category',
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    color: Colors.black,
+                    color: AppColors().black,
                     fontWeight: FontWeight.bold,
                     fontSize: 16.sp,
                   ),
@@ -236,7 +237,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   'Items',
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    color: Colors.black,
+                    color: AppColors().black,
                     fontWeight: FontWeight.bold,
                     fontSize: 18.sp,
                   ),

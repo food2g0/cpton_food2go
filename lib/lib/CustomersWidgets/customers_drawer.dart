@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../authentication/auth_screen.dart';
 import '../global/global.dart';
+import '../mainScreen/favoriteScreen.dart';
 
 class CustomersDrawer extends StatelessWidget {
   const CustomersDrawer({super.key });
@@ -97,7 +98,7 @@ class CustomersDrawer extends StatelessWidget {
             ),
             title: const Text("Favorites"),
             onTap: () {
-              // Handle the Favorites item tap
+              Navigator.push(context, MaterialPageRoute(builder: (c)=> FavoritesScreen()));
             },
           ),
           ListTile(
