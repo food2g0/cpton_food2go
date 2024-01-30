@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Items {
   final String productsID;
   final String menuID;
@@ -7,8 +9,10 @@ class Items {
   final int productPrice;
   final int productQuantity;
   final String thumbnailUrl;
+  Timestamp timestamp;
 
   Items({
+    required this.timestamp,
     required this.productsID,
     required this.menuID,
     required this.sellersUID,
@@ -38,6 +42,7 @@ class Items {
       productPrice: productPrice ?? this.productPrice,
       productQuantity: productQuantity ?? this.productQuantity,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      timestamp: timestamp,
     );
   }
 
@@ -56,14 +61,17 @@ class Items {
 
   factory Items.fromJson(Map<String, dynamic> json) {
     return Items(
-      productsID: json['productsID'],
-      menuID: json['menuID'],
-      sellersUID: json['sellersUID'],
-      productDescription: json['productDescription'],
-      productTitle: json['productTitle'],
-      productPrice: json['productPrice'],
-      productQuantity: json['productQuantity'],
-      thumbnailUrl: json['thumbnailUrl'],
+      productsID: json['productsID'] ,
+      menuID: json['menuID'] ?? '',
+      sellersUID: json['sellersUID'] ?? '',
+      productDescription: json['productDescription'] ?? '',
+      productTitle: json['productTitle'] ?? '',
+      productPrice: json['productPrice'] ?? 0,
+      productQuantity: json['productQuantity'] ?? 0,
+      thumbnailUrl: json['thumbnailUrl'] ?? '',
+      timestamp: json['timestamp'] ?? Timestamp.now(), // Use the appropriate default value
     );
   }
+
+
 }

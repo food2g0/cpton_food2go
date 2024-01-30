@@ -1,3 +1,4 @@
+import 'package:cpton_foodtogo/lib/mainScreen/favoriteScreen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Initialize the _pages list here
     _pages = [
       const FoodPageBody(),
-      PlaceholderWidget(label: 'Favorites'),
+      FavoritesScreen(),
       PlaceholderWidget(label: 'Notifications'),
       ChatScreen(),
     ];
@@ -130,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ) ,// If it's ChatScreen, set AppBar to null
-      drawer: const CustomersDrawer(),
+      drawer:  CustomersDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -414,19 +415,44 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       ),
     );
   }
-  Future<void> addToFavorites(String productId, String customersUID) async {
+  Future<void> addToFavorites(String productsID, String customersUID) async {
     try {
       await FirebaseFirestore.instance
           .collection('favorites')
           .doc(customersUID)
           .collection('items')
-          .doc(productId)
+          .doc(productsID)
           .set({
-        'productId': productId,
+        'productsID': widget.model.productsID,
+        'thumbnailUrl': widget.model.thumbnailUrl,
+        'productTitle': widget.model.productTitle,
+        'productPrice': widget.model.productPrice,
+        'productQuantity': widget.model.productQuantity,
+        'productDescription': widget.model.productDescription,
+        'menuID': widget.model.menuID,
+        'sellersUID': widget.model.sellersUID,
+
+
         'timestamp': FieldValue.serverTimestamp(),
       });
+      Fluttertoast.showToast(
+        msg: 'Item added to favorites',
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: AppColors().red,
+        textColor: Colors.white,
+        fontSize: 12.sp
+      );
+
       print('Item added to favorites');
     } catch (e) {
+      // Show a toast message for the error
+      Fluttertoast.showToast(
+        msg: 'Error adding item to favorites: $e',
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+
       print('Error adding item to favorites: $e');
     }
   }

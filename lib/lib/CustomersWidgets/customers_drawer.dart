@@ -7,7 +7,7 @@ import '../global/global.dart';
 import '../mainScreen/favoriteScreen.dart';
 
 class CustomersDrawer extends StatelessWidget {
-  const CustomersDrawer({super.key });
+ const CustomersDrawer({super.key });
 
   String capitalize(String text) {
     if (text.isEmpty) return text;
@@ -16,6 +16,7 @@ class CustomersDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String imageUrl = sharedPreferences!.getString("customerImageUrl") ?? 'default_image_url';
     return Drawer(
       child: ListView(
         children: [
@@ -33,13 +34,13 @@ class CustomersDrawer extends StatelessWidget {
                       height: 100.h,
                       width: 100.w,
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          sharedPreferences!.getString("customerImageUrl") ?? 'default_image_url',
-                        ),
-
+                        backgroundImage: imageUrl.isNotEmpty
+                            ? NetworkImage(imageUrl)
+                            : AssetImage('images/img.png') as ImageProvider,
                       ),
                     ),
                   ),
+
                 ),
                 SizedBox(height: 30.h),
                 Align(

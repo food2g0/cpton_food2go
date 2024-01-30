@@ -78,7 +78,6 @@ class _AuthScreenState extends State<AuthScreen> {
             await sharedPreferences!.setString("uid", currentUser.uid);
             await sharedPreferences!.setString("email", snapshot.data()!["customersEmail"]);
             await sharedPreferences!.setString("name", snapshot.data()!["customersName"]);
-
             List<String> userCartList = snapshot.data()!['userCart'].cast<String>();
             await sharedPreferences!.setStringList("userCart", userCartList );
 

@@ -44,7 +44,6 @@ class _CartScreenState extends State<CartScreen> {
 
     // Check if the cart is empty
     bool isCartEmpty = separateItemQuantities().isEmpty;
-    print("Is Cart Empty: $isCartEmpty");
 
     return Scaffold(
       backgroundColor: Colors.white70,

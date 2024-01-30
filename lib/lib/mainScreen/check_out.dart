@@ -16,6 +16,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../global/global.dart';
+import 'my_order_screen.dart';
 
 class CheckOut extends StatefulWidget {
   final double? totalAmount;
@@ -64,7 +65,7 @@ class _CheckOutState extends State<CheckOut> {
       clearCartNow(context);
       setState(() {
         orderId = "";
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PlacedOrderScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyOrderScreen()));
         Fluttertoast.showToast(msg: "Congratulations, order placed successfully! ");
       });
     });
@@ -240,7 +241,7 @@ class _CheckOutState extends State<CheckOut> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (c) => PlacedOrderScreen(
+                    builder: (c) => MyOrderScreen(
                       addressID: widget.addressId,
                       totalAmount: widget.totalAmount,
                       sellerUID: widget.sellersUID,
