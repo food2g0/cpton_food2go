@@ -32,28 +32,41 @@ class _ChatScreenState extends State<ChatScreen> {
           print('Sender Email from chat_rooms: $receiverId');
         }
 
-        return Container(
-          height: MediaQuery.of(context).size.height,
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    return FutureBuilder<Widget>(
-                      future: _buildUserListItem(snapshot.data!.docs[index]),
-                      builder: (context, userItemSnapshot) {
-                        if (userItemSnapshot.connectionState == ConnectionState.done) {
-                          return userItemSnapshot.data!;
-                        } else {
-                          return const Text('Loading user item...');
-                        }
-                      },
-                    );
-                  },
-                  childCount: snapshot.data!.docs.length,
-                ),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Messages',style:
+              TextStyle(fontFamily: "Poppins",
+              fontSize: 14.sp,
+              color: AppColors().white),),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                color: AppColors().red,
               ),
-            ],
+            ),
+          ),
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return FutureBuilder<Widget>(
+                        future: _buildUserListItem(snapshot.data!.docs[index]),
+                        builder: (context, userItemSnapshot) {
+                          if (userItemSnapshot.connectionState == ConnectionState.done) {
+                            return userItemSnapshot.data!;
+                          } else {
+                            return const Text('Loading user item...');
+                          }
+                        },
+                      );
+                    },
+                    childCount: snapshot.data!.docs.length,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
