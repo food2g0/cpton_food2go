@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/global/global.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
@@ -9,8 +11,10 @@ class RatingScreen extends StatefulWidget {
   String? riderUID;
   String? productsID;
   String? sellerUID;
+  String? orderID;
 
   RatingScreen({
+    this.orderID,
     this.productsID,
     this.riderUID,
     this.sellerUID,
@@ -133,6 +137,7 @@ class _RatingScreenState extends State<RatingScreen> {
             ElevatedButton(
               onPressed: () {
                 submitRating();
+                confirmParcelHasBeenDelivered();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors().green,
@@ -174,7 +179,7 @@ class _RatingScreenState extends State<RatingScreen> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(MaterialPageRoute(builder: (c)=> HomeScreen()));
 
                 },
                 child: Text("OK"),
@@ -204,4 +209,30 @@ class _RatingScreenState extends State<RatingScreen> {
       );
     }
   }
-}
+  confirmParcelHasBeenDelivered() {
+    String? customerUID = FirebaseAuth.instance.currentUser?.uid;
+
+    if (customerUID != null) {
+      FirebaseFirestore.instance
+          .collection("orders")
+          .doc(widget.orderID)
+          .update({
+        "status": "rated",
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(customerUID)
+            .collection("orders")
+            .doc(widget.orderID)
+            .update({
+          "status": "rated",
+          "riderUID": sharedPreferences!.getString("uid"),
+        });
+      });
+    } else {
+      // Handle the case where the current user ID is null
+      print("Current user ID is null");
+    }
+  }
+
+  }

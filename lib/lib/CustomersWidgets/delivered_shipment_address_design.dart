@@ -185,6 +185,7 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
     DocumentSnapshot orderSnapshot = await FirebaseFirestore.instance
         .collection("orders").doc(widget.orderID).get();
     if (orderSnapshot.exists) {
+      var orderID = orderSnapshot["orderId"];
       var riderUID = orderSnapshot["riderUID"];
       var productsIDs = orderSnapshot["productsIDs"];
       var sellerUID = orderSnapshot["sellerUID"];
@@ -211,6 +212,7 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
           context,
           MaterialPageRoute(
             builder: (context) => RatingScreen(
+              orderID: orderID,
               riderUID: riderUID,
               productsID: productsIDString,
               sellerUID: sellerUID,
