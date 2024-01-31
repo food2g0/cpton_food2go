@@ -55,6 +55,7 @@ dependencies:
   location: ^5.0.3
   permission_handler: ^11.2.0
   flutter_screenutil: ^5.9.0
+  smooth_star_rating_null_safety: ^1.0.4+2
 
 
 dev_dependencies:

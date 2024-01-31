@@ -49,19 +49,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
     _requestPermission();
   }
 
-  // Future<Map<String, dynamic>> fetchRiderLocation() async {
-  //   try {
-  //     DocumentSnapshot snapshot = await FirebaseFirestore.instance
-  //         .collection('orders')
-  //         .doc(widget.orderID!) // Assuming 'orderID' is the document ID
-  //         .get();
-  //
-  //     return snapshot.data() as Map<String, dynamic>;
-  //   } catch (e) {
-  //     print("Error fetching rider location: $e");
-  //     return {};
-  //   }
-  // }
+
 
   @override
   Widget build(BuildContext context) {

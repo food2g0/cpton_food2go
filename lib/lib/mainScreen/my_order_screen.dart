@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/CustomersWidgets/delivered_order_card.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,7 +27,7 @@ class MyOrderScreen extends StatefulWidget {
 }
 
 class _MyOrderScreenState extends State<MyOrderScreen> {
-  final List<String> _tabs = ['Normal', 'Picking', 'Delivered'];
+  final List<String> _tabs = ['To Pay', 'Picking', 'Delivered'];
   int _selectedIndex = 0;
 
   @override
@@ -66,6 +67,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
               _buildOrderListNormal('To Pay'),
               _buildOrderListAccepted('Picking'),
               _buildOrderListDelivered('Delivered'),
+
             ],
           ),
           bottomNavigationBar: Theme(
@@ -137,6 +139,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                   data: snap.data!.docs,
                   sellerName: widget.model?.sellersName,
                   orderID: snapshot.data!.docs[index].id,
+                  status: status,
                   seperateQuantitiesList: separateOrderItemQuantities((snapshot.data!.docs[index].data()! as Map<String, dynamic>)["productsIDs"]),
                 )
                     : Center(child: circularProgress());
@@ -176,6 +179,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                   data: snap.data!.docs,
                   sellerName: widget.model?.sellersName,
                   orderID: snapshot.data!.docs[index].id,
+                  status: status,
                   seperateQuantitiesList: separateOrderItemQuantities((snapshot.data!.docs[index].data()! as Map<String, dynamic>)["productsIDs"]),
                 )
                     : Center(child: circularProgress());
@@ -210,11 +214,12 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                   .get(),
               builder: (context, snap) {
                 return snap.hasData
-                    ? OrderCard(
+                    ? DeliveredOrderCard(
                   itemCount: snap.data!.docs.length,
                   data: snap.data!.docs,
                   sellerName: widget.model?.sellersName,
                   orderID: snapshot.data!.docs[index].id,
+                  status: status,
                   seperateQuantitiesList: separateOrderItemQuantities((snapshot.data!.docs[index].data()! as Map<String, dynamic>)["productsIDs"]),
                 )
                     : Center(child: circularProgress());
@@ -226,6 +231,8 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
       },
     );
   }
+
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -241,29 +248,29 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
         break;
-      // case 1:
-      // // Navigate to Favorites
-      // // Replace PlaceholderWidget with the actual widget for Favorites
+      case 1:
+      // Navigate to Favorites
+      // Replace PlaceholderWidget with the actual widget for Favorites
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FavoritesScreen()),
+        );
+        break;
+      case 2:
+      // Navigate to Notifications
+      // Replace PlaceholderWidget with the actual widget for Notifications
       //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => PlaceholderWidget(label: 'Favorites')),
+      //     // context,
+      //     // MaterialPageRoute(builder: (context) => PlaceholderWidget(label: 'Notifications')),
       //   );
-      //   break;
-      // case 2:
-      // // Navigate to Notifications
-      // // Replace PlaceholderWidget with the actual widget for Notifications
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => PlaceholderWidget(label: 'Notifications')),
-      //   );
-      //   break;
-      // case 3:
-      // // Navigate to ChatScreen
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => PlaceholderWidget(label: 'Notifications')),
-      //   );
-      //   break;
+        break;
+      case 3:
+      // Navigate to ChatScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ChatScreen()),
+        );
+        break;
     }
   }
 }

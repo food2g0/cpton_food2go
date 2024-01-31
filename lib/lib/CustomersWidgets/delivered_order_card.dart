@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/delivered_order_details_screen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../mainScreen/order_details_screen.dart';
 import '../models/items.dart';
 
-class OrderCard extends StatelessWidget {
+class DeliveredOrderCard extends StatelessWidget {
   final int? itemCount;
   final List<DocumentSnapshot>? data;
   final String? orderID;
@@ -13,7 +14,7 @@ class OrderCard extends StatelessWidget {
   final String? sellerName;
   final String status; // Added status parameter
 
-  OrderCard({
+  DeliveredOrderCard({
     this.itemCount,
     this.data,
     this.orderID,
@@ -26,7 +27,7 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => OrderDetailsScreen(orderID: orderID)));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => DeliveredOrderDetailsScreen(orderID: orderID)));
       },
       child: Card(
         elevation: 2,
