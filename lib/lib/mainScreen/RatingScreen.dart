@@ -159,7 +159,7 @@ class _RatingScreenState extends State<RatingScreen> {
       await FirebaseFirestore.instance.collection("riders").doc(widget.riderUID).collection("ridersRecord").add({
         "productsID": widget.productsID,
         "sellerUID": widget.sellerUID,
-        "rating": countRatingStars.toString(),
+        "rating": countRatingStars,
         "comment": commentController.text,
         // Add other fields as needed
       });
