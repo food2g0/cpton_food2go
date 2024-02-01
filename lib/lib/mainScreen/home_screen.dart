@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
                 currentIndex: _selectedIndex,
-                selectedItemColor: AppColors().yellow,
+                selectedItemColor: AppColors().red,
                 unselectedItemColor: AppColors().white,
                 selectedLabelStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -114,184 +114,189 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } else {
       // If it's the HomeScreen, show the Scaffold with AppBar
-      return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: AppColors().white,
+      return WillPopScope(
+        onWillPop: () async{
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                color: AppColors().white,
+              ),
             ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Text(
+                      sharedPreferences!.getString("name")!,
+                      style: TextStyle(
+                        color: AppColors().black,
+                        fontSize: 12.sp,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Text(
+                        "Welcome to Food2Go",
+                      style: TextStyle(
+                        color: AppColors().black1, // Adjust color as needed
+                        fontSize: 10.sp, // Adjust font size as needed
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            centerTitle: false,
+            automaticallyImplyLeading: true,
+            actions: [
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (c) => CartScreen(sellersUID: '',)));
+                    },
+                    icon:  Icon(
+                      Icons.shopping_cart_rounded,
+                      color: AppColors().red,
+                    ),
+                  ),
+                  Positioned(
+                    top: 2,
+                    right: 2,
+                    child: Consumer<CartItemCounter>(
+                      builder: (context, counter, c) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors().white,
+                          ),
+                          padding: EdgeInsets.all(4.0.w),
+                          child: Text(
+                            counter.count.toString(),
+                            style: TextStyle(
+                              color: AppColors().red,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(80.h),
+              child: Card(
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.w),
+                ),
+                margin: EdgeInsets.all(7.w),
+                color: Colors.white, // Set the background color for the Card
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Text(
-                    sharedPreferences!.getString("name")!,
-                    style: TextStyle(
-                      color: AppColors().black,
-                      fontSize: 12.sp,
-                      fontFamily: "Poppins",
+                  padding: EdgeInsets.symmetric(horizontal: 0.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 16.h),
+                      filled: true,
+                      fillColor: Colors.white, // Set the background color to match the Card
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.w),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: "Search...",
+                      prefixIcon: Icon(Icons.search),
                     ),
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Text(
-                      "Welcome to Food2Go",
-                    style: TextStyle(
-                      color: AppColors().black1, // Adjust color as needed
-                      fontSize: 10.sp, // Adjust font size as needed
-                      fontFamily: "Poppins",
-                    ),
-                  ),
+            ),
+
+
+
+
+          ),
+          drawer:  CustomersDrawer(),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20.h),
+              Expanded(
+                child: SafeArea(
+                  child: _pages[_selectedIndex],
                 ),
               ),
             ],
           ),
-
-          centerTitle: false,
-          automaticallyImplyLeading: true,
-          actions: [
-            Stack(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (c) => CartScreen(sellersUID: '',)));
-                  },
-                  icon:  Icon(
-                    Icons.shopping_cart_rounded,
-                    color: AppColors().red,
+          bottomNavigationBar: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: AppColors().black,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(10.0),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors().red,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
                   ),
                 ),
-                Positioned(
-                  top: 2,
-                  right: 2,
-                  child: Consumer<CartItemCounter>(
-                    builder: (context, counter, c) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors().white,
-                        ),
-                        padding: EdgeInsets.all(4.0.w),
-                        child: Text(
-                          counter.count.toString(),
-                          style: TextStyle(
-                            color: AppColors().red,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
-          ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(80.h),
-            child: Card(
-              elevation: 4.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.w),
-              ),
-              margin: EdgeInsets.all(7.w),
-              color: Colors.white, // Set the background color for the Card
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0.w),
-                child: TextField(
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16.h),
-                    filled: true,
-                    fillColor: Colors.white, // Set the background color to match the Card
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.w),
-                      borderSide: BorderSide.none,
+                child: BottomNavigationBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_outlined),
+                      label: 'Home',
                     ),
-                    hintText: "Search...",
-                    prefixIcon: Icon(Icons.search),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.favorite_border),
+                      label: 'Favorites',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.notifications_on_rounded),
+                      label: 'Notification',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.chat_bubble_outline),
+                      label: 'Messages',
+                    ),
+                  ],
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: AppColors().red,
+                  unselectedItemColor: AppColors().white,
+                  selectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Poppins",
                   ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontFamily: "Poppins",
+                  ),
+                  onTap: _onItemTapped,
                 ),
               ),
             ),
           ),
 
-
-
-
         ),
-        drawer:  CustomersDrawer(),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20.h),
-            Expanded(
-              child: SafeArea(
-                child: _pages[_selectedIndex],
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            canvasColor: AppColors().black,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.0),
-              topRight: Radius.circular(10.0),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors().red,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0),
-                ),
-              ),
-              child: BottomNavigationBar(
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home_outlined),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.favorite_border),
-                    label: 'Favorites',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.notifications_on_rounded),
-                    label: 'Notification',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.chat_bubble_outline),
-                    label: 'Messages',
-                  ),
-                ],
-                currentIndex: _selectedIndex,
-                selectedItemColor: AppColors().yellow,
-                unselectedItemColor: AppColors().white,
-                selectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Poppins",
-                ),
-                unselectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontFamily: "Poppins",
-                ),
-                onTap: _onItemTapped,
-              ),
-            ),
-          ),
-        ),
-
       );
     }
   }

@@ -114,7 +114,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                 Text(
                   "All Products",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: AppColors().black,
                     fontSize: 12.sp,
                     fontFamily: "Poppins",
                     fontWeight: FontWeight.bold,

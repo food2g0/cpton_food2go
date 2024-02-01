@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import '../assistantMethods/assistant_methods.dart';
 import '../mainScreen/item_details_screen.dart';
@@ -61,7 +62,7 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                             child: Icon(
                               Icons.fastfood,
                               size: 16.sp,
-                              color: AppColors().yellow,
+                              color: AppColors().red,
                             ),
                           ),
                         ),
@@ -83,6 +84,22 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                 ),
               ),
               SizedBox(height: 5),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: SmoothStarRating(
+                    allowHalfRating: false,
+                    starCount: 5,
+                    size: 10.sp,
+                    rating: 5,
+                    color: AppColors().yellow,
+                    borderColor: AppColors().black,
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Container(
