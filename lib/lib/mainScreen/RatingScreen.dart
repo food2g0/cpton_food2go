@@ -119,7 +119,7 @@ class _RatingScreenState extends State<RatingScreen> {
                   ),
                   child: TextField(
                     controller: commentController,
-                    maxLines: 3,
+                    maxLines: 5,
                     maxLength: 200,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h), // Add padding here
