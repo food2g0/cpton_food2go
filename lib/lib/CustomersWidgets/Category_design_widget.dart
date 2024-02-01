@@ -27,25 +27,25 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
       },
       child: Padding(
         padding: EdgeInsets.all(4.0.w),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors().white,
-            border: Border.all(color: AppColors().red, width: 1.0), // Add border styling
-          ),
-          width: MediaQuery.of(context).size.width,
+        child: Card(
+          elevation: 2,
           child: Column(
             children: [
               SizedBox(
-                height: 100.h,
+                height: 150.h,
                 width: 200.w,
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
-                  child: Image.network(
-                    widget.model!.thumbnailUrl!,
-                    fit: BoxFit.fitWidth,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0), // You can adjust the radius as needed
+                    child: Image.network(
+                      widget.model!.thumbnailUrl!,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
+
               SizedBox(height: 10.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -115,41 +115,8 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                   ),
                 ),
               ),
-              SizedBox(height: 10.h,),
-              Padding(
-                padding: EdgeInsets.all(8.0.w),
-                child: Container(
-                  height: 40.h,
-                  width: 150.w,
-                  child: InkWell(
-                    onTap: () {
-                      int itemCounter = 1;
 
-                      List<String> separateItemIDsList = separateItemIDs();
-                      if (separateItemIDsList.contains(widget.model.productsID)) {
-                        Fluttertoast.showToast(msg: "Item is already in the cart");
-                      } else {
-                        // Add to cart
-                        addItemToCart(widget.model.productsID, context, itemCounter);
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors().red,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.shopping_cart,
-                          size: 20.sp,
-                          color: AppColors().white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+
             ],
           ),
         ),

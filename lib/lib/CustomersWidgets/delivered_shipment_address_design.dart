@@ -211,7 +211,7 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RatingScreen(
+            builder: (context) => DriverRatingScreen(
               orderID: orderID,
               riderUID: riderUID,
               productsID: productsIDString,

@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/global/global.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
-import 'package:cpton_foodtogo/lib/mainScreen/seller_rating_screen.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/product_rating_screen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
-class DriverRatingScreen extends StatefulWidget {
+class SellerRatingScreen extends StatefulWidget {
   String? riderUID;
   String? productsID;
   String? sellerUID;
   String? orderID;
 
-  DriverRatingScreen({
+  SellerRatingScreen({
     this.orderID,
     this.productsID,
     this.riderUID,
@@ -22,10 +22,10 @@ class DriverRatingScreen extends StatefulWidget {
   });
 
   @override
-  State<DriverRatingScreen> createState() => _DriverRatingScreenState();
+  State<SellerRatingScreen> createState() => _SellerRatingScreenState();
 }
 
-class _DriverRatingScreenState extends State<DriverRatingScreen> {
+class _SellerRatingScreenState extends State<SellerRatingScreen> {
   TextEditingController commentController = TextEditingController();
 
   @override
@@ -48,7 +48,7 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Rate your Rider",
+              "Rate your Seller",
               style: TextStyle(
                 fontSize: 16.sp,
                 fontFamily: "Poppins",
@@ -138,7 +138,6 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
             ElevatedButton(
               onPressed: () {
                 submitRating();
-                confirmParcelHasBeenDelivered();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors().green,
@@ -162,7 +161,7 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
 
   void submitRating() async {
     try {
-      await FirebaseFirestore.instance.collection("riders").doc(widget.riderUID).collection("ridersRecord").add({
+      await FirebaseFirestore.instance.collection("sellers").doc(widget.sellerUID).collection("sellersRecord").add({
         "productsID": widget.productsID,
         "sellerUID": widget.sellerUID,
         "rating": countRatingStars,
@@ -181,7 +180,7 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=>SellerRatingScreen(sellerUID: widget.sellerUID,
+                  Navigator.push(context, MaterialPageRoute(builder: (c)=>ProductRatingScreen(sellerUID: widget.sellerUID,
                     productsID: widget.productsID, riderUID: widget.riderUID, orderID: widget.orderID,
                   )));
 
@@ -204,6 +203,7 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+
                 },
                 child: Text("OK"),
               ),

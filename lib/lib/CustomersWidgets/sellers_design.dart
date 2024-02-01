@@ -25,18 +25,16 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
 
     return SizedBox(
       child: Container(
-        color: Colors.white,
         child: InkWell(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (c) => MenuScreen(model: widget.model, sellersName: widget.model!.sellersName,)));
           },
           child: Padding(
-            padding:  EdgeInsets.all(13.0.w),
+            padding:  EdgeInsets.all(12.0.w),
             child: SizedBox(
-              width: containerWidth,
+              width: 250.w,
               height: containerHeight,
               child: Container(
-                color: AppColors().white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -52,7 +50,6 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                     Center(
                       child: Container(
                         padding:  EdgeInsets.all(8.0.w),
-                        color: AppColors().white,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

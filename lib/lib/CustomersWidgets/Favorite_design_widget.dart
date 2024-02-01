@@ -42,7 +42,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
           child: Column(
             children: [
               SizedBox(
-                height: 150.h,
+                height: 155.h,
                 width: MediaQuery.of(context).size.width,
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
@@ -72,7 +72,9 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                           ),
                         ),
                         TextSpan(
-                          text: ' ${widget.model!.productTitle}',
+                          text:  widget.model!.productTitle!.length <= 14
+                              ? widget.model!.productTitle!
+                              : widget.model!.productTitle!.substring(0, 14) + '...',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: AppColors().black,
