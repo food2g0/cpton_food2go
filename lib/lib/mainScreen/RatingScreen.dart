@@ -112,17 +112,17 @@ class _RatingScreenState extends State<RatingScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: Container(
-                  height: 90.h,
+                  height: 100.h,
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors().red, width: 1.0),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextField(
                     controller: commentController,
-                    maxLines: 3,
+                    maxLines: 5,
                     maxLength: 200,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h), // Add padding here
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h), // Add padding here
                       hintText: 'Add your comment...',
                       border: InputBorder.none,
                     ),
