@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../authentication/auth_screen.dart';
 import '../global/global.dart';
 import '../mainScreen/home_screen.dart';
+import '../theme/colors.dart';
 
 
 class CustomersDrawer extends StatelessWidget {
@@ -19,6 +20,7 @@ class CustomersDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     String imageUrl = sharedPreferences!.getString("customerImageUrl") ?? 'default_image_url';
     return Drawer(
+      backgroundColor: AppColors().white,
       child: ListView(
         children: [
           Container(

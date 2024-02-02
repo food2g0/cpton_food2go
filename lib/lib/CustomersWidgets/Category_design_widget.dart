@@ -33,7 +33,7 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
           child: Column(
             children: [
               SizedBox(
-                height: 150.h,
+                height: 120.h,
                 width: 200.w,
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
@@ -77,7 +77,6 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                             fontFamily: "Poppins",
                           ),
                         ),
-
                       ],
                     ),
                   ),

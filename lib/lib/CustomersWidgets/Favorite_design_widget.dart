@@ -42,7 +42,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
           child: Column(
             children: [
               SizedBox(
-                height: 155.h,
+                height: 125.h,
                 width: MediaQuery.of(context).size.width,
                 child: AspectRatio(
                   aspectRatio: 3 / 4,

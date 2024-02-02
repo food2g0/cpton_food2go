@@ -120,9 +120,11 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
+
+            iconTheme: IconThemeData(color: AppColors().white),
             flexibleSpace: Container(
               decoration: BoxDecoration(
-                color: AppColors().white,
+                color: AppColors().black,
               ),
             ),
             title: Column(
@@ -130,29 +132,23 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Text(
-                      sharedPreferences!.getString("name")!,
-                      style: TextStyle(
-                        color: AppColors().black,
-                        fontSize: 12.sp,
-                        fontFamily: "Poppins",
-                      ),
+                  child: Text(
+                    sharedPreferences!.getString("name")!,
+                    style: TextStyle(
+                      color: AppColors().white,
+                      fontSize: 12.sp,
+                      fontFamily: "Poppins",
                     ),
                   ),
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Text(
-                        "Welcome to Food2Go",
-                      style: TextStyle(
-                        color: AppColors().black1, // Adjust color as needed
-                        fontSize: 10.sp, // Adjust font size as needed
-                        fontFamily: "Poppins",
-                      ),
+                  child: Text(
+                      "Welcome to Food2Go",
+                    style: TextStyle(
+                      color: AppColors().black1, // Adjust color as needed
+                      fontSize: 10.sp, // Adjust font size as needed
+                      fontFamily: "Poppins",
                     ),
                   ),
                 ),
@@ -171,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     icon:  Icon(
                       Icons.shopping_cart_rounded,
-                      color: AppColors().red,
+                      color: AppColors().white,
                     ),
                   ),
                   Positioned(
@@ -232,6 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           ),
           drawer:  CustomersDrawer(),
+
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

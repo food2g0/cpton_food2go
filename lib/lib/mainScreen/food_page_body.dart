@@ -140,8 +140,7 @@ SizedBox(height: 10.h,),
                     crossAxisCount: 2, // Number of items in each row
                     crossAxisSpacing: 8.0, // Spacing between items horizontally
                     mainAxisSpacing: 8.0,
-                    childAspectRatio: 0.8,
-                    // Spacing between items vertically
+                    childAspectRatio: 0.8, // Spacing between items vertically
                   ),
                   itemCount: data.length,
                   itemBuilder: (context, index) {
