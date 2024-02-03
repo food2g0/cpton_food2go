@@ -108,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(child:
           MyTextField(
             controller: _messageController,
-            hint: 'Enter your Message',
+            hint: 'Enter your Message', keyboardType: TextInputType.text,
           ),
           ),
           IconButton(onPressed: sendMessage,

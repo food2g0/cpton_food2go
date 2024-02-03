@@ -277,8 +277,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                   currentIndex: _selectedIndex,
-                  selectedItemColor: AppColors().red,
-                  unselectedItemColor: AppColors().white,
+                  selectedItemColor: AppColors().white,
+                  unselectedItemColor: AppColors().red,
                   selectedLabelStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontFamily: "Poppins",
@@ -371,7 +371,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
         ),
       ),
-
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('favorites')
@@ -385,12 +384,26 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             List<Items> itemsList = snapshot.data!.docs.map((doc) {
               return Items.fromJson(doc.data() as Map<String, dynamic>);
             }).toList();
+
+            if (itemsList.isEmpty) {
+              return Center(
+                child: Text(
+                  'No items in favorites.',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors().black1
+                  ),
+                ),
+              );
+            }
+
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Number of items in each row
-                crossAxisSpacing: 10.0, // Spacing between items horizontally
+                crossAxisCount: 2,
+                crossAxisSpacing: 10.0,
                 mainAxisSpacing: 10.0,
-                childAspectRatio: 0.67, // Spacing between items vertically
+                childAspectRatio: 0.67,
               ),
               itemCount: itemsList.length,
               itemBuilder: (context, index) {
@@ -409,6 +422,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       ),
     );
   }
+
 }
 
 class NotificationScreen extends StatelessWidget {

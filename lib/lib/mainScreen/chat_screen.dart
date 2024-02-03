@@ -16,94 +16,54 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Widget _buildUserList() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection("chat_rooms").snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Error');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text('Loading....');
-        }
-
-        for (QueryDocumentSnapshot doc in snapshot.data!.docs) {
-          final receiverId = doc['receiverId'];
-          print('Sender Email from chat_rooms: $receiverId');
-        }
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Messages',style:
-              TextStyle(fontFamily: "Poppins",
-              fontSize: 14.sp,
-              color: AppColors().white),),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                color: AppColors().red,
-              ),
-            ),
+  Widget _buildUserList(QuerySnapshot snapshot) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Messages',
+          style: TextStyle(
+            fontFamily: "Poppins",
+            fontSize: 14.sp,
+            color: AppColors().white,
           ),
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return FutureBuilder<Widget>(
-                        future: _buildUserListItem(snapshot.data!.docs[index]),
-                        builder: (context, userItemSnapshot) {
-                          if (userItemSnapshot.connectionState == ConnectionState.done) {
-                            return userItemSnapshot.data!;
-                          } else {
-                            return const Text('Loading user item...');
-                          }
-                        },
-                      );
-                    },
-                    childCount: snapshot.data!.docs.length,
-                  ),
-                ),
-              ],
-            ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            color: AppColors().red,
           ),
-        );
-      },
+        ),
+      ),
+      body: ListView.builder(
+        itemCount: snapshot.docs.length,
+        itemBuilder: (context, index) {
+          return _buildUserListItem(snapshot.docs[index]);
+        },
+      ),
     );
   }
 
-  Future<Widget> _buildUserListItem(QueryDocumentSnapshot document) async {
-    final sellersUID = document['receiverId'];
+  Widget _buildUserListItem(QueryDocumentSnapshot document) {
+    final sellerData = document.data() as Map<String, dynamic>;
+    final sellersUID = sellerData['sellersUID'];
 
-    final sellersSnapshot = await FirebaseFirestore.instance
-        .collection('sellers')
-        .where(sellersUID)
-        .get();
-
-    if (sellersSnapshot.docs.isNotEmpty) {
-      final sellerData = sellersSnapshot.docs.first.data() as Map<String, dynamic>;
-
-      if (_auth.currentUser!.email != sellerData['sellersEmail']) {
-        final sellersUID = sellerData['sellersUID'];
-        if (sellersUID is String) {
-          return ListTile(
-            title: Text(sellerData['sellersEmail']),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (c) => ChatPage(
-                    receiverUserEmail: sellerData['sellersEmail'],
-                    receiverUserID: sellersUID,
-                  ),
+    if (_auth.currentUser!.email != sellerData['sellersEmail']) {
+      if (sellersUID is String) {
+        return ListTile(
+          title: Text(sellerData['sellersEmail']),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (c) => ChatPage(
+                  receiverUserEmail: sellerData['sellersEmail'],
+                  receiverUserID: sellersUID,
                 ),
-              );
-            },
-          );
-        } else {
-          print('sellersUID is not a String: $sellersUID');
-        }
+              ),
+            );
+          },
+        );
+      } else {
+        print('sellersUID is not a String: $sellersUID');
       }
     }
 
@@ -112,6 +72,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildUserList();
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text('Loading....');
+        }
+
+        return _buildUserList(snapshot.data!);
+      },
+    );
   }
 }
+

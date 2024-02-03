@@ -1,12 +1,25 @@
-import 'package:flutter/cupertino.dart';
+// text_field.dart
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class MyTextField extends StatefulWidget {
   final String? hint;
   final TextEditingController? controller;
+  final TextInputType keyboardType;
+  final FocusNode? focusNode;
 
-  MyTextField({this.hint, this.controller});
+  MyTextField({
+    this.hint,
+    this.controller,
+    required this.keyboardType,
+    this.focusNode,
+  });
 
+  @override
+  _MyTextFieldState createState() => _MyTextFieldState();
+}
+
+class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,20 +27,21 @@ class MyTextField extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.black, // Change the border color as needed
-            width: 1.0, // Adjust the border width
+            color: AppColors().black,
+            width: 1.0,
           ),
-          borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
+          borderRadius: BorderRadius.circular(8.0),
         ),
         child: TextFormField(
-          controller: controller,
+          controller: widget.controller,
+          keyboardType: widget.keyboardType,
+          focusNode: widget.focusNode,
           decoration: InputDecoration(
-            hintText: hint,
-            contentPadding: EdgeInsets.all(10), // Adjust padding as needed
-            border: InputBorder.none, // Remove the default border
+            hintText: widget.hint,
+            contentPadding: EdgeInsets.all(10),
+            border: InputBorder.none,
           ),
-          validator: (value) =>
-          value!.isEmpty ? "Field cannot be empty" : null,
+          validator: (value) => value!.isEmpty ? "Field cannot be empty" : null,
         ),
       ),
     );
