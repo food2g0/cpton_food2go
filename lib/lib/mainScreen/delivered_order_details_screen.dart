@@ -28,7 +28,7 @@ class DeliveredOrderDetailsScreen extends StatefulWidget {
 
 class _DeliveredOrderDetailsScreenState extends State<DeliveredOrderDetailsScreen> {
   String orderStatus = "";
-  int defaultShippingFee = 50;
+
 
 
 
@@ -64,7 +64,7 @@ class _DeliveredOrderDetailsScreenState extends State<DeliveredOrderDetailsScree
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Total Amount Php ${(dataMap["totalAmount"] + defaultShippingFee).toStringAsFixed(2)}", // Add defaultShippingFee here
+                        "Total Amount Php ${(dataMap["totalAmount"]).toStringAsFixed(2)}", // Add defaultShippingFee here
                         style:  TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w700,
