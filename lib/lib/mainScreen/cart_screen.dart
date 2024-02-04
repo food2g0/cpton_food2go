@@ -14,8 +14,9 @@ import '../models/menus.dart';
 
 class CartScreen extends StatefulWidget {
   final String? sellersUID;
+  final Menus? model;
 
-  const CartScreen({super.key, required this.sellersUID});
+  const CartScreen({Key? key, this.sellersUID, this.model}) : super(key: key);
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -24,25 +25,18 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   bool isEditing = false;
   List<int>? seperateItemQuantityList;
-  num totalAmount = 0;
 
   @override
   void initState() {
     super.initState();
-
-    totalAmount = 0;
-    Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(0);
-
     seperateItemQuantityList = separateItemQuantities();
   }
 
   @override
   Widget build(BuildContext context) {
-
     double defaultShippingFee = 50.0;
     double totalAmount = Provider.of<TotalAmount>(context).tAmount + defaultShippingFee;
 
-    // Check if the cart is empty
     bool isCartEmpty = separateItemQuantities().isEmpty;
 
     return Scaffold(
@@ -73,7 +67,6 @@ class _CartScreenState extends State<CartScreen> {
       body: CustomScrollView(
         slivers: [
           if (isCartEmpty)
-          // Show an empty cart message and "Continue Shopping" button
             SliverToBoxAdapter(
               child: Container(
                 alignment: Alignment.center,
@@ -115,7 +108,6 @@ class _CartScreenState extends State<CartScreen> {
               ),
             )
           else
-          // Display cart items with quantity number
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("items")
@@ -152,6 +144,13 @@ class _CartScreenState extends State<CartScreen> {
                           model: model,
                           context: context,
                           quanNumber: seperateItemQuantityList![index],
+                          onQuantityChanged: (newQuantity) {
+                            double newTotalAmount = model.productPrice! * newQuantity.toDouble();
+                            Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(newTotalAmount);
+
+                            // Print the totalAmount
+                            print("Total Amount: ${Provider.of<TotalAmount>(context, listen: false).tAmount}");
+                          },
                         );
                       },
                       childCount: snapshot.hasData ? snapshot.data!.docs.length : 0,

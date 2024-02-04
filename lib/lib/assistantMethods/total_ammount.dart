@@ -1,17 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
-class TotalAmount extends ChangeNotifier
-{
+class TotalAmount extends ChangeNotifier {
   double _totalAmount = 0;
   double get tAmount => _totalAmount;
 
-  displayTotalAmount(double number) async
-  {
+  void displayTotalAmount(double number) {
     _totalAmount = number;
-    
-    await Future.delayed(const Duration(milliseconds: 100), ()
-        {
-          notifyListeners();
-        });
+    notifyListeners(); // Notify listeners immediately without delay
   }
 }

@@ -1,19 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../assistantMethods/assistant_methods.dart';
+import '../assistantMethods/total_ammount.dart';
 import '../models/menus.dart';
 import '../theme/colors.dart';
 
-class CartItemDesign extends StatelessWidget {
+class CartItemDesign extends StatefulWidget {
   final Menus? model;
   final int? quanNumber;
   final BuildContext? context;
+  final Function(int) onQuantityChanged;
 
   const CartItemDesign({
-    super.key,
+    Key? key,
     this.model,
     this.quanNumber,
     this.context,
-  });
+    required this.onQuantityChanged,
+  }) : super(key: key);
+
+  @override
+  _CartItemDesignState createState() => _CartItemDesignState();
+}
+
+class _CartItemDesignState extends State<CartItemDesign> {
+  late int quantity;
+  late CartManager cartManager;
+
+  @override
+  void initState() {
+    super.initState();
+    quantity = widget.quanNumber ?? 0;
+    _initializeCartManager();
+
+  }
+
+  void _initializeCartManager() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    cartManager = CartManager(sharedPreferences);
+  }
+
+  void _incrementQuantity() {
+    setState(() {
+      quantity++;
+      _updateQuantityInDatabase();
+      print("Total Quantity: $quantity");
+      widget.onQuantityChanged(quantity);
+      Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(calculateTotalAmount());
+    });
+  }
+
+  void _decrementQuantity() {
+    if (quantity > 0) {
+      setState(() {
+        quantity--;
+        _updateQuantityInDatabase();
+        print("Total Quantity: $quantity");
+        widget.onQuantityChanged(quantity);
+        Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(calculateTotalAmount());
+      });
+    }
+  }
+  double calculateTotalAmount() {
+    double totalAmount = 0;
+    // Calculate totalAmount based on the updated quantity
+    totalAmount += (widget.model!.productPrice! * quantity);
+
+    // Add any additional calculations (shipping fee, taxes, etc.) here
+    totalAmount += 50.0; // Example: Adding a shipping fee
+
+    return totalAmount;
+  }
+
+  void _updateQuantityInDatabase() {
+    String? productId = widget.model!.productsID;
+    cartManager.updateItemQuantity(productId!, quantity);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,43 +88,39 @@ class CartItemDesign extends StatelessWidget {
           height: 120.h,
           width: double.infinity,
           child: Container(
-
             decoration: BoxDecoration(
-              color:AppColors().white,
+              color: AppColors().white,
               borderRadius: BorderRadius.circular(10.w),
-              border: Border.all(color: AppColors().red, width: 1), // Add this line for the border
+              border: Border.all(color: AppColors().red, width: 1),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image
                 Container(
                   width: 140.w,
                   height: 120.h,
                   decoration: BoxDecoration(
-                    borderRadius:  BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10.w),
                       bottomLeft: Radius.circular(10.w),
                     ),
                     image: DecorationImage(
-                      image: NetworkImage(model!.thumbnailUrl!),
+                      image: NetworkImage(widget.model!.thumbnailUrl!),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-             SizedBox(width: 8.w),
-
-                // Title, Quantity, Price
+                SizedBox(width: 8.w),
                 Padding(
-                  padding: const EdgeInsets.all(8.0).w,
+                  padding: EdgeInsets.all(1.0).w,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       SizedBox(height: 8.h),
+                      SizedBox(height: 8.h),
                       Text(
-                        model!.productTitle!.length <= 20
-                            ? model!.productTitle!
-                            : model!.productTitle!.substring(0, 20) + '...',
+                        widget.model!.productTitle!.length <= 20
+                            ? widget.model!.productTitle!
+                            : widget.model!.productTitle!.substring(0, 20) + '...',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 12.sp,
@@ -68,10 +128,6 @@ class CartItemDesign extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-
-
-                      SizedBox(height: 5.h),
-                      // Quantity
                       Row(
                         children: [
                           Text(
@@ -80,12 +136,11 @@ class CartItemDesign extends StatelessWidget {
                               color: Colors.black54,
                               fontSize: 12.sp,
                               fontFamily: "Poppins",
-                              fontWeight: FontWeight.w600
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-
                           Text(
-                            quanNumber.toString(),
+                            quantity.toString(),
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 12.sp,
@@ -93,13 +148,20 @@ class CartItemDesign extends StatelessWidget {
                               fontFamily: "Poppins",
                             ),
                           ),
+                          SizedBox(width: 8.w),
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: _incrementQuantity,
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: _decrementQuantity,
+                          ),
                         ],
                       ),
-                      SizedBox(height: 5.h),
-                      // Price
                       Text(
-                        "Php ${model!.productPrice}.00",
-                        style:  TextStyle(
+                        "Php ${(widget.model!.productPrice!).toStringAsFixed(2)}",
+                        style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.black,
                           fontWeight: FontWeight.w500,

@@ -1,4 +1,5 @@
 
+import 'package:cpton_foodtogo/lib/mainScreen/cart_screen.dart';
 import 'package:cpton_foodtogo/lib/splashScreen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (c) => CartItemCounter()),
             ChangeNotifierProvider(create: (c) => TotalAmount()),
             ChangeNotifierProvider(create: (c) => AddressChanger()),
+
           ],
           child: const GetMaterialApp(
             title: 'Food To Go',

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../global/global.dart';
 import 'cart_item_counter.dart';
 
@@ -198,4 +199,47 @@ clearCartNow(context)
     sharedPreferences!.setStringList("userCart", emptyList!);
     Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
   });
+}
+
+
+
+class CartManager {
+  SharedPreferences? _sharedPreferences;
+
+  CartManager(this._sharedPreferences);
+
+  void updateItemQuantity(String productId, int newQuantity) {
+    List<String>? defaultItemList = _sharedPreferences!.getStringList("userCart");
+    List<String> updatedItemList = [];
+
+    if (defaultItemList != null) {
+      for (String item in defaultItemList) {
+        List<String> listItemCharacters = item.split(":");
+        String currentProductId = listItemCharacters[0];
+
+        if (currentProductId == productId) {
+          listItemCharacters[1] = newQuantity.toString();
+        }
+
+        updatedItemList.add(listItemCharacters.join(":"));
+      }
+
+      _sharedPreferences!.setStringList("userCart", updatedItemList);
+    }
+  }
+
+  List<int> separateItemQuantities() {
+    List<int> separateItemQuantityList = [];
+    List<String>? defaultItemList = _sharedPreferences!.getStringList("userCart");
+
+    if (defaultItemList != null) {
+      for (String item in defaultItemList) {
+        List<String> listItemCharacters = item.split(":");
+        int quanNumber = int.parse(listItemCharacters[1]);
+        separateItemQuantityList.add(quanNumber);
+      }
+    }
+
+    return separateItemQuantityList;
+  }
 }

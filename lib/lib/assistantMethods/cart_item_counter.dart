@@ -10,7 +10,7 @@ class CartItemCounter extends ChangeNotifier
   Future<void> displayCartListItemNumber() async
   {
     cartListItemCounter = sharedPreferences!.getStringList("userCart")!.length - 1;
-    
+
     await Future.delayed(const Duration(milliseconds: 100),() {
       notifyListeners();
     });
