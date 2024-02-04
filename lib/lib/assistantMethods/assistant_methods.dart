@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,7 @@ separateItemIDs()
 
     //56557657
     String getItemId = (pos != -1) ? item.substring(0, pos) : item;
-
+    //
     // if (kDebugMode) {
     //   print("\nThis is itemID now = $getItemId");
     // }
@@ -200,6 +201,40 @@ clearCartNow(context)
     Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
   });
 }
+removeSelectedProductsFromCart(List<String> productIdsToRemove, context) {
+  List<String>? currentCart = sharedPreferences!.getStringList("userCart");
+
+  if (currentCart != null) {
+    // Remove selected product IDs from the current cart
+    currentCart.removeWhere((productId) {
+      // Extract item ID (excluding quantity)
+      var pos = productId.lastIndexOf(":");
+      String getItemId = (pos != -1) ? productId.substring(0, pos) : productId;
+
+      // Check if the extracted item ID is in the list of product IDs to remove
+      return productIdsToRemove.contains(getItemId);
+    });
+
+    // Update Firestore and SharedPreferences
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .update({"userCart": currentCart}).then((value) {
+      sharedPreferences!.setStringList("userCart", currentCart);
+      Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
+    });
+  }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
