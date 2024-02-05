@@ -103,9 +103,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         MaterialPageRoute(
                             builder: (c) => CartScreen(sellersUID: widget.model!.sellersUID)));
                   },
-                  icon: const Icon(
+                  icon:  Icon(
                     Icons.shopping_cart_rounded,
-                    color: Colors.white,
+                    color: AppColors().white,
                   ),
                 ),
                 Positioned(

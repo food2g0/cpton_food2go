@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/CustomersWidgets/custom_text_field.dart';
 
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -119,12 +120,13 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: Scaffold(
+          backgroundColor: AppColors().white1,
           appBar: AppBar(
 
-            iconTheme: IconThemeData(color: AppColors().white),
+            iconTheme: IconThemeData(color: AppColors().black),
             flexibleSpace: Container(
               decoration: BoxDecoration(
-                color: AppColors().black,
+                color: AppColors().white1,
               ),
             ),
             title: Column(
@@ -135,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     sharedPreferences!.getString("name")!,
                     style: TextStyle(
-                      color: AppColors().white,
+                      color: AppColors().black,
                       fontSize: 12.sp,
                       fontFamily: "Poppins",
                     ),
@@ -146,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                       "Welcome to Food2Go",
                     style: TextStyle(
-                      color: AppColors().black1, // Adjust color as needed
+                      color: AppColors().red, // Adjust color as needed
                       fontSize: 10.sp, // Adjust font size as needed
                       fontFamily: "Poppins",
                     ),
@@ -197,31 +199,43 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(80.h),
-              child: Card(
-                elevation: 4.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.w),
-                ),
-                margin: EdgeInsets.all(7.w),
-                color: Colors.white, // Set the background color for the Card
+              child: Container(
+                height: 80.h,
+                width: MediaQuery.of(context).size.width * 0.9, // Adjust the width as needed
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0.w),
                   child: TextField(
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 16.h),
+                      contentPadding: EdgeInsets.symmetric(vertical: 16.0),
                       filled: true,
-                      fillColor: Colors.white, // Set the background color to match the Card
+                      fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.w),
+                        borderRadius: BorderRadius.circular(20.0),
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Search...",
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: AppColors().red,
+                      ),
+                      hintStyle: TextStyle(
+                        fontFamily: "Poppins",
+                        color: AppColors().black1,
+                      ),
+
                     ),
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp,
+                      color: Colors.black,
+                    ),
+                    cursorColor: AppColors().red,
                   ),
+
                 ),
               ),
             ),
+
 
 
 
@@ -277,8 +291,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                   currentIndex: _selectedIndex,
-                  selectedItemColor: AppColors().white,
-                  unselectedItemColor: AppColors().red,
+                  selectedItemColor: AppColors().red,
+                  unselectedItemColor: AppColors().white,
                   selectedLabelStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontFamily: "Poppins",

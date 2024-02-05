@@ -23,27 +23,28 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model,)));
       },
-      child: Padding(
-        padding: EdgeInsets.all(4.0.w),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors().white,
-            border: Border.all(color: AppColors().red, width: 1.0), // Add border styling
-          ),
-          width: MediaQuery.of(context).size.width,
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(4.0.w),
           child: Column(
             children: [
-              SizedBox(
-                height: 150.h,
-                width: MediaQuery.of(context).size.width,
-                child: AspectRatio(
-                  aspectRatio: 3 / 4,
-                  child: Image.network(
-                    widget.model!.thumbnailUrl!,
-                    fit: BoxFit.cover,
+              Card(
+                child: Container(
+                  height: 150.h,
+                  width: MediaQuery.of(context).size.width,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0), // Set the desired border radius
+                    child: AspectRatio(
+                      aspectRatio: 3 / 4,
+                      child: Image.network(
+                        widget.model!.thumbnailUrl!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
               ),
+
               SizedBox(height: 10.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),

@@ -132,8 +132,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
                               IconButton(
                                 icon: Icon(Icons.close, color: Colors.black), // Close (X) button
                                 onPressed: () {
-                                  // Handle close button action
-                                  // For example, you can call a function to remove the item from the cart.
+
 
                                   String? productIdToRemove = widget.model?.productsID;
 

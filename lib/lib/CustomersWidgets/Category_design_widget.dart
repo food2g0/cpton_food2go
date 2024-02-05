@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -82,19 +83,67 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                   ),
                 ),
               ),
-              SizedBox(height: 5),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: SmoothStarRating(
-                    allowHalfRating: false,
-                    starCount: 5,
-                    size: 10.sp,
-                    rating: 5,
-                    color: AppColors().yellow,
-                    borderColor: AppColors().black,
-                  ),
+                padding: const EdgeInsets.only(left: 8),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("items")
+                      .doc(widget.model.productsID)
+                      .collection("itemRecord")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+
+                    var ratings = snapshot.data!.docs
+                        .map((doc) => (doc.data() as Map<String, dynamic>)['rating'] as num?)
+                        .toList();
+
+                    double averageRating = 0;
+                    if (ratings.isNotEmpty) {
+                      var totalRating = ratings
+                          .map((rating) => rating ?? 0)
+                          .reduce((a, b) => a + b);
+                      averageRating = totalRating / ratings.length;
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 10.h),
+                            Row(
+                              children: [
+                                SmoothStarRating(
+                                  rating: averageRating,
+                                  allowHalfRating: false,
+                                  starCount: 5,
+                                  size: 10.sp,
+                                  color: Colors.yellow,
+                                  borderColor: Colors.black45,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  '${averageRating.toStringAsFixed(1)}',
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      color: AppColors().black1,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
               SizedBox(height: 5),
@@ -109,19 +158,20 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                         WidgetSpan(
                           child: Padding(
                             padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(
-                              Icons.currency_ruble,
-                              size: 16.sp,
-                              color: Colors.green,
+                            child: Image.asset(
+                              'images/peso.png',
+                              width: 14,
+                              height: 14,
+                              color: AppColors().green,
                             ),
                           ),
                         ),
                         TextSpan(
-                          text: "Php: " + '${widget.model!.productPrice}',
+                          text: ": "+ '${widget.model!.productPrice}'".00",
                           style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 12.sp,
+                            color: AppColors().black1,
+                            fontWeight: FontWeight.w600,
                             overflow: TextOverflow.ellipsis,
                             fontFamily: "Poppins",
                           ),

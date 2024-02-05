@@ -1,3 +1,4 @@
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -41,7 +42,7 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         obscureText: isObscure,
         validator: _validateEmail,
-        cursorColor: Theme.of(context).primaryColor,
+        cursorColor: AppColors().red,
         decoration: InputDecoration(
           border: InputBorder.none,
           prefixIcon: Icon(
