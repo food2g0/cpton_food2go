@@ -72,51 +72,81 @@ class CustomersDrawer extends StatelessWidget {
 
           //body drawer
           ListTile(
-            leading: const Icon(
-              Icons.local_offer,
-              color: Colors.red,
+            leading: Icon(
+              Icons.account_circle,
+              color: AppColors().red,
             ),
-            title: const Text("Vouchers and Offers"),
+            title: Text("Profile",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors().black
+            ),),
             onTap: () {
               // Handle the Home item tap
             },
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.fastfood_rounded,
-              color: Colors.red,
+              color: AppColors().red,
             ),
-            title: const Text("Orders"),
+            title: Text("Orders",
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors().black
+              ),),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (c)=> MyOrderScreen()));
             },
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.info_rounded,
-              color: Colors.red,
+              color: AppColors().red,
             ),
-            title: const Text("About"),
+            title: Text("About",
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors().black
+              ),),
             onTap: () {
               // Handle the About item tap
             },
           ),
           ListTile(
-            leading: const Icon(
-              Icons.favorite_border,
-              color: Colors.red,
+            leading: Icon(
+              Icons.favorite,
+              color: AppColors().red,
             ),
-            title: const Text("Favorites"),
+            title: Text("Favorites",
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors().black
+              ),),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (c)=> FavoritesScreen()));
             },
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.logout_rounded,
-              color: Colors.red,
+              color: AppColors().red,
             ),
-            title: const Text("Logout"),
+            title: Text("Logout",
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors().black
+              ),),
             onTap: () {
               firebaseAuth.signOut().then((value){
                 Navigator.push(context, MaterialPageRoute(builder: (c)=> const AuthScreen()));

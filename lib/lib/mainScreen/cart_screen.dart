@@ -45,23 +45,23 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: AppColors().red,
         title: Text(
           "Shopping Cart",
-          style: TextStyle(fontFamily: "Poppins", color: AppColors().white, fontSize: 14.sp),
+          style: TextStyle(fontFamily: "Poppins", color: AppColors().white, fontSize: 12.sp,
+          fontWeight: FontWeight.w600),
         ),
-        actions: <Widget>[
-          TextButton(
+        actions: [
+          IconButton(
             onPressed: () {
-              setState(() {
-                isEditing = !isEditing;
-              });
+              clearCartNow(context);
+              Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+              Fluttertoast.showToast(msg: "Cart has been cleared.");
             },
-            child: Text(
-              isEditing ? "Done" : "Edit",
-              style: TextStyle(
-                color: AppColors().white,
-                fontSize: 14.sp,
-              ),
+            icon: Icon(
+              Icons.remove_shopping_cart_outlined,
+              size: 20.sp,
+              color: AppColors().white,
             ),
           ),
+          SizedBox(width: 16.w),
         ],
       ),
       body: CustomScrollView(
@@ -254,61 +254,48 @@ class _CartScreenState extends State<CartScreen> {
               SizedBox(height: 10.h),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: isEditing
-                    ? Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     clearCartNow(context);
+                    //     Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+                    //     Fluttertoast.showToast(msg: "Cart has been cleared.");
+                    //   },
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: AppColors().yellow,
+                    //     minimumSize: Size(140.w, 50.h),
+                    //   ),
+                    //   child: Text(
+                    //     "Clear All",
+                    //     style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins", color: AppColors().white,),
+                    //   ),
+                    // ),
                     ElevatedButton(
                       onPressed: () {
-                        clearCartNow(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
-                        Fluttertoast.showToast(msg: "Cart has been cleared.");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (c) => CheckOut(
+                              totalAmount: totalAmount.toDouble(),
+                              sellersUID: widget.sellersUID,
+                            ),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors().yellow,
-                        minimumSize: Size(140.w, 50.h),
+                        backgroundColor: AppColors().red,
+                        minimumSize: Size(300.w, 50.h),
                       ),
                       child: Text(
-                        "Clear All",
-                        style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins", color: AppColors().white,),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle the logic when "Clear Selected" is pressed
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:  AppColors().red,
-                        minimumSize: Size(110.w, 50.h),
-                      ),
-                      child: Text(
-                        "Delete Selected",
-                        style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins", color: AppColors().white,),
+                        "Check Out",
+                        style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins",color: AppColors().white,),
                       ),
                     ),
                   ],
                 )
-                    : ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (c) => CheckOut(
-                          totalAmount: totalAmount.toDouble(),
-                          sellersUID: widget.sellersUID,
-                        ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors().red,
-                    minimumSize: Size(300.w, 50.h),
-                  ),
-                  child: Text(
-                    "Check Out",
-                    style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins",color: AppColors().white,),
-                  ),
-                ),
+
               ),
             ],
           ),

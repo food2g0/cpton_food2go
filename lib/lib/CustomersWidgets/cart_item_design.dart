@@ -130,7 +130,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.close, color: Colors.black), // Close (X) button
+                                icon: Icon(Icons.delete_forever, color: AppColors().red), // Close (X) button
                                 onPressed: () {
 
 
