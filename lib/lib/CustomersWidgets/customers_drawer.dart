@@ -1,3 +1,4 @@
+import 'package:cpton_foodtogo/lib/mainScreen/Proflie_screen.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/my_order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -84,7 +85,7 @@ class CustomersDrawer extends StatelessWidget {
               color: AppColors().black
             ),),
             onTap: () {
-              // Handle the Home item tap
+              Navigator.push(context, MaterialPageRoute(builder: (c)=> ProfileScreen()));
             },
           ),
           ListTile(
