@@ -18,7 +18,7 @@ class CustomersDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String imageUrl = sharedPreferences!.getString("customerImageUrl") ?? 'default_image_url';
+    String imageUrl = sharedPreferences!.getString("customerImageUrl") ?? '';
     return Drawer(
       backgroundColor: AppColors().white,
       child: ListView(
@@ -36,11 +36,17 @@ class CustomersDrawer extends StatelessWidget {
                     child: SizedBox(
                       height: 100.h,
                       width: 100.w,
-                      child: CircleAvatar(
-                        backgroundImage: imageUrl.isNotEmpty
-                            ? NetworkImage(imageUrl)
-                            : AssetImage('images/img.png') as ImageProvider,
+                      child: SizedBox(
+                        height: 100.h,
+                        width: 100.w,
+                        child: CircleAvatar(
+                          backgroundImage: imageUrl.isNotEmpty
+                              ? NetworkImage(imageUrl)
+                              : AssetImage('images/boy.png') as ImageProvider<Object>, // Provide a placeholder image
+                        ),
                       ),
+
+
                     ),
                   ),
 

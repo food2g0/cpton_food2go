@@ -36,20 +36,23 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
       child: DefaultTabController(
         length: _tabs.length,
         child: Scaffold(
+          backgroundColor: AppColors().white1,
           appBar: AppBar(
             backgroundColor: AppColors().red,
-            title: const Text(
+            title:  Text(
               "Orders",
-              style: TextStyle(fontFamily: "Poppins", fontSize: 16, color: Colors.white),
+              style: TextStyle(fontFamily: "Poppins", fontSize: 14.sp, color: AppColors().white),
             ),
             bottom: TabBar(
               indicatorColor: AppColors().white,
               labelColor: AppColors().white,
               unselectedLabelColor: AppColors().white,
               tabs: [
+
                 Tab(
                   icon: Icon(Icons.shopping_cart, size: 16.sp),
                   text: 'To Pay',
+
                 ),
                 Tab(
                   icon: Icon(Icons.directions_bike, size: 16.sp,),
@@ -60,6 +63,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                   text: 'Delivered',
                 ),
               ],
+              labelStyle: TextStyle(fontSize: 12.sp, fontFamily: "Poppins", fontWeight: FontWeight.w600),
             ),
           ),
           body: TabBarView(
@@ -72,7 +76,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           ),
           bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
-              canvasColor: AppColors().red,
+              canvasColor: AppColors().black,
             ),
             child: BottomNavigationBar(
               items: const <BottomNavigationBarItem>[
@@ -94,7 +98,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 ),
               ],
               currentIndex: _selectedIndex,
-              selectedItemColor: AppColors().yellow,
+              selectedItemColor: AppColors().red,
               unselectedItemColor: AppColors().white,
               selectedLabelStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -118,7 +122,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           .collection("users")
           .doc(sharedPreferences!.getString("uid"))
           .collection("orders")
-          .where("status", isEqualTo: "normal")
+          .where("status", isEqualTo: "ToPay")
           .snapshots(),
       builder: (context, snapshot) {
         return snapshot.hasData

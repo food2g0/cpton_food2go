@@ -88,7 +88,7 @@ class _CheckOutState extends State<CheckOut> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF890010),
+        backgroundColor: AppColors().red,
         title: Text(
           "Checkout",
           style: TextStyle(fontFamily: "Poppins", color: Colors.white, fontSize: 14.sp),
@@ -105,9 +105,10 @@ class _CheckOutState extends State<CheckOut> {
                 child: Text(
                   "Select Address: ",
                   style: TextStyle(
-                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors().black,
                     fontFamily: "Poppins",
-                    fontSize: 16.sp,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),
@@ -118,10 +119,10 @@ class _CheckOutState extends State<CheckOut> {
                 },
                 child:  Row(
                   children: [
-                    Icon(Icons.add_location_alt_outlined, color:  Color(0xFF890010),),
+                    Icon(Icons.add_location_alt_outlined, color:  AppColors().red,),
                     Text("Add address", style: TextStyle(
-                      color:  Color(0xFF890010),
-                      fontSize: 14.sp
+                      color:  AppColors().red,
+                      fontSize: 12.sp
                     ),),
                   ],
                 ),
@@ -174,10 +175,10 @@ class _CheckOutState extends State<CheckOut> {
                 Text(
                   "Choose Payment Method:",
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: AppColors().black,
                     fontFamily: "Poppins",
-                    fontSize: 14.h,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -186,9 +187,9 @@ class _CheckOutState extends State<CheckOut> {
                   title: Text(
                     "Pay with Gcash",
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: AppColors().black,
                       fontFamily: "Poppins",
-                      fontSize: Dimensions.font14,
+                      fontSize: 12.sp,
                     ),
                   ),
                   value: "Gcash",
@@ -204,9 +205,9 @@ class _CheckOutState extends State<CheckOut> {
                   title: Text(
                     "Cash on Delivery",
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: AppColors().black,
                       fontFamily: "Poppins",
-                      fontSize: 14.sp,
+                      fontSize: 12.sp,
                     ),
                   ),
                   value: "CashOnDelivery",
@@ -231,28 +232,22 @@ class _CheckOutState extends State<CheckOut> {
                   MaterialPageRoute(
                     builder: (c) => PaymentScreen(
                       // Pass any necessary data to PaymentScreen
+                      addressID: widget.addressId,
                       totalAmount: widget.totalAmount,
                       paymentMethod: selectedPaymentMethod,
+                      sellersUID: widget.sellersUID,
                     ),
                   ),
                 );
               } else {
-                // Navigate to PlacedOrderScreen for other payment methods
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (c) => MyOrderScreen(
-                      addressID: widget.addressId,
-                      totalAmount: widget.totalAmount,
-                      sellerUID: widget.sellersUID,
-                      paymentMode: widget.paymentMode,
-                    ),
-                  ),
-                );
                 addOrderDetails();
               }
             },
-            child: Text("Place Order", style: TextStyle(fontWeight: FontWeight.w700)),
+            child: Text("Place Order", style: TextStyle(
+                fontWeight: FontWeight.w600,
+              fontFamily: "Poppins",
+              fontSize: 12.sp,
+            )),
             style: ElevatedButton.styleFrom(
               primary: AppColors().red, // Change the background color
               onPrimary: Colors.white, // Change the text color

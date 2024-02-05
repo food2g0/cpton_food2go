@@ -13,6 +13,7 @@ import '../CustomersWidgets/progress_bar.dart';
 import '../assistantMethods/cart_item_counter.dart';
 import '../global/global.dart';
 import '../models/items.dart';
+import 'SearchResultScreen.dart';
 import 'cart_screen.dart';
 import 'food_page_body.dart';
 import 'chat_screen.dart'; // Import the ChatScreen
@@ -54,7 +55,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
+    Future<QuerySnapshot>? restaurantsDocumentsList;
+    String sellerNameText = "";
+
+    initSearchingRestaurant(String textEntered) {
+          restaurantsDocumentsList = FirebaseFirestore.instance.collection("sellers")
+          .where("sellersName", isGreaterThanOrEqualTo: textEntered)
+          .get();
+    }
+
     // Check if it's not the ChatScreen
     if (_selectedIndex != 0) {
       return Scaffold(
@@ -203,10 +214,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 80.h,
                 width: MediaQuery.of(context).size.width * 0.9, // Adjust the width as needed
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.w),
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: TextField(
+                    onTap: () {
+                     Navigator.push(context, MaterialPageRoute(builder: (c)=> SearchResultScreen()));
+                    },
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 16.0),
+                      contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -214,15 +228,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Search...",
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: AppColors().red,
-                      ),
+                      suffixIcon:
+                         Icon(
+                          Icons.search,
+                          color: AppColors().red,
+                        ),
                       hintStyle: TextStyle(
                         fontFamily: "Poppins",
                         color: AppColors().black1,
                       ),
-
                     ),
                     style: TextStyle(
                       fontFamily: "Poppins",
@@ -231,6 +245,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     cursorColor: AppColors().red,
                   ),
+
+
 
                 ),
               ),

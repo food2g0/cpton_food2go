@@ -3,9 +3,9 @@ import 'dart:ui';
 class AppColors {
   final white1 = const Color(0xFFD7D7D7);
   final white = const Color(0xFFFFFFFF);
-  final red = const Color(0xFFF3724C);
+  final red = const Color(0xFFe63946);
   final green = const Color(0xFF178F39);
-  final yellow = const Color(0xFFFFC529);
+  final yellow = const Color(0xFFffb703);
   final black = const Color(0xFF272D2F);
   final black1 = const Color(0xFF9AA1A9);
 
