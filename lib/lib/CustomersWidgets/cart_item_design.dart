@@ -34,7 +34,6 @@ class _CartItemDesignState extends State<CartItemDesign> {
     super.initState();
     quantity = widget.quanNumber ?? 0;
     _initializeCartManager();
-
   }
 
   void _initializeCartManager() async {
@@ -63,6 +62,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
       });
     }
   }
+
   double calculateTotalAmount() {
     double totalAmount = 0;
     // Calculate totalAmount based on the updated quantity
@@ -79,140 +79,120 @@ class _CartItemDesignState extends State<CartItemDesign> {
     cartManager.updateItemQuantity(productId!, quantity);
   }
 
-    @override
-    Widget build(BuildContext context) {
-      return InkWell(
-        child: Padding(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 10).w,
-          child: SizedBox(
-            height: 145.h,
-            width: double.infinity,
-            child: Card(
-              elevation: 2,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Card(
-                    elevation: 2,
-                    child: Container(
-                      width: 150.w,
-                      height: 120.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        image: DecorationImage(
-                          image: NetworkImage(widget.model!.thumbnailUrl!),
-                          fit: BoxFit.cover,
-                        ),
+  @override
+  Widget build(BuildContext context) {
+
+
+    return InkWell(
+      child: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10, top: 10).w,
+        child: SizedBox(
+          height: 145.h,
+          width: double.infinity,
+          child: Card(
+            elevation: 2,
+            child:
+
+                Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 2,
+                  child: Container(
+                    width: 150.w,
+                    height: 120.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      image: DecorationImage(
+                        image: NetworkImage(widget.model!.thumbnailUrl!),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(1.0).w,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 8.h),
-                          Row(
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(1.0).w,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 8.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.model!.productTitle!.length <= 20
+                                    ? widget.model!.productTitle!
+                                    : widget.model!.productTitle!.substring(0, 20) + '...',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12.sp,
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete_forever, color: AppColors().red), // Close (X) button
+                              onPressed: () {
+                                String? productIdToRemove = widget.model?.productsID;
+
+                                print('Original productsID: $productIdToRemove');
+                                print('Processed productsID: $productIdToRemove');
+
+                                removeSelectedProductsFromCart([productIdToRemove ?? ""], context);
+                              },
+                            ),
+                          ],
+                        ),
+                        Text(
+                          "Php ${(widget.model!.productPrice!).toStringAsFixed(2)}",
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Container(
+                          height: 40.h,
+                          width: 110.w,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
                             children: [
-                              Expanded(
-                                child: Text(
-                                  widget.model!.productTitle!.length <= 20
-                                      ? widget.model!.productTitle!
-                                      : widget.model!.productTitle!.substring(0, 20) + '...',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12.sp,
-                                    fontFamily: "Poppins",
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                              IconButton(
+                                icon: Icon(Icons.add_circle_outlined, color: AppColors().red, size: 20,),
+                                onPressed: _incrementQuantity,
+                              ),
+                              Text(
+                                quantity.toString(),
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Poppins",
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete_forever, color: AppColors().red), // Close (X) button
-                                onPressed: () {
-
-
-                                  String? productIdToRemove = widget.model?.productsID;
-
-                                  // Print the value for debugging
-                                  print('Original productsID: $productIdToRemove');
-
-
-                                  // Print the value after processing for debugging
-                                  print('Processed productsID: $productIdToRemove');
-
-                                  // Call the removeSelectedProductsFromCart function with the selected product ID
-                                  removeSelectedProductsFromCart([productIdToRemove ?? ""], context);
-                                },
-
-
-
-
-
-
-
+                                icon: Icon(Icons.remove_circle, color: AppColors().red, size: 20),
+                                onPressed: _decrementQuantity,
                               ),
-
-
                             ],
                           ),
-
-                          Text(
-                            "Php ${(widget.model!.productPrice!).toStringAsFixed(2)}",
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 10,),
-                          Container(
-                            height: 40.h,
-                            width: 110.w,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.add_circle_outlined, color: AppColors().red, size: 20,),
-                                  onPressed: _incrementQuantity,
-                                ),
-                                Text(
-                                  quantity.toString(),
-                                  style: TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "Poppins",
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.remove_circle, color: AppColors().red, size: 20),
-                                  onPressed: _decrementQuantity,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      );
-    }
-
+      ),
+    );
   }
-
-
-
-
-
-
+}

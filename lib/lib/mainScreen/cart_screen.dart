@@ -66,48 +66,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: CustomScrollView(
         slivers: [
-          if (isCartEmpty)
-            SliverToBoxAdapter(
-              child: Container(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Text(
-                      "Your cart is empty.",
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Poppins",
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [AppColors().startColor, AppColors().endColor],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0.r),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (c) => HomeScreen()));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(180.w, 50.h),
-                        ),
-                        child: Text(
-                          "Continue Shopping",
-                          style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: AppColors().red),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          else
+
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("items")
@@ -129,9 +88,9 @@ class _CartScreenState extends State<CartScreen> {
 
                         if (index == 0) {
                           totalAmount = 0;
-                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]);
+                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
                         } else {
-                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]);
+                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
                         }
 
                         if (snapshot.data!.docs.length - 1 == index) {
@@ -162,7 +121,33 @@ class _CartScreenState extends State<CartScreen> {
         ],
       ),
       bottomNavigationBar: isCartEmpty
-          ? Container()
+          ? Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Your cart is empty.",
+                style: TextStyle(fontSize: 12.sp, fontFamily: "Poppins", color: AppColors().black),
+              ),
+              SizedBox(height: 16.h),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors().red,
+                  minimumSize: Size(150.w, 50.h),
+                ),
+                child: Text(
+                  "Shop Now",
+                  style: TextStyle(fontSize: 12.sp, fontFamily: "Poppins", color: AppColors().white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
           : Container(
         height: 200.h,
         decoration: BoxDecoration(
@@ -257,21 +242,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     clearCartNow(context);
-                    //     Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
-                    //     Fluttertoast.showToast(msg: "Cart has been cleared.");
-                    //   },
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor: AppColors().yellow,
-                    //     minimumSize: Size(140.w, 50.h),
-                    //   ),
-                    //   child: Text(
-                    //     "Clear All",
-                    //     style: TextStyle(fontSize: 14.sp, fontFamily: "Poppins", color: AppColors().white,),
-                    //   ),
-                    // ),
+
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(

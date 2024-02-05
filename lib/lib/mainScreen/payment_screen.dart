@@ -91,6 +91,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double defaultShippingFee = 50.0;
+    double? totalAmount = widget.totalAmount! + defaultShippingFee;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors().red,
@@ -106,7 +108,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Total Amount: ${widget.totalAmount}'),
+            Text('Total Amount: ${totalAmount}'),
             SizedBox(height: 16),
             Text('GCash Number: 09271679585 - Paolo Somido'), // Assuming sellersUID is the GCash number
             SizedBox(height: 16),
