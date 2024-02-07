@@ -19,12 +19,6 @@ class FavoriteDesignWidget extends StatefulWidget {
 }
 
 class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -33,22 +27,22 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
       },
       child: Padding(
         padding: EdgeInsets.all(4.0.w),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors().white,
-            border: Border.all(color: AppColors().red, width: 1.0), // Add border styling
-          ),
-          width: MediaQuery.of(context).size.width,
+        child: Card(
+
+          elevation: 2,
           child: Column(
             children: [
               SizedBox(
-                height: 125.h,
-                width: MediaQuery.of(context).size.width,
+                height: 120.h,
+                width: 200.w,
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
-                  child: Image.network(
-                    widget.model!.thumbnailUrl!,
-                    fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      widget.model!.thumbnailUrl!,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -65,7 +59,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                           child: Padding(
                             padding: EdgeInsets.only(right: 4.0),
                             child: Icon(
-                              Icons.fastfood,
+                              Icons.delete_forever,
                               size: 16.sp,
                               color: AppColors().yellow,
                             ),
@@ -121,12 +115,12 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                   ),
                 ),
               ),
-              SizedBox(height: 10.h,),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(8.0.w),
+                    padding: EdgeInsets.all(1.0.w),
                     child: Container(
                       height: 40.h,
                       width: 80.w,
@@ -142,25 +136,19 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                             addItemToCart(widget.model.productsID, context, itemCounter);
                           }
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:AppColors().red,
-                            borderRadius: BorderRadius.circular(8.0.w),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0.w),
-                            child: Icon(
-                              Icons.shopping_cart,
-                              size: 20.sp,
-                              color: AppColors().white,
-                            ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0.w),
+                          child: Icon(
+                            Icons.shopping_cart_outlined,
+                            size: 28.sp,
+                            color: AppColors().green,
                           ),
                         ),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0.w),
+                    padding: EdgeInsets.all(4.0.w),
                     child: Container(
                       height: 40.h,
                       width: 60.w,
@@ -171,18 +159,12 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                             widget.onRemove!();
                           }
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors().yellow,
-                            borderRadius: BorderRadius.circular(8.0.w),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0.w),
-                            child: Icon(
-                              Icons.favorite,
-                              size: 28.sp,
-                              color: AppColors().red,
-                            ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0.w),
+                          child: Icon(
+                            Icons.delete_outline,
+                            size: 28.sp,
+                            color: AppColors().red,
                           ),
                         ),
                       ),

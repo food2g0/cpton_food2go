@@ -134,10 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: AppColors().white1,
           appBar: AppBar(
 
-            iconTheme: IconThemeData(color: AppColors().black),
+            iconTheme: IconThemeData(color: AppColors().white),
             flexibleSpace: Container(
               decoration: BoxDecoration(
-                color: AppColors().white1,
+                color: AppColors().black,
               ),
             ),
             title: Column(
@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     sharedPreferences!.getString("name")!,
                     style: TextStyle(
-                      color: AppColors().black,
+                      color: AppColors().white,
                       fontSize: 12.sp,
                       fontFamily: "Poppins",
                     ),
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppColors().white1,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
                         borderSide: BorderSide.none,
@@ -386,6 +386,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors().white1,
       appBar: AppBar(
         title: Text(
           'Favorites',
@@ -397,7 +398,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: AppColors().red,
+            color: AppColors().black,
           ),
         ),
       ),
@@ -433,7 +434,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 10.0,
                 mainAxisSpacing: 10.0,
-                childAspectRatio: 0.67,
+                childAspectRatio: 0.77,
               ),
               itemCount: itemsList.length,
               itemBuilder: (context, index) {

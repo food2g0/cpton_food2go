@@ -29,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: AppColors().red,
+            color: AppColors().black,
           ),
         ),
       ),
@@ -49,13 +49,13 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_auth.currentUser!.email != sellerData['sellersEmail']) {
       if (sellersUID is String) {
         return ListTile(
-          title: Text(sellerData['sellersEmail']),
+          title: Text(sellerData['sellersName']),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (c) => ChatPage(
-                  receiverUserEmail: sellerData['sellersEmail'],
+                  receiverUserEmail: sellerData['sellersName'],
                   receiverUserID: sellersUID,
                 ),
               ),
