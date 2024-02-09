@@ -9,7 +9,8 @@ class Items {
   final int productPrice;
   final int productQuantity;
   final String thumbnailUrl;
-  Timestamp timestamp;
+  final List<Map<String, dynamic>> variations; // Updated field for variations
+  final Timestamp timestamp;
 
   Items({
     required this.timestamp,
@@ -21,6 +22,7 @@ class Items {
     required this.productPrice,
     required this.productQuantity,
     required this.thumbnailUrl,
+    required this.variations, // Updated constructor to include variations
   });
 
   Items copyWith({
@@ -32,8 +34,10 @@ class Items {
     int? productPrice,
     int? productQuantity,
     String? thumbnailUrl,
+    List<Map<String, dynamic>>? variations, // Updated copyWith to include variations
   }) {
     return Items(
+      timestamp: timestamp,
       productsID: productsID ?? this.productsID,
       menuID: menuID ?? this.menuID,
       sellersUID: sellersUID ?? this.sellersUID,
@@ -42,12 +46,13 @@ class Items {
       productPrice: productPrice ?? this.productPrice,
       productQuantity: productQuantity ?? this.productQuantity,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      timestamp: timestamp,
+      variations: variations ?? this.variations, // Updated copyWith to include variations
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'variation': variations,
       'productsID': productsID,
       'menuID': menuID,
       'sellersUID': sellersUID,
@@ -56,12 +61,14 @@ class Items {
       'productPrice': productPrice,
       'productQuantity': productQuantity,
       'thumbnailUrl': thumbnailUrl,
+      'variations': variations, // Updated toJson to include variations
     };
   }
 
   factory Items.fromJson(Map<String, dynamic> json) {
     return Items(
-      productsID: json['productsID'] ,
+      timestamp: json['timestamp'] ?? Timestamp.now(), // Use the appropriate default value
+      productsID: json['productsID'] ?? '',
       menuID: json['menuID'] ?? '',
       sellersUID: json['sellersUID'] ?? '',
       productDescription: json['productDescription'] ?? '',
@@ -69,9 +76,7 @@ class Items {
       productPrice: json['productPrice'] ?? 0,
       productQuantity: json['productQuantity'] ?? 0,
       thumbnailUrl: json['thumbnailUrl'] ?? '',
-      timestamp: json['timestamp'] ?? Timestamp.now(), // Use the appropriate default value
+      variations: List<Map<String, dynamic>>.from(json['variations'] ?? []), // Updated fromJson to parse variations
     );
   }
-
-
 }

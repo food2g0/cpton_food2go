@@ -133,7 +133,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                             Fluttertoast.showToast(msg: "Item is already in the cart");
                           } else {
                             // Add to cart
-                            addItemToCart(widget.model.productsID, context, itemCounter);
+                            addItemToCart(widget.model.productsID, context, itemCounter, );
                           }
                         },
                         child: Padding(

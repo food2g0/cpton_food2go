@@ -443,11 +443,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   model: item,
                   context: context,
                   onRemove: () {
-                    removeFromFavorites(item.productsID);
+                    final productId = item.productsID ?? ""; // Handle null case
+                    removeFromFavorites(productId);
                   },
                 );
               },
             );
+
           }
         },
       ),

@@ -93,7 +93,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
             elevation: 2,
             child:
 
-                Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Card(

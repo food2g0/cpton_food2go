@@ -46,7 +46,7 @@ class _CartScreenState extends State<CartScreen> {
         title: Text(
           "Shopping Cart",
           style: TextStyle(fontFamily: "Poppins", color: AppColors().white, fontSize: 12.sp,
-          fontWeight: FontWeight.w600),
+              fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
@@ -67,57 +67,57 @@ class _CartScreenState extends State<CartScreen> {
       body: CustomScrollView(
         slivers: [
 
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("items")
-                  .where("productsID", whereIn: separateItemIDs())
-                  .orderBy("publishedDate", descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return SliverToBoxAdapter(child: Center(child: circularProgress()));
-                } else if (snapshot.data!.docs.isEmpty) {
-                  return SliverToBoxAdapter(child: Container());
-                } else {
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        Menus model = Menus.fromJson(
-                          snapshot.data!.docs[index].data()! as Map<String, dynamic>,
-                        );
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection("items")
+                .where("productsID", whereIn: separateItemIDs())
+                .orderBy("publishedDate", descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return SliverToBoxAdapter(child: Center(child: circularProgress()));
+              } else if (snapshot.data!.docs.isEmpty) {
+                return SliverToBoxAdapter(child: Container());
+              } else {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                      Menus model = Menus.fromJson(
+                        snapshot.data!.docs[index].data()! as Map<String, dynamic>,
+                      );
 
-                        if (index == 0) {
-                          totalAmount = 0;
-                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
-                        } else {
-                          totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
-                        }
+                      if (index == 0) {
+                        totalAmount = 0;
+                        totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
+                      } else {
+                        totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
+                      }
 
-                        if (snapshot.data!.docs.length - 1 == index) {
-                          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                            Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(totalAmount.toDouble());
-                          });
-                        }
+                      if (snapshot.data!.docs.length - 1 == index) {
+                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                          Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(totalAmount.toDouble());
+                        });
+                      }
 
-                        return CartItemDesign(
-                          model: model,
-                          context: context,
-                          quanNumber: seperateItemQuantityList![index],
-                          onQuantityChanged: (newQuantity) {
-                            double newTotalAmount = model.productPrice! * newQuantity.toDouble();
-                            Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(newTotalAmount);
+                      return CartItemDesign(
+                        model: model,
+                        context: context,
+                        quanNumber: seperateItemQuantityList![index],
+                        onQuantityChanged: (newQuantity) {
+                          double newTotalAmount = model.productPrice! * newQuantity.toDouble();
+                          Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(newTotalAmount);
 
-                            // Print the totalAmount
-                            print("Total Amount: ${Provider.of<TotalAmount>(context, listen: false).tAmount}");
-                          },
-                        );
-                      },
-                      childCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
-                    ),
-                  );
-                }
-              },
-            ),
+                          // Print the totalAmount
+                          print("Total Amount: ${Provider.of<TotalAmount>(context, listen: false).tAmount}");
+                        },
+                      );
+                    },
+                    childCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
       bottomNavigationBar: isCartEmpty
@@ -238,34 +238,34 @@ class _CartScreenState extends State<CartScreen> {
               ),
               SizedBox(height: 10.h),
               Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
 
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (c) => CheckOut(
-                              totalAmount: totalAmount.toDouble(),
-                              sellersUID: widget.sellersUID,
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (c) => CheckOut(
+                                totalAmount: totalAmount.toDouble(),
+                                sellersUID: widget.sellersUID,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors().red,
-                        minimumSize: Size(300.w, 50.h),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors().red,
+                          minimumSize: Size(300.w, 50.h),
+                        ),
+                        child: Text(
+                          "Check Out",
+                          style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins",color: AppColors().white,),
+                        ),
                       ),
-                      child: Text(
-                        "Check Out",
-                        style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins",color: AppColors().white,),
-                      ),
-                    ),
-                  ],
-                )
+                    ],
+                  )
 
               ),
             ],

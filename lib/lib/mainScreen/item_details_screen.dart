@@ -30,6 +30,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   bool isCartEmpty = separateItemIDs().isEmpty;
   int cartItemCount = 0;
   late String customersUID; // Declare customersUID without initialization
+  String selectedVariationPrice = '';
 
   @override
   void initState() {
@@ -48,14 +49,31 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     }
   }
 
+  // Function to calculate average rating from Firestore document snapshots
+  double calculateAverageRating(List<DocumentSnapshot> docs) {
+    if (docs.isEmpty) return 0.0;
+
+    var ratings = docs
+        .map((doc) => (doc.data() as Map<String, dynamic>)['rating'] as num?)
+        .toList();
+
+    double averageRating = 0;
+    if (ratings.isNotEmpty) {
+      var totalRating = ratings
+          .map((rating) => rating ?? 0)
+          .reduce((a, b) => a + b);
+      averageRating = totalRating / ratings.length;
+    }
+
+    return averageRating;
+  }
+
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.model?.thumbnailUrl ?? 'default_image_url.jpg';
 
     return Scaffold(
-
       body: Container(
-
         child: CustomScrollView(
           slivers: <Widget>[
         SliverAppBar(
@@ -99,11 +117,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 IconButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (c) => CartScreen(sellersUID: widget.model!.sellersUID)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) => CartScreen(sellersUID: widget.model!.sellersUID),
+                      ),
+                    );
                   },
-                  icon:  Icon(
+                  icon: Icon(
                     Icons.shopping_cart_rounded,
                     color: AppColors().white,
                   ),
@@ -118,8 +138,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           shape: BoxShape.circle,
                           color: AppColors().white,
                         ),
-                        padding: EdgeInsets.all(
-                            4.0.w), // Adjust the padding as needed
+                        padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
                         child: Text(
                           counter.count.toString(),
                           style: TextStyle(
@@ -180,6 +199,69 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         ),
                       ],
                     ),
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("items")
+                          .doc(widget.model.productsID)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        var variations = (snapshot.data! as DocumentSnapshot)['variations'] ?? [];
+
+
+                        if (variations.isNotEmpty) {
+                          // If variations exist, show variation options UI
+                          return Row(
+                            children: [
+                              SizedBox(height: 10),
+                              // Display buttons for each variation
+                              Row(
+                                children: variations.map<Widget>((variation) {
+                                  String variationName = variation['name'];
+                                  String variationPrice = variation['price'];
+
+
+                                  // Check if variation price is not null
+                                  String firstLetter = variationName.substring(0, 1);
+
+                                  // Return a button for each variation wrapped in padding for spacing
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.w)
+                                          )
+                                      ),
+                                      onPressed: () {
+                                        // Set the selected variation price
+                                        print('$variationPrice');
+                                        setState(() {
+                                          selectedVariationPrice = variationPrice;
+                                        });
+                                        // Handle button press for this variation
+                                        // You can implement the logic here to perform actions when a variation button is pressed
+                                        print('Selected variation: $variationPrice');
+                                      },
+                                      child: Text(firstLetter),
+                                    ),
+                                  );
+                                                                }).toList(),
+                              ),
+                            ],
+                          );
+                        } else {
+                          // If no variations exist, return an empty container
+                          return Container();
+                        }
+                      },
+                    ),
                     SizedBox(height: 10.0),
                     Row(
                       children: [
@@ -191,7 +273,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         ),
                         SizedBox(width: 10.0),
                         Text(
-                          ' ${widget.model.productPrice?.toStringAsFixed(2)}',
+                          ' ${selectedVariationPrice != '' ? selectedVariationPrice : widget.model.productPrice?.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14.0.sp,
@@ -202,66 +284,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       ],
                     ),
                     SizedBox(height: 10.0.h),
-                    StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection("items")
-                          .doc(widget.model.productsID)
-                          .collection("itemRecord")
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-
-                        var ratings = snapshot.data!.docs
-                            .map((doc) => (doc.data() as Map<String, dynamic>)['rating'] as num?)
-                            .toList();
-
-                        double averageRating = 0;
-                        if (ratings.isNotEmpty) {
-                          var totalRating = ratings
-                              .map((rating) => rating ?? 0)
-                              .reduce((a, b) => a + b);
-                          averageRating = totalRating / ratings.length;
-                        }
-
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 10.h),
-                                Row(
-                                  children: [
-                                    SmoothStarRating(
-                                      rating: averageRating,
-                                      allowHalfRating: false,
-                                      starCount: 5,
-                                      size: 25,
-                                      color: Colors.yellow,
-                                      borderColor: Colors.black45,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      '${averageRating.toStringAsFixed(2)}/5.00',
-                                      style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          color: AppColors().black1,
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                    buildRatingSection(),
                   ],
                 ),
               ),
@@ -351,15 +374,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   ),
                   SizedBox(width: 10.0.w),
                   TextButton(
-                    onPressed: () {  },
+                      onPressed: () {  },
                       child: Text('View All Reviews', style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors().red,
-                  ), )
-
-
+                        fontFamily: "Poppins",
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors().red,
+                      ), )
                   ),
                 ],
               ),
@@ -400,7 +421,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             // "View All Reviews" button
 
           ],
-          ),
+          )
         )
           ],
         ),
@@ -429,9 +450,20 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   int itemCounter = int.parse(counterTextEditingController.text);
 
                   List<String> separateItemIDsList = separateItemIDs();
-                  separateItemIDsList.contains(widget.model.productsID)
-                      ? Fluttertoast.showToast(msg: "Item is already in a cart")
-                      : addItemToCart(widget.model.productsID, context, itemCounter);
+                  if (separateItemIDsList.contains(widget.model.productsID)) {
+                    Fluttertoast.showToast(msg: "Item is already in a cart");
+                  } else {
+                    // Check if a variation price is selected
+                    if (selectedVariationPrice.isNotEmpty) {
+                      double price = double.parse(selectedVariationPrice);
+                      addItemToCart(widget.model.productsID, context, itemCounter);
+                    } else {
+                      // If no variation is selected, use the default product price
+                      addItemToCart(widget.model.productsID, context, itemCounter, );
+
+
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF890010),
@@ -446,12 +478,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   ),
                 ),
               ),
+
             ],
           ),
         ),
       ),
     );
   }
+
 
   Widget buildReviewItem(Map<String, dynamic> reviewData) {
     return Padding(
@@ -521,6 +555,59 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
         ],
       ),
+    );
+  }
+
+  Widget buildRatingSection() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection("items")
+          .doc(widget.model.productsID)
+          .collection("itemRecord")
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        double averageRating = calculateAverageRating(snapshot.data!.docs);
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    SmoothStarRating(
+                      rating: averageRating,
+                      allowHalfRating: false,
+                      starCount: 5,
+                      size: 25,
+                      color: Colors.yellow,
+                      borderColor: Colors.black45,
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      '${averageRating.toStringAsFixed(2)}/5.00',
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors().black1,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 
