@@ -1,12 +1,15 @@
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final IconData? data;
   final String? hintText;
+  final TextStyle? hintStyle;
   final bool isObscure; // Mark as final
-  final bool enabled;    // Mark as final
+  final bool enabled;
+  final TextStyle? inputTextStyle;// Mark as final
 
   const CustomTextField({
     super.key,
@@ -14,7 +17,8 @@ class CustomTextField extends StatelessWidget {
     this.data,
     this.hintText,
     this.isObscure = true,
-    this.enabled = true,
+    this.enabled = true, this.inputTextStyle, this.hintStyle,
+
   });
 
   String? _validateEmail(String? value) {
@@ -43,15 +47,24 @@ class CustomTextField extends StatelessWidget {
         obscureText: isObscure,
         validator: _validateEmail,
         cursorColor: AppColors().red,
+        style: inputTextStyle,
         decoration: InputDecoration(
           border: InputBorder.none,
           prefixIcon: Icon(
             data,
-            color: Colors.black,
+            color: AppColors().red,
           ),
           hintText: hintText,
+          hintStyle: hintStyle,
+
+
         ),
       ),
     );
   }
 }
+// TextStyle(
+// color: AppColors().black1,
+// fontFamily: "Poppins",
+// fontSize: 12.sp,
+// ),

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/authentication/signup_page.dart';
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../CustomersWidgets/custom_text_field.dart';
 import '../CustomersWidgets/error_dialog.dart';
@@ -119,7 +121,7 @@ class _AuthScreenState extends State<AuthScreen> {
         .height;
 
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: AppColors().white,
       body: SingleChildScrollView( // Wrap with SingleChildScrollView
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -141,6 +143,18 @@ class _AuthScreenState extends State<AuthScreen> {
                   CustomTextField(
                     data: Icons.email,
                     hintText: "Enter your Email",
+
+                    hintStyle: TextStyle(
+                      color: AppColors().black1,
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    inputTextStyle: TextStyle(
+                        fontFamily: "Poppins",
+                        color: AppColors().black,
+                        fontSize: 12.sp
+                    ),
                     isObscure: false,
                     controller: emailController,
 
@@ -148,8 +162,20 @@ class _AuthScreenState extends State<AuthScreen> {
                   CustomTextField(
                     data: Icons.password,
                     hintText: "Enter your Password",
+                    hintStyle: TextStyle(
+                      color: AppColors().black1,
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    inputTextStyle: TextStyle(
+                        fontFamily: "Poppins",
+                        color: AppColors().black,
+                        fontSize: 12.sp
+                    ),
                     isObscure : true,
                     controller: passwordController,
+
 
                   ),
                 ],
@@ -158,7 +184,10 @@ class _AuthScreenState extends State<AuthScreen> {
             SizedBox(height: w * 0.08),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black45,
+                backgroundColor: AppColors().red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.w)
+                ),
                 padding: const EdgeInsets.symmetric(
                     horizontal: 50, vertical: 15),
               ),
@@ -166,8 +195,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 formValidation();
                 loginNow();
               },
-              child: const Text("Login", style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.normal),
+              child: Text("Login", style: TextStyle(
+                fontFamily: "Poppins",
+                  color: AppColors().white, fontWeight: FontWeight.w600),
               ),
             ),
 
@@ -175,17 +205,19 @@ class _AuthScreenState extends State<AuthScreen> {
             SizedBox(height: w * 0.08),
             RichText(text: TextSpan(
                 text: "Don't have an account?",
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15
+                style: TextStyle(
+                    color: AppColors().black1,
+                    fontFamily: "Poppins",
+                    fontSize: 15.sp
                 ),
                 children: [
                   TextSpan(
                       text: "  Create!",
-                      style: const TextStyle(
-                          color: Colors.black,
+                      style:  TextStyle(
+                        fontFamily: "Poppins",
+                          color: AppColors().black,
 
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600
 
                       ),
