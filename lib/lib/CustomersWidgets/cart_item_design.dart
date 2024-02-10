@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../assistantMethods/assistant_methods.dart';
@@ -8,17 +10,24 @@ import '../models/menus.dart';
 import '../theme/colors.dart';
 
 class CartItemDesign extends StatefulWidget {
-  final Menus? model;
-  final int? quanNumber;
+  final String? foodItemId;
+  final String? thumbnailUrl;
+  final String? productTitle;
+  final String? productPrice;
+  final String? cartID;
+  final int quanNumber;
   final BuildContext? context;
   final Function(int) onQuantityChanged;
 
   const CartItemDesign({
     Key? key,
-    this.model,
-    this.quanNumber,
+    this.foodItemId,
+    this.thumbnailUrl,
+    this.productTitle,
+    required this.productPrice,
+    required this.quanNumber,
     this.context,
-    required this.onQuantityChanged,
+    required this.onQuantityChanged, this.cartID,
   }) : super(key: key);
 
   @override
@@ -27,27 +36,33 @@ class CartItemDesign extends StatefulWidget {
 
 class _CartItemDesignState extends State<CartItemDesign> {
   late int quantity;
-  late CartManager cartManager;
 
   @override
   void initState() {
     super.initState();
     quantity = widget.quanNumber ?? 0;
-    _initializeCartManager();
   }
 
-  void _initializeCartManager() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    cartManager = CartManager(sharedPreferences);
+  Future<void> _updateItemCounter(int newQuantity) async {
+    // Update the Firestore collection with the new quantity
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("cart")
+          .doc(widget.cartID)
+          .update({"itemCounter": newQuantity});
+    } catch (error) {
+      print("Failed to update item counter in Firestore: $error");
+    }
   }
 
   void _incrementQuantity() {
     setState(() {
       quantity++;
-      _updateQuantityInDatabase();
       print("Total Quantity: $quantity");
       widget.onQuantityChanged(quantity);
-      Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(calculateTotalAmount());
+      _updateItemCounter(quantity);
     });
   }
 
@@ -55,34 +70,15 @@ class _CartItemDesignState extends State<CartItemDesign> {
     if (quantity > 0) {
       setState(() {
         quantity--;
-        _updateQuantityInDatabase();
         print("Total Quantity: $quantity");
         widget.onQuantityChanged(quantity);
-        Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(calculateTotalAmount());
+        _updateItemCounter(quantity);
       });
     }
   }
 
-  double calculateTotalAmount() {
-    double totalAmount = 0;
-    // Calculate totalAmount based on the updated quantity
-    totalAmount += (widget.model!.productPrice! * quantity);
-
-    // Add any additional calculations (shipping fee, taxes, etc.) here
-    totalAmount += 50.0; // Example: Adding a shipping fee
-
-    return totalAmount;
-  }
-
-  void _updateQuantityInDatabase() {
-    String? productId = widget.model!.productsID;
-    cartManager.updateItemQuantity(productId!, quantity);
-  }
-
   @override
   Widget build(BuildContext context) {
-
-
     return InkWell(
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10).w,
@@ -91,9 +87,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
           width: double.infinity,
           child: Card(
             elevation: 2,
-            child:
-
-            Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Card(
@@ -104,7 +98,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
-                        image: NetworkImage(widget.model!.thumbnailUrl!),
+                        image: NetworkImage(widget.thumbnailUrl!),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -122,9 +116,9 @@ class _CartItemDesignState extends State<CartItemDesign> {
                           children: [
                             Expanded(
                               child: Text(
-                                widget.model!.productTitle!.length <= 20
-                                    ? widget.model!.productTitle!
-                                    : widget.model!.productTitle!.substring(0, 20) + '...',
+                                widget.productTitle!.length <= 20
+                                    ? widget.productTitle!
+                                    : widget.productTitle!.substring(0, 20) + '...',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 12.sp,
@@ -136,18 +130,20 @@ class _CartItemDesignState extends State<CartItemDesign> {
                             IconButton(
                               icon: Icon(Icons.delete_forever, color: AppColors().red), // Close (X) button
                               onPressed: () {
-                                String? productIdToRemove = widget.model?.productsID;
+                                // Retrieve the cartID of the item to remove
+                                String? cartIDToRemove = widget.cartID;
 
-                                print('Original productsID: $productIdToRemove');
-                                print('Processed productsID: $productIdToRemove');
-
-                                removeSelectedProductsFromCart([productIdToRemove ?? ""], context);
+                                // Check if cartID is not null and then remove the item from the cart
+                                if (cartIDToRemove != null) {
+                                  removeCartItemFromCart(cartIDToRemove, context);
+                                }
                               },
                             ),
+
                           ],
                         ),
                         Text(
-                          "Php ${(widget.model!.productPrice!).toStringAsFixed(2)}",
+                          "Php ${widget.productPrice}",
                           style: TextStyle(
                             fontSize: 10.sp,
                             color: Colors.black,

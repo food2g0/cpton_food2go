@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: BoxShape.circle,
                             color: AppColors().white,
                           ),
-                          padding: EdgeInsets.all(4.0.w),
+                          padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
                           child: Text(
                             counter.count.toString(),
                             style: TextStyle(

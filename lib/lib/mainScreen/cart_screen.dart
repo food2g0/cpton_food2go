@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../CustomersWidgets/cart_item_design.dart';
-import '../CustomersWidgets/progress_bar.dart';
 import '../assistantMethods/assistant_methods.dart';
 import '../assistantMethods/total_ammount.dart';
+import '../global/global.dart';
 import '../models/menus.dart';
 
 class CartScreen extends StatefulWidget {
@@ -23,21 +24,14 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  bool isEditing = false;
-  List<int>? seperateItemQuantityList;
 
-  @override
-  void initState() {
-    super.initState();
-    seperateItemQuantityList = separateItemQuantities();
-  }
+  bool isEditing = false;
+  List<int>? separateItemQuantityList;
+  bool isCartEmpty = false; // Initially set to true
 
   @override
   Widget build(BuildContext context) {
     double defaultShippingFee = 50.0;
-    double totalAmount = Provider.of<TotalAmount>(context).tAmount + defaultShippingFee;
-
-    bool isCartEmpty = separateItemQuantities().isEmpty;
 
     return Scaffold(
       backgroundColor: Colors.white70,
@@ -45,8 +39,12 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: AppColors().red,
         title: Text(
           "Shopping Cart",
-          style: TextStyle(fontFamily: "Poppins", color: AppColors().white, fontSize: 12.sp,
-              fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontFamily: "Poppins",
+            color: AppColors().white,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         actions: [
           IconButton(
@@ -66,63 +64,68 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: CustomScrollView(
         slivers: [
-
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("items")
-                .where("productsID", whereIn: separateItemIDs())
-                .orderBy("publishedDate", descending: true)
+                .collection("users")
+                .doc(firebaseAuth.currentUser!.uid)
+                .collection("cart")
                 .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return SliverToBoxAdapter(child: Center(child: circularProgress()));
-              } else if (snapshot.data!.docs.isEmpty) {
-                return SliverToBoxAdapter(child: Container());
-              } else {
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      Menus model = Menus.fromJson(
-                        snapshot.data!.docs[index].data()! as Map<String, dynamic>,
-                      );
-
-                      if (index == 0) {
-                        totalAmount = 0;
-                        totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
-                      } else {
-                        totalAmount += (model.productPrice! * seperateItemQuantityList![index]) ;
-                      }
-
-                      if (snapshot.data!.docs.length - 1 == index) {
-                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                          Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(totalAmount.toDouble());
-                        });
-                      }
-
-                      return CartItemDesign(
-                        model: model,
-                        context: context,
-                        quanNumber: seperateItemQuantityList![index],
-                        onQuantityChanged: (newQuantity) {
-                          double newTotalAmount = model.productPrice! * newQuantity.toDouble();
-                          Provider.of<TotalAmount>(context, listen: false).displayTotalAmount(newTotalAmount);
-
-                          // Print the totalAmount
-                          print("Total Amount: ${Provider.of<TotalAmount>(context, listen: false).tAmount}");
-                        },
-                      );
-                    },
-                    childCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
-                  ),
-                );
+            builder: (context, cartSnapshot) {
+              if (cartSnapshot.connectionState == ConnectionState.waiting) {
+                return SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
               }
+              if (!cartSnapshot.hasData || cartSnapshot.data!.docs.isEmpty) {
+                return SliverToBoxAdapter(child: Center(child: Text("Your cart is empty.")));
+              }
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    var cartItem = cartSnapshot.data!.docs[index];
+                    String foodItemId = cartItem['foodItemId'];
+                    int itemCount = cartItem['itemCounter'];
+                    String thumbnailUrl = cartItem['thumbnailUrl'];
+                    String productTitle = cartItem['productTitle'];
+                    String productPrice = cartItem['productPrice'];
+                    String cartID = cartItem.id;
+
+                    return CartItemDesign(
+                      foodItemId: foodItemId,
+                      thumbnailUrl: thumbnailUrl,
+                      productTitle: productTitle,
+                      productPrice: productPrice,
+                      quanNumber: itemCount,
+                      context: context,
+                      onQuantityChanged: (newQuantity) async {
+                        // Update quantity in Firestore
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(firebaseAuth.currentUser!.uid)
+                            .collection("cart")
+                            .doc(cartID)
+                            .update({"itemCounter": newQuantity});
+
+                        // Recalculate subtotal and update TotalAmount provider
+                        calculateSubtotalAndUpdateTotalAmount();
+                      },
+                      cartID: cartID, // Pass the cartID to the CartItemDesign widget
+                    );
+                  },
+                  childCount: cartSnapshot.data!.docs.length,
+                ),
+              );
             },
           ),
+
         ],
       ),
-      bottomNavigationBar: isCartEmpty
-          ? Container(
-        child: Center(
+      bottomNavigationBar: Container(
+        height: isCartEmpty ? null : 200.h,
+        decoration: BoxDecoration(
+          color: AppColors().white,
+          border: Border.all(color: AppColors().red, width: 1),
+        ),
+        child: isCartEmpty
+            ? Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -146,73 +149,67 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ],
           ),
-        ),
-      )
-          : Container(
-        height: 200.h,
-        decoration: BoxDecoration(
-          color: AppColors().white,
-          border: Border.all(color: AppColors().red, width: 1),
-        ),
-        child: Padding(
+        )
+            : Padding(
           padding: EdgeInsets.all(19.w),
           child: Column(
             children: [
-              if (!isCartEmpty)
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Sub Total:",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors().black,
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w600,
-                          ),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Sub Total:",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors().black,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w600,
                         ),
-                        Text(
-                          "${Provider.of<TotalAmount>(context).tAmount}",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors().black,
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      Consumer<TotalAmount>(
+                        builder: (context, totalAmountProvider, _) {
+                          return Text(
+                            "${totalAmountProvider.tAmount}",
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: AppColors().black,
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Shipping Fee:",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors().black,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 6.h,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Shipping Fee:",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors().black,
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      Text(
+                        "${defaultShippingFee.toStringAsFixed(2)}",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors().black,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w600,
                         ),
-                        Text(
-                          "${defaultShippingFee.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors().black,
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              SizedBox(height: 6.h,),
-
-
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 6.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -225,53 +222,76 @@ class _CartScreenState extends State<CartScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    totalAmount.toStringAsFixed(2),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors().black,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Consumer<TotalAmount>(
+                    builder: (context, totalAmountProvider, _) {
+                      return Text(
+                        (totalAmountProvider.tAmount + defaultShippingFee).toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors().black,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
               SizedBox(height: 10.h),
               Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (c) => CheckOut(
-                                totalAmount: totalAmount.toDouble(),
-                                sellersUID: widget.sellersUID,
-                              ),
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (c) => CheckOut(
+                              totalAmount: Provider.of<TotalAmount>(context, listen: false).tAmount + defaultShippingFee,
+                              sellersUID: widget.sellersUID,
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors().red,
-                          minimumSize: Size(300.w, 50.h),
-                        ),
-                        child: Text(
-                          "Check Out",
-                          style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins",color: AppColors().white,),
-                        ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors().red,
+                        minimumSize: Size(300.w, 50.h),
                       ),
-                    ],
-                  )
-
+                      child: Text(
+                        "Check Out",
+                        style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: AppColors().white,),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    calculateSubtotalAndUpdateTotalAmount();
+  }
+
+  Future<void> calculateSubtotalAndUpdateTotalAmount() async {
+    double subtotal = 0;
+    QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("cart")
+        .get();
+    cartSnapshot.docs.forEach((cartItem) {
+      double price = double.parse(cartItem['productPrice']);
+      int quantity = cartItem['itemCounter'];
+      subtotal += (price * quantity);
+    });
+    Provider.of<TotalAmount>(context, listen: false).updateSubtotal(subtotal);
   }
 }

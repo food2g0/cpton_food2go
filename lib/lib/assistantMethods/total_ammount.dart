@@ -8,4 +8,9 @@ class TotalAmount extends ChangeNotifier {
     _totalAmount = number;
     notifyListeners(); // Notify listeners immediately without delay
   }
+  void updateSubtotal(double subtotal) {
+    _totalAmount = subtotal;
+    notifyListeners();
+  }
 }
+

@@ -127,7 +127,18 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                         Fluttertoast.showToast(msg: "Item is already in the cart");
                       } else {
                         // Add to cart
-                        addItemToCart(widget.model.productsID, context, itemCounter, );
+                        double price = double.parse(widget.model.productPrice);
+
+                        addItemToCart(
+
+                          widget.model.productsID,
+                          context,
+                          itemCounter,
+                          widget.model.thumbnailUrl,
+                          widget.model.productTitle,
+                          price as String?,
+
+                        );
                       }
                     },
                     child: Container(

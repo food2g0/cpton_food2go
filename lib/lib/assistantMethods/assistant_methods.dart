@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/assistantMethods/total_ammount.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -68,24 +69,41 @@ separateItemIDs()
   return separateItemIDsList;
 }
 
-addItemToCart(String? foodItemId, BuildContext context, int itemCounter)
-{
-  List<String>? tempList = sharedPreferences!.getStringList("userCart");
-  tempList!.add("${foodItemId!}:$itemCounter"); //56557657:7
+addItemToCart(String? foodItemId,
+    BuildContext context, int itemCounter, String? thumbnailUrl, String? productTitle, price,) async {
+  try {
+    // Fetch user document reference
+    DocumentReference userDocRef = FirebaseFirestore.instance.collection("users").doc(firebaseAuth.currentUser!.uid);
+    String cartID = FirebaseFirestore.instance.collection("users").doc().id;
 
-  FirebaseFirestore.instance.collection("users")
-      .doc(firebaseAuth.currentUser!.uid).update({
-    "userCart": tempList,
-  }).then((value)
-  {
+    // Create a new cart item object
+    Map<String, dynamic> cartItem = {
+      "cartID": cartID,
+      "foodItemId": foodItemId,
+      "itemCounter": itemCounter,
+      "thumbnailUrl": thumbnailUrl,
+      "productTitle": productTitle,
+      "productPrice": price,
+      // Add other properties as needed
+    };
+
+    // Add the cart item to a new collection inside the user's document
+    await userDocRef.collection("cart").doc(cartID).set(cartItem);
+
+    // Show success message
     Fluttertoast.showToast(msg: "Item Added Successfully.");
 
-    sharedPreferences!.setStringList("userCart", tempList);
+    // Update the local cart if needed
+    // Not required in this scenario as we are not updating tempList
 
-    //update the badge
+    // Update the badge
     Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
-  });
+  } catch (error) {
+    print("Error adding item to cart: $error");
+    // Handle error as needed
+  }
 }
+
 addItemToCartnoItemCounter(String? foodItemId, BuildContext context)
 {
   List<String>? tempList = sharedPreferences!.getStringList("userCart");
@@ -187,44 +205,48 @@ separateItemQuantities()
 
 
 
-clearCartNow(context)
-{
-  sharedPreferences!.setStringList("userCart", ['garbageValue']);
-  List<String>? emptyList = sharedPreferences!.getStringList("userCart");
-
+void clearCartNow(BuildContext context) {
   FirebaseFirestore.instance
       .collection("users")
       .doc(firebaseAuth.currentUser!.uid)
-      .update({"userCart": emptyList}).then((value)
-  {
-    sharedPreferences!.setStringList("userCart", emptyList!);
+      .collection("cart")
+      .get()
+      .then((querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      doc.reference.delete();
+    });
+  }).then((_) {
     Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
+    Provider.of<TotalAmount>(context, listen: false).updateSubtotal(0); // Update subtotal to 0 after clearing the cart
+  }).catchError((error) {
+    print("Failed to clear cart: $error");
   });
 }
-removeSelectedProductsFromCart(List<String> productIdsToRemove, context) {
-  List<String>? currentCart = sharedPreferences!.getStringList("userCart");
 
-  if (currentCart != null) {
-    // Remove selected product IDs from the current cart
-    currentCart.removeWhere((productId) {
-      // Extract item ID (excluding quantity)
-      var pos = productId.lastIndexOf(":");
-      String getItemId = (pos != -1) ? productId.substring(0, pos) : productId;
+void removeCartItemFromCart(String cartID, BuildContext context) {
+  // Remove the cart item from Firestore
+  FirebaseFirestore.instance
+      .collection("users")
+      .doc(firebaseAuth.currentUser!.uid)
+      .collection("cart")
+      .doc(cartID)
+      .delete()
+      .then((_) {
+    // Show success message
+    Fluttertoast.showToast(msg: "Item removed from cart.");
 
-      // Check if the extracted item ID is in the list of product IDs to remove
-      return productIdsToRemove.contains(getItemId);
-    });
+    // Update the local cart if needed
+    // Not required in this scenario as we are not updating any local cart list
 
-    // Update Firestore and SharedPreferences
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(firebaseAuth.currentUser!.uid)
-        .update({"userCart": currentCart}).then((value) {
-      sharedPreferences!.setStringList("userCart", currentCart);
-      Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
-    });
-  }
+    // Notify listeners to update the UI
+    Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
+  }).catchError((error) {
+    // Handle error
+    print("Error removing item from cart: $error");
+    // You can show an error message or handle the error as needed
+  });
 }
+
 
 
 
