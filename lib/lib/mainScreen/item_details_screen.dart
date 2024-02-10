@@ -471,22 +471,16 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
                     } else {
                       // If no variation is selected, use the default product price
-                      double price = double.parse(widget.model.productPrice);
-
-
+                      double price = widget.model.productPrice.toDouble(); // Convert integer to double
 
                       addItemToCart(
-
                         widget.model.productsID,
                         context,
                         itemCounter,
                         widget.model.thumbnailUrl,
                         widget.model.productTitle,
                         price,
-
                       );
-
-
                     }
                   }
                 },
