@@ -27,7 +27,7 @@ class OrderDetailsScreen extends StatefulWidget {
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   String orderStatus = "";
-  int defaultShippingFee = 50;
+
 
 
 
@@ -63,7 +63,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Total Amount Php ${(dataMap["totalAmount"] + defaultShippingFee).toStringAsFixed(2)}", // Add defaultShippingFee here
+                        "Total Amount Php ${(dataMap["totalAmount"])}", // Add defaultShippingFee here
                         style:  TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w700,
@@ -72,37 +72,37 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       ),
                     ),
                   ),
-                   Padding(
-                     padding: EdgeInsets.all(4.0.w),
-                     child: Align(
-                       alignment: Alignment.centerLeft,
-                       child: Text(
-                          "Order Id = " + widget.orderID!,
-                          style:  TextStyle(
-                            fontSize: 12.sp,
-                            fontFamily: "Poppins",
-                          ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0.w),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Order Id = " + widget.orderID!,
+                        style:  TextStyle(
+                          fontSize: 12.sp,
+                          fontFamily: "Poppins",
                         ),
-                     ),
-                   ),
+                      ),
+                    ),
+                  ),
 
                   Padding(
                     padding:  EdgeInsets.all(4.0.w),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                          "Order at: " +
-                              DateFormat("dd MMMM, yyyy - hh:mm aa").format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(dataMap["orderTime"]),
-                                ),
+                        "Order at: " +
+                            DateFormat("dd MMMM, yyyy - hh:mm aa").format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(dataMap["orderTime"]),
                               ),
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.grey,
-                            fontFamily: "Poppins",
-                          ),
+                            ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.grey,
+                          fontFamily: "Poppins",
                         ),
+                      ),
                     ),
                   ),
 
@@ -114,22 +114,34 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   FutureBuilder<DocumentSnapshot>(
                     future: FirebaseFirestore.instance
                         .collection("users")
-                        .doc(sharedPreferences!.getString("uid"))
+                        .doc(sharedPreferences?.getString("uid")) // Use null-aware operator
                         .collection("userAddress")
                         .doc(dataMap["addressID"])
                         .get(),
                     builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? ShipmentAddressDesign(
-                        orderID: widget.orderID,
-                        model: Address.fromJson(
-                          snapshot.data!.data()!
-                          as Map<String, dynamic>,
-                        ),
-                      )
-                          : Center(child: circularProgress());
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: circularProgress());
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        // Print the address data
+                        print('Address data: ${snapshot.data!.data()}');
+
+                        // Return the ShipmentAddressDesign widget with the retrieved address data
+                        return ShipmentAddressDesign(
+                          orderID: widget.orderID,
+                          model: Address.fromJson(
+                            snapshot.data!.data()! as Map<String, dynamic>,
+                          ),
+                        );
+                      } else {
+                        // Display a message indicating that the address was not found
+                        return Center(child: Text("Address not found."));
+                      }
                     },
+
                   ),
+
                 ],
               ),
             )
@@ -137,7 +149,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           },
         ),
 
-     
+
       ),
     );
   }

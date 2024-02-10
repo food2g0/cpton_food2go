@@ -31,6 +31,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   int cartItemCount = 0;
   late String customersUID; // Declare customersUID without initialization
   String selectedVariationPrice = '';
+  String selectedFlavorsPrice = '';
 
   @override
   void initState() {
@@ -212,7 +213,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           return Text('Error: ${snapshot.error}');
                         }
 
-                        var variations = (snapshot.data! as DocumentSnapshot)['variations'] ?? [];
+                        var variations = (snapshot.data!)['variations'] ?? [];
+                        var flavors = (snapshot.data!)['flavors'] ?? [];
 
 
                         if (variations.isNotEmpty) {
@@ -254,14 +256,67 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                   );
                                                                 }).toList(),
                               ),
+
                             ],
                           );
                         } else {
-                          // If no variations exist, return an empty container
                           return Container();
+                        }
+},
+
+                    ),
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("items")
+                          .doc(widget.model.productsID)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        final data = snapshot.data!.data() as Map<String, dynamic>?; // Cast data to Map<String, dynamic>?
+                        if (data != null && data.containsKey('flavors') && data['flavors'] is List) {
+                          var flavors = data['flavors'];
+                          String? selectedFlavor;
+
+                          // If flavors exist and it's a list, show flavor dropdown menu
+                          return DropdownButtonFormField<String>(
+                            value: selectedFlavor,
+                            items: flavors.map<DropdownMenuItem<String>>((flavor) {
+                              String flavorName = flavor['name'];
+                              return DropdownMenuItem<String>(
+                                value: flavorName,
+                                child: Text(flavorName),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedFlavor = value;
+                              });
+                              // Handle flavor selection here
+                              print('Selected flavor: $value');
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Select Flavor',
+                              border: OutlineInputBorder(),
+                            ),
+                          );
+                        } else {
+                          return Container(); // If 'flavors' key doesn't exist or is not a list, return an empty container
                         }
                       },
                     ),
+
+
+
+
+
+
+
                     SizedBox(height: 10.0),
                     Row(
                       children: [
@@ -278,7 +333,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                             fontFamily: "Poppins",
                             fontSize: 14.0.sp,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black87,
+                            color: AppColors().black1,
                           ),
                         ),
                       ],
@@ -298,14 +353,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(Icons.delivery_dining, size: 24.sp, color: Color(0xFF890010)),
+                    Icon(Icons.delivery_dining, size: 24.sp, color: AppColors().red),
                     Text(
                       "  Cost ",
                       style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w700,
-                          color: Colors.black),
+                          color: AppColors().black),
                     ),
                     Text(
                       ' Php: 50',
@@ -321,7 +376,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             SizedBox(height: 20.sp,),
             // Product Description
             Container(
-              color: Colors.white,
+              color: AppColors().white,
               child: Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: Column(
@@ -337,7 +392,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               fontFamily: "Poppins",
                               fontSize: 12.sp,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF890010)),
+                              color: AppColors().red),
                         ),
                       ],
                     ),

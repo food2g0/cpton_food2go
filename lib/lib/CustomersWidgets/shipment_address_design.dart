@@ -64,7 +64,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "Poppins")
             ),
           ),
-           SizedBox(
+          SizedBox(
             height: 6.0.h,
           ),
           Container(
@@ -74,7 +74,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
               children: [
                 TableRow(
                   children: [
-                   Text(
+                    Text(
                       "Name : ",
                       style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),
                     ),
@@ -83,7 +83,7 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                 ),
                 TableRow(
                   children: [
-                     Text(
+                    Text(
                       "Phone Number : ",
                       style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),
                     ),
@@ -121,41 +121,41 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
                 return ListView.builder(
                     itemCount: snapshot.data?.docs.length ?? 0,
                     itemBuilder: (context, index) {
-                  if (snapshot.data?.docs == null || index >= snapshot.data!.docs.length) {
-                    return Container(); // or any other widget indicating the absence of data
-                  }
-                  return Padding(
-                    padding: EdgeInsets.all(8.w),
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => MyMap(
-                                user_id: snapshot.data!.docs[index].id,
-                              ),
+                      if (snapshot.data?.docs == null || index >= snapshot.data!.docs.length) {
+                        return Container(); // or any other widget indicating the absence of data
+                      }
+                      return Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => MyMap(
+                                    user_id: snapshot.data!.docs[index].id,
+                                  ),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF31572c),
+                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF31572c),
-                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.navigation_outlined, color: Color(0xFFFFFFFF)),
-                            Text(
-                              "Track Order",
-                              style: TextStyle(color: Colors.white, fontSize: 14.sp, fontFamily: "Poppins"),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.navigation_outlined, color: Color(0xFFFFFFFF)),
+                                Text(
+                                  "Track Order",
+                                  style: TextStyle(color: Colors.white, fontSize: 14.sp, fontFamily: "Poppins"),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }
-    );
+                      );
+                    }
+                );
               },
             ),
           ),

@@ -9,15 +9,16 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 
 class ProductRatingScreen extends StatefulWidget {
   String? riderUID;
-  String? productsID;
+
   String? sellerUID;
   String? orderID;
+  String? foodItemIDs;
 
   ProductRatingScreen({
     this.orderID,
-    this.productsID,
     this.riderUID,
     this.sellerUID,
+    this.foodItemIDs,
   });
 
   @override
@@ -160,7 +161,7 @@ class _ProductRatingScreenState extends State<ProductRatingScreen> {
 
   void submitRating() async {
     try {
-      await FirebaseFirestore.instance.collection("items").doc(widget.productsID).collection("itemRecord").add({
+      await FirebaseFirestore.instance.collection("items").doc(widget.foodItemIDs).collection("itemRecord").add({
         "rating": countRatingStars,
         "comment": commentController.text,
         // Add other fields as needed

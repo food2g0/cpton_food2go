@@ -38,48 +38,87 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? selectedPaymentMethod;
   String orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
-  addOrderDetails() {
-    writeOrderDetailsForUser({
-      "addressID": widget.addressID,
-      "totalAmount": widget.totalAmount,
-      "orderBy": sharedPreferences!.getString("uid"),
-      "productsIDs": sharedPreferences!.getStringList("userCart"),
-      "paymentDetails": "Gcash",
-      "orderTime": orderId,
-      "isSuccess": true,
-      "sellerUID": widget.sellersUID,
-      "referenceNumber": referenceNumberController.text,
-      "riderUID": "",
-      "status": "ToPay",
-      "orderId": orderId,
-    });
-    writeOrderDetailsForSeller({
-      "addressID": widget.addressID,
-      "totalAmount": widget.totalAmount,
-      "orderBy": sharedPreferences!.getString("uid"),
-      "productsIDs": sharedPreferences!.getStringList("userCart"),
-      "paymentDetails": "Gcash",
-      "orderTime": orderId,
-      "isSuccess": true,
-      "referenceNumber": referenceNumberController.text,
-      "sellerUID": widget.sellersUID,
-      "riderUID": "",
-      "status": "ToPay",
-      "orderId": orderId,
-    }).whenComplete(() {
+  Future<void> addOrderDetails(BuildContext context) async {
+    if (sharedPreferences == null) return;
+    try {
+      // Fetch user document reference
+
+      DocumentReference userDocRef =
+      FirebaseFirestore.instance.collection("users").doc(firebaseAuth.currentUser!.uid);
+
+      // Fetch cart items
+      QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(firebaseAuth.currentUser!.uid)
+          .collection("cart")
+          .get();
+
+      // Get cart item details
+      List<Map<String, dynamic>> products = cartSnapshot.docs.map((cartItem) {
+        return {
+          "foodItemId": cartItem['foodItemId'],
+          "itemCounter": cartItem['itemCounter'],
+          "cartID": cartItem['cartID'],
+          "thumbnailUrl": cartItem['thumbnailUrl'],
+          "productTitle": cartItem['productTitle'],
+          "productPrice": cartItem['productPrice'],
+
+        };
+      }).toList();
+
+      // Add order details for user
+      await writeOrderDetailsForUser({
+        "addressID": widget.addressID,
+        "totalAmount": widget.totalAmount,
+        "orderBy": sharedPreferences?.getString("uid"),
+        "products": products, // Add cart items
+        "paymentDetails": "Gcash",
+        "orderTime": orderId,
+        "isSuccess": true,
+        "sellerUID": widget.sellersUID,
+        "riderUID": "",
+        "status": "ToPay",
+        "orderId": orderId,
+      });
+
+      // Add order details for seller
+      await writeOrderDetailsForSeller({
+        "addressID": widget.addressID,
+        "totalAmount": widget.totalAmount,
+        "orderBy": sharedPreferences?.getString("uid"),
+        "products": products, // Add cart items
+        "paymentDetails": "Gcash",
+        "orderTime": orderId,
+        "isSuccess": true,
+        "sellerUID": widget.sellersUID,
+        "riderUID": "",
+        "status": "ToPay",
+        "orderId": orderId,
+      });
+
+      // Clear the cart
       clearCartNow(context);
+
+      // Reset orderId
       setState(() {
         orderId = "";
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MyOrderScreen()));
-        Fluttertoast.showToast(msg: "Congratulations, order placed successfully! ");
       });
-    });
+
+      // Navigate to the order screen
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MyOrderScreen()));
+
+      // Show success message
+      Fluttertoast.showToast(msg: "Congratulations, order placed successfully!");
+    } catch (error) {
+      print("Error adding order details: $error");
+      // Handle error as needed
+    }
   }
 
   Future writeOrderDetailsForUser(Map<String, dynamic> data) async {
     await FirebaseFirestore.instance
         .collection("users")
-        .doc(sharedPreferences!.getString("uid"))
+        .doc(sharedPreferences?.getString("uid"))
         .collection("orders")
         .doc(orderId)
         .set(data);
@@ -91,8 +130,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double defaultShippingFee = 50.0;
-    double? totalAmount = widget.totalAmount! + defaultShippingFee;
+    double? totalAmount = widget.totalAmount!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors().red,
@@ -124,7 +162,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                addOrderDetails();
+                addOrderDetails(context);
                 // Add your logic for processing the payment with the reference number
               },
               child: Text('Submit Payment'),

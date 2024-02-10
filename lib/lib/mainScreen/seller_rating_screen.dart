@@ -10,15 +10,16 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 
 class SellerRatingScreen extends StatefulWidget {
   String? riderUID;
-  String? productsID;
+
   String? sellerUID;
   String? orderID;
+  String? foodItemIDs;
 
   SellerRatingScreen({
     this.orderID,
-    this.productsID,
     this.riderUID,
     this.sellerUID,
+    this.foodItemIDs,
   });
 
   @override
@@ -162,7 +163,7 @@ class _SellerRatingScreenState extends State<SellerRatingScreen> {
   void submitRating() async {
     try {
       await FirebaseFirestore.instance.collection("sellers").doc(widget.sellerUID).collection("sellersRecord").add({
-        "productsID": widget.productsID,
+        "productsID": widget.foodItemIDs,
         "sellerUID": widget.sellerUID,
         "rating": countRatingStars,
         "comment": commentController.text,
@@ -181,7 +182,7 @@ class _SellerRatingScreenState extends State<SellerRatingScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.push(context, MaterialPageRoute(builder: (c)=>ProductRatingScreen(sellerUID: widget.sellerUID,
-                    productsID: widget.productsID, riderUID: widget.riderUID, orderID: widget.orderID,
+                    foodItemIDs: widget.foodItemIDs, riderUID: widget.riderUID, orderID: widget.orderID,
                   )));
 
                 },

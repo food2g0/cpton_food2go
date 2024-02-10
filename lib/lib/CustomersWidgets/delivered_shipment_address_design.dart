@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cpton_foodtogo/lib/mainScreen/RatingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,30 +16,24 @@ import '../splashScreen/splash_screen.dart';
 class DeliveredShipmentAddressDesign extends StatefulWidget {
   final Address? model;
   String? purchaserId;
-  String? sellerUID;
+  String? sellerId;
   String? orderID;
   String? purchaserAddress;
   double? purchaserLat;
-  String? getOrderID;
+
   double? purchaserLng;
   String? riderName;
-  String? riderUID;
-  String? orderByUser;
-  String? productsIDs;
 
   DeliveredShipmentAddressDesign({
     this.model,
     this.purchaserId,
-    this.sellerUID,
+    this.sellerId,
     this.orderID,
     this.purchaserAddress,
     this.purchaserLat,
-    this.getOrderID,
+
     this.riderName,
     this.purchaserLng,
-    this.riderUID,
-    this.orderByUser,
-    this.productsIDs,
   });
 
   @override
@@ -55,6 +50,8 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
     _requestPermission();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -63,30 +60,43 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
         children: [
           const Padding(
             padding: EdgeInsets.all(10.0),
-            child: Text('Shipping Details:', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "Poppins")),
+            child: Text(
+                'Shipping Details:',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: "Poppins")
+            ),
           ),
-          SizedBox(height: 6.0.h),
+          SizedBox(
+            height: 6.0.h,
+          ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 5.h),
+            padding:  EdgeInsets.symmetric(horizontal: 30.w, vertical: 5.h),
             width: MediaQuery.of(context).size.width,
             child: Table(
               children: [
                 TableRow(
                   children: [
-                    Text("Name : ", style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
-                    Text(widget.model!.name!, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
+                    Text(
+                      "Name : ",
+                      style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),
+                    ),
+                    Text(widget.model!.name!,style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),),
                   ],
                 ),
                 TableRow(
                   children: [
-                    Text("Phone Number : ", style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
-                    Text(widget.model!.phoneNumber!, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
+                    Text(
+                      "Phone Number : ",
+                      style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp),
+                    ),
+                    Text(widget.model!.phoneNumber!,  style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp), ),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(
+            height: 20,
+          ),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(
@@ -97,7 +107,10 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
               ),
             ),
           ),
-          Divider(thickness: 4),
+
+
+          Divider(thickness: 4,),
+
           Container(
             height: 100.h,
             child: StreamBuilder(
@@ -179,33 +192,36 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
       openAppSettings();
     }
   }
-
-  // Fetch data for orderID
   Future<void> fetchData() async {
     DocumentSnapshot orderSnapshot = await FirebaseFirestore.instance
-        .collection("orders").doc(widget.orderID).get();
+        .collection("orders")
+        .doc(widget.orderID)
+        .get();
+
     if (orderSnapshot.exists) {
       var orderID = orderSnapshot["orderId"];
       var riderUID = orderSnapshot["riderUID"];
-      var productsIDs = orderSnapshot["productsIDs"];
+      var products = orderSnapshot["products"];
       var sellerUID = orderSnapshot["sellerUID"];
 
-      if (sellerUID is String && productsIDs is List<dynamic>) {
-        // Extracting only the valid IDs from productsIDs list
-        List<String> itemIDs = [];
+      if (sellerUID is String && products is List<dynamic>) {
+        List<String> foodItemIDs = [];
 
-        for (var productID in productsIDs) {
-          if (productID is String && productID != "garbageValue") {
-            var pos = productID.lastIndexOf(":");
-            var validID = (pos != -1) ? productID.substring(0, pos) : productID;
-            itemIDs.add(validID);
+        // Iterate over products and extract foodItemId if it exists
+        for (var product in products) {
+          if (product is Map<String, dynamic> && product.containsKey("foodItemId")) {
+            var fooditemId = product["foodItemId"];
+            if (fooditemId is String) {
+              foodItemIDs.add(fooditemId);
+            }
           }
         }
 
-        String productsIDString = itemIDs.join(', ');
+        // Join the food item IDs into a single string
+        String foodItemIDsString = foodItemIDs.join(', ');
 
         print("riderUID: ${riderUID}");
-        print("productsIDs: ${productsIDString}");
+        print("foodItemIDs: ${foodItemIDsString}");
         print("sellerUID: ${sellerUID}");
 
         Navigator.push(
@@ -214,7 +230,7 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
             builder: (context) => DriverRatingScreen(
               orderID: orderID,
               riderUID: riderUID,
-              productsID: productsIDString,
+              foodItemIDs: foodItemIDsString,
               sellerUID: sellerUID,
             ),
           ),
@@ -225,6 +241,4 @@ class _DeliveredShipmentAddressDesignState extends State<DeliveredShipmentAddres
       }
     }
   }
-
-
 }

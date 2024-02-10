@@ -1,130 +1,156 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../mainScreen/order_details_screen.dart';
-import '../models/items.dart';
 
 class OrderCard extends StatelessWidget {
-  final int? itemCount;
-  final List<DocumentSnapshot>? data;
-  final String? orderID;
-  final List<String>? seperateQuantitiesList;
-  final String? sellerName;
-  final String status; // Added status parameter
+  final int itemCount;
+  final List<Map<String, dynamic>> data;
+  final String orderID;
+  final String sellerName;
+  final String? paymentDetails;
+  final String? totalAmount;
+  final List<Map<String, dynamic>> cartItems;
 
   OrderCard({
-    this.itemCount,
-    this.data,
-    this.orderID,
-    this.seperateQuantitiesList,
-    this.sellerName,
-    required this.status,
+    required this.itemCount,
+    required this.data,
+    required this.orderID,
+    required this.sellerName,
+    this.paymentDetails,
+    this.totalAmount,
+    required this.cartItems,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => OrderDetailsScreen(orderID: orderID)));
+      onTap: ()  {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (c) => OrderDetailsScreen(orderID: orderID)),
+        );
       },
       child: Card(
         elevation: 2,
-        child: Container(
-          color: Colors.white70,
-          padding: EdgeInsets.all(10.w),
-          margin: EdgeInsets.all(10.w),
-          height: itemCount! * 125,
-          child: ListView.builder(
-            itemCount: itemCount,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              Items model = Items.fromJson(data![index].data()! as Map<String, dynamic>);
-              return placedOrderDesignWidget(model, context, seperateQuantitiesList![index], sellerName, status);
-            },
-          ),
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: itemCount,
+              itemBuilder: (context, index) {
+                return placedOrderDesignWidget(context, index);
+              },
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
-Widget placedOrderDesignWidget(Items model, BuildContext context, String seperateQuantitiesList, String? sellerName, String status) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Display seller's name
-      Row(
+  Widget placedOrderDesignWidget(BuildContext context, int index) {
+    Map<String, dynamic> snapshot = data[index];
+    return SizedBox(
+      height: 140,
+      child: Row(
         children: [
-          Image.network(
-            model.thumbnailUrl,
-            width: 120.w,
-            fit: BoxFit.cover,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.network(
+                cartItems[index]['thumbnailUrl'], // Use cartItems instead of data
+                width: 150,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          SizedBox(width: 10.0.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  (model.productTitle.length > 12)
-                      ? ' ${model.productTitle.substring(0, 12)}...'
-                      : ' ${model.productTitle}',
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cartItems[index]['productTitle'], // Use cartItems instead of data
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  sellerName ?? '',
-                  style: const TextStyle(
-                    color: Colors.black45,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Poppins",
+                  const SizedBox(height: 5,),
+                  Row(
+                    children: [
+                      Text(
+                        "Seller: ",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                      Text(
+                        sellerName,
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      " Php ",
-                      style: TextStyle(fontSize: 12.sp, color: AppColors().red),
-                    ),
-                    Text(
-                      model.productPrice.toString(),
-                      style: TextStyle(
-                        color: AppColors().red,
-                        fontSize: 12.0.sp,
+                  Row(
+                    children: [
+                      Text(
+                        "Price: ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "Poppins",
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 5),
-                    const Text(
-                      "qty: x ",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 10,
+                      Text(
+                        cartItems[index]['productPrice'].toString(), // Use cartItems instead of data
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "Poppins",
+                        ),
                       ),
-                    ),
-                    Text(
-                      seperateQuantitiesList,
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 14.sp,
-                        fontFamily: "Poppins",
+                      const SizedBox(width: 5),
+                      Text(
+                        "x ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 10,
+                          fontFamily: "Poppins",
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-              ],
+                      Text(
+                        cartItems[index]['itemCounter'].toString(), // Use cartItems instead of data
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10,),
+                ],
+              ),
             ),
           ),
         ],
       ),
-
-    ],
-  );
+    );
+  }
 }
