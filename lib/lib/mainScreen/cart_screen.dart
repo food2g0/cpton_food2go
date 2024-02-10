@@ -85,7 +85,7 @@ class _CartScreenState extends State<CartScreen> {
                     int itemCount = cartItem['itemCounter'];
                     String thumbnailUrl = cartItem['thumbnailUrl'];
                     String productTitle = cartItem['productTitle'];
-                    String productPrice = cartItem['productPrice'];
+                    String productPrice = cartItem['productPrice'].toString();
                     String cartID = cartItem.id;
 
                     return CartItemDesign(
@@ -288,10 +288,12 @@ class _CartScreenState extends State<CartScreen> {
         .collection("cart")
         .get();
     cartSnapshot.docs.forEach((cartItem) {
-      double price = double.parse(cartItem['productPrice']);
+      double price = cartItem['productPrice']; // Directly assign the value
       int quantity = cartItem['itemCounter'];
       subtotal += (price * quantity);
     });
     Provider.of<TotalAmount>(context, listen: false).updateSubtotal(subtotal);
   }
+
+
 }

@@ -455,8 +455,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   } else {
                     // Check if a variation price is selected
                     if (selectedVariationPrice.isNotEmpty) {
-                      double price1 = double.parse(selectedVariationPrice);
-                      double price = double.parse(widget.model.productPrice);
+                      double price = double.parse(selectedVariationPrice);
+
 
                       addItemToCart(
 
@@ -465,13 +465,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         itemCounter,
                         widget.model.thumbnailUrl,
                         widget.model.productTitle,
-                        price as String?,
+                        price,
 
                       );
 
                     } else {
                       // If no variation is selected, use the default product price
-                      String? price = widget.model.productPrice.toString();
+                      double price = double.parse(widget.model.productPrice);
 
 
 
