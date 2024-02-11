@@ -45,13 +45,15 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
       ),
       backgroundColor: Colors.grey,
       body: Dialog(
+
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            SizedBox(height: 20.h,),
             Text(
               "Rate your Rider",
               style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: 10.sp,
                 fontFamily: "Poppins",
                 fontWeight: FontWeight.w600,
                 color: AppColors().black,
@@ -65,7 +67,7 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
               rating: countRatingStars,
               allowHalfRating: false,
               starCount: 5,
-              size: 30.sp,
+              size: 25.sp,
               color: AppColors().yellow,
               borderColor: AppColors().black,
               onRatingChanged: (valueOfStarsChoice) {
@@ -102,9 +104,9 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
             Text(
               titleStarRatings,
               style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors().black1,
                 fontFamily: "Poppins",
               ),
             ),
@@ -114,18 +116,25 @@ class _DriverRatingScreenState extends State<DriverRatingScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: Container(
-                  height: 90.h,
+                  height: 130.h,
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors().red, width: 1.0),
+                    border: Border.all(color: AppColors().black, width: 1.0),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextField(
                     controller: commentController,
-                    maxLines: 3,
+                    maxLines: 5,
                     maxLength: 200,
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp
+                    ),
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h), // Add padding here
                       hintText: 'Add your comment...',
+                      hintStyle: TextStyle(
+                        fontSize: 12.sp,
+                        fontFamily: "Poppins"
+                      ),
                       border: InputBorder.none,
                     ),
                   ),

@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar:
           AppBar(
             backgroundColor: AppColors().backgroundWhite,
-          toolbarHeight: 80,
+          toolbarHeight: 90.h,
             iconTheme: IconThemeData(color: AppColors().white),
             elevation: 0.0,
             flexibleSpace: ClipPath(
@@ -229,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(80.h),
               child: Container(
-                height:80.h,
+                height:74.h,
                 width: MediaQuery.of(context).size.width * 0.9, // Adjust the width as needed
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),

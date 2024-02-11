@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomShape extends CustomClipper<Path>{
   @override
@@ -8,11 +9,11 @@ class CustomShape extends CustomClipper<Path>{
     double width = size.width;
 
     var path = Path();
-    path.lineTo(0, height-50);
+    path.lineTo(0, height-50.h);
 
-    path.quadraticBezierTo(width/2, height, width, height-50);
+    path.quadraticBezierTo(width/2, height, width, height-50.h);
 
-    path.lineTo(width, 0);
+    path.lineTo(width, 0.w);
     path.close();
     return path;
 

@@ -371,36 +371,36 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         ],
       ),
     ),
-    ]
-    ),
+      ]
+      ),
     ),
     bottomNavigationBar: BottomAppBar(
-    color: AppColors().backgroundWhite,
-    child: Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    child: ElevatedButton(
-    onPressed: () {
-    _showVariationsBottomSheet(context);
-    },
-    style: ElevatedButton.styleFrom(
-    shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10.w)
+      color: AppColors().backgroundWhite,
+      child: Container(
+         padding: const EdgeInsets.symmetric(horizontal: 16.0),
+         child: ElevatedButton(
+          onPressed: () {
+           _showVariationsBottomSheet(context);
+          },
+          style: ElevatedButton.styleFrom(
+           shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.w)
     ),
-    backgroundColor: AppColors().red,
+          backgroundColor: AppColors().red,
     ),
-    child: Text(
-    'Add to Cart',
-    style: TextStyle(
-    fontFamily: "Poppins",
-    fontSize: 10.sp,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-    ),
-    ),
-    ),
-    ),
-    ),
-    );
+        child: Text(
+        'Add to Cart',
+        style: TextStyle(
+        fontFamily: "Poppins",
+        fontSize: 10.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        ),
+       ),
+     ),
+        ),
+     ),
+        );
 
 
 
@@ -424,7 +424,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 // Your bottom sheet content
                 Text(
                   'Variations',
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 10.0.sp,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 16.0),
                 StreamBuilder<DocumentSnapshot>(
@@ -478,7 +480,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                   },
                                   child: Text(firstLetter,
                                     style: TextStyle(
-                                        color: AppColors().black1,
+                                        color: AppColors().black,
                                         fontSize: 10.sp,
                                         fontFamily: "Poppins"
                                     ),),
@@ -496,9 +498,11 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 // Add your variation widgets here
                 Text(
                   'Flavors',
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 10.0.sp,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 16.0),
+                SizedBox(height: 16.0.h),
                 StreamBuilder<DocumentSnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection("items")
@@ -512,59 +516,43 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       return Text('Error: ${snapshot.error}');
                     }
 
-                    var variations = (snapshot.data!)['variations'] ?? [];
+                    var flavors = (snapshot.data!)['flavors'] ?? [];
 
-
-                    if (variations.isNotEmpty) {
+                    if (flavors.isNotEmpty) {
                       // If variations exist, show variation options UI
-                      return Row(
-                        children: [
-                          SizedBox(height: 10),
-                          // Display buttons for each variation
-                          Row(
-                            children: variations.map<Widget>((variation) {
-                              String variationName = variation['name'];
-                              String variationPrice = variation['price'];
+                      return Wrap(
+                        children: flavors.map<Widget>((variation) {
+                          String flavorsName = variation['name'];
+                          String firstLetter = flavorsName;
 
-                              // Check if variation price is not null
-                              String firstLetter = variationName.substring(0, 1);
-
-                              // Return a button for each variation wrapped in padding for spacing
-                              return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.w)
-                                      )
-                                  ),
-                                  onPressed: () {
-                                    // Set the selected variation price
-                                    print('$variationPrice');
-                                    setState(() {
-                                      selectedVariationPrice = variationPrice;
-                                    });
-                                    // Handle button press for this variation
-                                    // You can implement the logic here to perform actions when a variation button is pressed
-                                    print('Selected variation: $variationPrice');
-                                  },
-                                  child: Text(firstLetter,
-                                    style: TextStyle(
-                                        color: AppColors().black1,
-                                        fontSize: 10.sp,
-                                        fontFamily: "Poppins"
-                                    ),),
+                          // Return a button for each variation wrapped in padding for spacing
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.w)
+                                  )
+                              ),
+                              onPressed: () {},
+                              child: Text(
+                                firstLetter,
+                                style: TextStyle(
+                                    color: AppColors().black,
+                                    fontSize: 10.sp,
+                                    fontFamily: "Poppins"
                                 ),
-                              );
-                            }).toList(),
-                          ),
-                        ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       );
                     } else {
                       return Container();
                     }
                   },
                 ),
+
                 // Add your flavors widgets here
                 Row(
                   children: [
