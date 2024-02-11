@@ -63,10 +63,10 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                               child: Text(
                                 widget.model!.sellersName!,
                                 style: TextStyle(
-                                  color: AppColors().black,
+                                  color: AppColors().black1,
                                   fontFamily: "Poppins",
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 9.sp,
                                 ),
                                 overflow: TextOverflow.ellipsis, // Add ellipsis when text overflows
                               ),

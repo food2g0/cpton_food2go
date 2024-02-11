@@ -222,7 +222,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               color: AppColors().red,
                             ),
                             Text(
-                              '${widget.model!.sellersAddress}'.substring(0, 35) + '...', // Truncate text to 20 characters
+                              '${widget.model!.sellersAddress}'.substring(0, 33) + '...', // Truncate text to 20 characters
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: AppColors().black,

@@ -24,17 +24,34 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-
   bool isEditing = false;
   List<int>? separateItemQuantityList;
-  bool isCartEmpty = false; // Initially set to true
+  bool isCartEmpty = true; // Initially set to true
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the initial value of isCartEmpty based on the cart data
+    checkCartEmpty();
+  }
+
+  Future<void> checkCartEmpty() async {
+    QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("cart")
+        .get();
+    setState(() {
+      isCartEmpty = cartSnapshot.docs.isEmpty;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double defaultShippingFee = 50.0;
 
     return Scaffold(
-      backgroundColor: Colors.white70,
+      backgroundColor: AppColors().backgroundWhite,
       appBar: AppBar(
         backgroundColor: AppColors().red,
         title: Text(
@@ -74,10 +91,40 @@ class _CartScreenState extends State<CartScreen> {
               if (cartSnapshot.connectionState == ConnectionState.waiting) {
                 return SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
               }
-              if (!cartSnapshot.hasData || cartSnapshot.data!.docs.isEmpty) {
-                return SliverToBoxAdapter(child: Center(child: Text("Your cart is empty.")));
-              }
-              return SliverList(
+              return isCartEmpty
+                  ? SliverFillRemaining(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Your cart is empty.",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors().black1,
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColors().red,
+                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        child: Text(
+                          "Start Shopping",
+                          style: TextStyle(fontSize: 12.sp, fontFamily: "Poppins", color: AppColors().white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+                  : SliverList(
                 delegate: SliverChildBuilderDelegate(
                       (context, index) {
                     var cartItem = cartSnapshot.data!.docs[index];
@@ -115,42 +162,17 @@ class _CartScreenState extends State<CartScreen> {
               );
             },
           ),
-
         ],
       ),
-      bottomNavigationBar: Container(
-        height: isCartEmpty ? null : 200.h,
+      bottomNavigationBar: isCartEmpty
+          ? null
+          : Container(
+        height: 200.h,
         decoration: BoxDecoration(
           color: AppColors().white,
           border: Border.all(color: AppColors().red, width: 1),
         ),
-        child: isCartEmpty
-            ? Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Your cart is empty.",
-                style: TextStyle(fontSize: 12.sp, fontFamily: "Poppins", color: AppColors().black),
-              ),
-              SizedBox(height: 16.h),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors().red,
-                  minimumSize: Size(150.w, 50.h),
-                ),
-                child: Text(
-                  "Shop Now",
-                  style: TextStyle(fontSize: 12.sp, fontFamily: "Poppins", color: AppColors().white),
-                ),
-              ),
-            ],
-          ),
-        )
-            : Padding(
+        child: Padding(
           padding: EdgeInsets.all(19.w),
           child: Column(
             children: [
@@ -261,7 +283,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       child: Text(
                         "Check Out",
-                        style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: AppColors().white,),
+                        style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: AppColors().white),
                       ),
                     ),
                   ],
@@ -294,6 +316,4 @@ class _CartScreenState extends State<CartScreen> {
     });
     Provider.of<TotalAmount>(context, listen: false).updateSubtotal(subtotal);
   }
-
-
 }

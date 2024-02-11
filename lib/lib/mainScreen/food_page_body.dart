@@ -5,6 +5,7 @@ import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../CustomersWidgets/dimensions.dart';
+import '../CustomersWidgets/menu_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../CustomersWidgets/sellers_design.dart';
 import '../models/items.dart';
@@ -24,6 +25,26 @@ class _FoodPageBodyState extends State<FoodPageBody> {
   var _currPageValue = 0.0;
   final double _scaleFactor = 0.8;
   final double _height = Dimensions.pageViewContainer;
+
+  List<String> categoryImages = [
+    'images/fast-food.png', // Fast food image path
+    'images/coffee.png', // Fast food image path
+    'images/tea.png', // Fast food image path
+    'images/tray.png', // Fast food image path
+    'images/desserts.png', // Fast food image path
+
+  ];
+
+  List<String> categoryLabels = [
+    'Fast Food',
+    'Coffee',
+    'Milk Tea',
+    'Buffet',
+    'Dessert',
+  ];
+
+
+
 
   @override
   void initState() {
@@ -46,21 +67,70 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            height: 200.h,
-            child: Stack(
-              children: [
-                PageView.builder(
-                  controller: pageController,
-                  itemBuilder: (context, position) {
-                    return _buildPageItem(position);
-                  },
-                ),
 
+          SizedBox(height: 25.h),
+          Container(
+            margin: EdgeInsets.only(left: 25.w),
+            child: Row(
+              children: [
+                Text(
+                  "Category",
+                  style: TextStyle(
+                    color: AppColors().black,
+                    fontSize: 10.sp,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
-          SizedBox(height: 25.w),
+          SizedBox(height: 10.h),
+
+
+          Container(
+            height: 120,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categoryImages.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundColor: AppColors().white,
+                        child: Image.asset(
+                          categoryImages[index],
+                          height: 40,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        categoryLabels[index],
+                        style: TextStyle(
+                          fontSize: 8.sp,
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+
+
+
+
+
+
+
+
+
+
+          SizedBox(height: 25.h),
           Container(
             margin: EdgeInsets.only(left: 25.w),
             child: Row(
@@ -68,8 +138,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                 Text(
                   "Restaurants near me",
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.sp,
+                    color: AppColors().black,
+                    fontSize: 10.sp,
                     fontFamily: "Poppins",
                     fontWeight: FontWeight.bold,
                   ),
@@ -87,7 +157,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               } else {
                 final data = snapshot.data!.docs;
                 return SizedBox(
-                  height: 210.h, // Adjust the height as needed
+                  height: 220.h, // Adjust the height as needed
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: data.length, // Adjust the count as needed
@@ -115,7 +185,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                   "All Products",
                   style: TextStyle(
                     color: AppColors().black,
-                    fontSize: 12.sp,
+                    fontSize: 10.sp,
                     fontFamily: "Poppins",
                     fontWeight: FontWeight.bold,
                   ),
@@ -204,50 +274,7 @@ SizedBox(height: 10.h,),
               ),
             ),
           ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: Container(
-          //     height: 110.h,
-          //     margin: EdgeInsets.only(left: 40.w, right: 40.w, bottom: 40.h,),
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(30),
-          //       color: Colors.white,
-          //       boxShadow: const [
-          //         BoxShadow(
-          //           color: Colors.grey,
-          //           blurRadius: 5.0,
-          //           offset: Offset(0, 5),
-          //         )
-          //       ],
-          //     ),
-          //     child: Container(
-          //       padding: EdgeInsets.only(top: 15, left: 15, right: 15),
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Text(
-          //             "Test12",
-          //             style: TextStyle(
-          //               color: Colors.cyan,
-          //               fontSize: 14.sp,
-          //             ),
-          //           ),
-          //           SizedBox(height: Dimensions.height10),
-          //           Row(
-          //             children: List.generate(5, (index) {
-          //               return const Icon(
-          //                 Icons.star,
-          //                 color: Color(0xFFFBCD42),
-          //                 size: 15,
-          //               );
-          //             }),
-          //           ),
-          //           SizedBox(height: 10.h),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
+
         ],
       ),
     );

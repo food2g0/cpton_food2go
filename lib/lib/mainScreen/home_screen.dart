@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import '../CustomersWidgets/CustomShape.dart';
 import '../CustomersWidgets/Favorite_design_widget.dart';
 import '../CustomersWidgets/customers_drawer.dart';
 import '../CustomersWidgets/progress_bar.dart';
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   {
     Future<QuerySnapshot>? restaurantsDocumentsList;
     String sellerNameText = "";
-
+    double displayWidth = MediaQuery.of(context).size.width;
     initSearchingRestaurant(String textEntered) {
           restaurantsDocumentsList = FirebaseFirestore.instance.collection("sellers")
           .where("sellersName", isGreaterThanOrEqualTo: textEntered)
@@ -72,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: _pages[_selectedIndex],
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
-            canvasColor: AppColors().black,
+            canvasColor: AppColors().white,
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.only(
@@ -82,36 +83,50 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors().red,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0),
-                ),
               ),
               child: BottomNavigationBar(
-                items: const <BottomNavigationBarItem>[
+                items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.home_outlined),
+                    icon: Image.asset(
+                      'images/home.png',
+                     // Replace 'path_to_home_icon' with the path to your home icon asset
+                      width: 24.w, // Adjust width as needed
+                      height: 24.h, // Adjust height as needed
+                    ),
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.favorite_border),
+                    icon: Image.asset(
+                      'images/heart.png', // Replace 'path_to_favorites_icon' with the path to your favorites icon asset
+                      width: 24, // Adjust width as needed
+                      height: 24, // Adjust height as needed
+                    ),
                     label: 'Favorites',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.notifications_on_rounded),
+                    icon: Image.asset(
+                      'images/bell.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
+                      width: 24, // Adjust width as needed
+                      height: 24, // Adjust height as needed
+                    ),
                     label: 'Notification',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.chat_bubble_outline),
+                    icon: Image.asset(
+                      'images/message.png', // Replace 'path_to_messages_icon' with the path to your messages icon asset
+                      width: 24, // Adjust width as needed
+                      height: 24, // Adjust height as needed
+                    ),
                     label: 'Messages',
                   ),
                 ],
                 currentIndex: _selectedIndex,
                 selectedItemColor: AppColors().red,
-                unselectedItemColor: AppColors().white,
-                selectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                unselectedItemColor: AppColors().black1,
+                selectedLabelStyle:  TextStyle(
+                  fontWeight: FontWeight.w500,
                   fontFamily: "Poppins",
+                  fontSize: 10.sp,
                 ),
                 unselectedLabelStyle: const TextStyle(
                   fontWeight: FontWeight.normal,
@@ -131,13 +146,19 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: Scaffold(
-          backgroundColor: AppColors().white1,
-          appBar: AppBar(
-
+          backgroundColor: AppColors().backgroundWhite,
+          appBar:
+          AppBar(
+            backgroundColor: AppColors().backgroundWhite,
+          toolbarHeight: 80,
             iconTheme: IconThemeData(color: AppColors().white),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                color: AppColors().black,
+            elevation: 0.0,
+            flexibleSpace: ClipPath(
+              clipper: CustomShape(),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors().red,
+                ),
               ),
             ),
             title: Column(
@@ -157,9 +178,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                      "Welcome to Food2Go",
+                    "Welcome to Food2Go",
                     style: TextStyle(
-                      color: AppColors().red, // Adjust color as needed
+                      color: AppColors().black, // Adjust color as needed
                       fontSize: 10.sp, // Adjust font size as needed
                       fontFamily: "Poppins",
                     ),
@@ -167,9 +188,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-
-            centerTitle: false,
-            automaticallyImplyLeading: true,
             actions: [
               Stack(
                 children: [
@@ -211,28 +229,28 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(80.h),
               child: Container(
-                height: 80.h,
+                height:80.h,
                 width: MediaQuery.of(context).size.width * 0.9, // Adjust the width as needed
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: TextField(
                     onTap: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (c)=> SearchResultScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (c)=> SearchResultScreen()));
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                       filled: true,
-                      fillColor: AppColors().white1,
+                      fillColor: AppColors().white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                        borderRadius: BorderRadius.circular(20.0), // Curved border
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Search...",
                       suffixIcon:
-                         Icon(
-                          Icons.search,
-                          color: AppColors().red,
-                        ),
+                      Icon(
+                        Icons.search,
+                        color: AppColors().red,
+                      ),
                       hintStyle: TextStyle(
                         fontFamily: "Poppins",
                         color: AppColors().black1,
@@ -245,24 +263,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     cursorColor: AppColors().red,
                   ),
-
-
-
                 ),
               ),
             ),
-
-
-
-
-
+           
           ),
+
           drawer:  CustomersDrawer(),
 
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20.h),
               Expanded(
                 child: SafeArea(
                   child: _pages[_selectedIndex],
@@ -270,48 +281,70 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+
+
+
+
+
+
+
+
           bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
-              canvasColor: AppColors().black,
+              canvasColor: AppColors().white,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0),
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
               ),
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors().red,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    topRight: Radius.circular(20.0),
-                  ),
                 ),
                 child: BottomNavigationBar(
-                  items: const <BottomNavigationBarItem>[
+                  items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.home_outlined),
+                      icon: Image.asset(
+                        'images/home-button.png',
+                        color: AppColors().red,// Replace 'path_to_home_icon' with the path to your home icon asset
+                        width: 24.w, // Adjust width as needed
+                        height: 24.h, // Adjust height as needed
+                      ),
                       label: 'Home',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.favorite_border),
+                      icon: Image.asset(
+                        'images/heart.png', // Replace 'path_to_favorites_icon' with the path to your favorites icon asset
+                        width: 24, // Adjust width as needed
+                        height: 24, // Adjust height as needed
+                      ),
                       label: 'Favorites',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.notifications_on_rounded),
+                      icon: Image.asset(
+                        'images/bell.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
+                        width: 24, // Adjust width as needed
+                        height: 24, // Adjust height as needed
+                      ),
                       label: 'Notification',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.chat_bubble_outline),
+                      icon: Image.asset(
+                        'images/message.png', // Replace 'path_to_messages_icon' with the path to your messages icon asset
+                        width: 24, // Adjust width as needed
+                        height: 24, // Adjust height as needed
+                      ),
                       label: 'Messages',
                     ),
                   ],
                   currentIndex: _selectedIndex,
                   selectedItemColor: AppColors().red,
-                  unselectedItemColor: AppColors().white,
-                  selectedLabelStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                  unselectedItemColor: AppColors().black1,
+                  selectedLabelStyle:  TextStyle(
+                    fontWeight: FontWeight.w500,
                     fontFamily: "Poppins",
+                    fontSize: 10.sp,
                   ),
                   unselectedLabelStyle: const TextStyle(
                     fontWeight: FontWeight.normal,
@@ -322,6 +355,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
+
 
         ),
       );

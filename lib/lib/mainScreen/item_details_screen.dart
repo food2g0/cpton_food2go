@@ -182,9 +182,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                 : ' ${widget.model!.productTitle}',
                             style: TextStyle(
                               fontFamily: "Poppins",
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors().black,
                             ),
                           ),
                         ),
@@ -195,126 +195,11 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           child: Icon(
                             Icons.favorite_border,
                             size: 30.0.sp,
-                            color: Colors.red,
+                            color: AppColors().red,
                           ),
                         ),
                       ],
                     ),
-                    StreamBuilder<DocumentSnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection("items")
-                          .doc(widget.model.productsID)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-
-                        var variations = (snapshot.data!)['variations'] ?? [];
-                        var flavors = (snapshot.data!)['flavors'] ?? [];
-
-
-                        if (variations.isNotEmpty) {
-                          // If variations exist, show variation options UI
-                          return Row(
-                            children: [
-                              SizedBox(height: 10),
-                              // Display buttons for each variation
-                              Row(
-                                children: variations.map<Widget>((variation) {
-                                  String variationName = variation['name'];
-                                  String variationPrice = variation['price'];
-
-
-                                  // Check if variation price is not null
-                                  String firstLetter = variationName.substring(0, 1);
-
-                                  // Return a button for each variation wrapped in padding for spacing
-                                  return Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.w)
-                                          )
-                                      ),
-                                      onPressed: () {
-                                        // Set the selected variation price
-                                        print('$variationPrice');
-                                        setState(() {
-                                          selectedVariationPrice = variationPrice;
-                                        });
-                                        // Handle button press for this variation
-                                        // You can implement the logic here to perform actions when a variation button is pressed
-                                        print('Selected variation: $variationPrice');
-                                      },
-                                      child: Text(firstLetter),
-                                    ),
-                                  );
-                                                                }).toList(),
-                              ),
-
-                            ],
-                          );
-                        } else {
-                          return Container();
-                        }
-},
-
-                    ),
-                    StreamBuilder<DocumentSnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection("items")
-                          .doc(widget.model.productsID)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-
-                        final data = snapshot.data!.data() as Map<String, dynamic>?; // Cast data to Map<String, dynamic>?
-                        if (data != null && data.containsKey('flavors') && data['flavors'] is List) {
-                          var flavors = data['flavors'];
-                          String? selectedFlavor;
-
-                          // If flavors exist and it's a list, show flavor dropdown menu
-                          return DropdownButtonFormField<String>(
-                            value: selectedFlavor,
-                            items: flavors.map<DropdownMenuItem<String>>((flavor) {
-                              String flavorName = flavor['name'];
-                              return DropdownMenuItem<String>(
-                                value: flavorName,
-                                child: Text(flavorName),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedFlavor = value;
-                              });
-                              // Handle flavor selection here
-                              print('Selected flavor: $value');
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Select Flavor',
-                              border: OutlineInputBorder(),
-                            ),
-                          );
-                        } else {
-                          return Container(); // If 'flavors' key doesn't exist or is not a list, return an empty container
-                        }
-                      },
-                    ),
-
-
-
-
-
 
 
                     SizedBox(height: 10.0),
@@ -322,8 +207,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       children: [
                         Image.asset(
                           'images/peso.png',
-                          width: 14,
-                          height: 14,
+                          width: 14.w,
+                          height: 14.h,
                           color: AppColors().red,
                         ),
                         SizedBox(width: 10.0),
@@ -331,7 +216,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           ' ${selectedVariationPrice != '' ? selectedVariationPrice : widget.model.productPrice?.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: 14.0.sp,
+                            fontSize: 12.0.sp,
                             fontWeight: FontWeight.w500,
                             color: AppColors().black1,
                           ),
@@ -374,6 +259,196 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               ),
             ),
             SizedBox(height: 20.sp,),
+            Container(
+              child: Padding(
+                  padding: EdgeInsets.all(8.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.set_meal, size: 20.sp,),
+                      SizedBox(width: 10.w,),
+                      Text(
+                        "Variations:",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+
+
+
+
+                    ],
+                  )
+                ],
+              ),),
+            ),
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("items")
+                  .doc(widget.model.productsID)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                var variations = (snapshot.data!)['variations'] ?? [];
+
+
+                if (variations.isNotEmpty) {
+                  // If variations exist, show variation options UI
+                  return Row(
+                    children: [
+                      SizedBox(height: 10),
+                      // Display buttons for each variation
+                      Row(
+                        children: variations.map<Widget>((variation) {
+                          String variationName = variation['name'];
+                          String variationPrice = variation['price'];
+
+                          // Check if variation price is not null
+                          String firstLetter = variationName.substring(0, 1);
+
+                          // Return a button for each variation wrapped in padding for spacing
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.w)
+                                  )
+                              ),
+                              onPressed: () {
+                                // Set the selected variation price
+                                print('$variationPrice');
+                                setState(() {
+                                  selectedVariationPrice = variationPrice;
+                                });
+                                // Handle button press for this variation
+                                // You can implement the logic here to perform actions when a variation button is pressed
+                                print('Selected variation: $variationPrice');
+                              },
+                              child: Text(firstLetter,
+                              style: TextStyle(
+                                color: AppColors().black1,
+                                fontSize: 10.sp,
+                                fontFamily: "Poppins"
+                              ),),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+            SizedBox(height: 20.sp,),
+            Container(
+              child: Padding(
+                padding: EdgeInsets.all(8.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.set_meal, size: 20.sp,),
+                        SizedBox(width: 10.w,),
+                        Text(
+                          "Flavors:",
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                      ],
+                    )
+                  ],
+
+                ),
+
+              ),
+            ),
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("items")
+                  .doc(widget.model.productsID)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                var flavors = (snapshot.data!)['flavors'] ?? [];
+
+                if (flavors.isNotEmpty) {
+                  // If flavors exist, show flavor options UI
+                  return Row(
+                    children: [
+                      // Display buttons for each flavor
+                      Row(
+                        children: flavors.map<Widget>((flavor) {
+                          String flavorName = flavor['name'];
+
+                          // Return a button for each flavor wrapped in padding for spacing
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2.0), // Adjust the spacing as needed
+                            child: Container(
+                              height: 50.h, // Set the height to accommodate two lines of text
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8.w)
+                                    )
+                                ),
+                                onPressed: () {
+                                  // Handle button press for this flavor
+                                  // You can implement the logic here to perform actions when a flavor button is pressed
+                                  print('Selected flavor: $flavorName');
+                                },
+                                child: Text(
+                                  flavorName,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis, // Wrap text if exceeds available width
+                                  maxLines: 2, // Maximum lines for text
+                                  style: TextStyle(
+                                      color: AppColors().black1,
+                                      fontSize: 10.sp,
+                                      fontFamily: "Poppins"
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+            SizedBox(height: 10.h,),
+
+
+
+
+
             // Product Description
             Container(
               color: AppColors().white,
@@ -384,15 +459,15 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.description, size: 20.0.sp),
+                        Icon(Icons.description, size: 15.0.sp),
                         SizedBox(width: 10.0.w),
                         Text(
                           "Product Description",
                           style: TextStyle(
                               fontFamily: "Poppins",
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors().red),
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors().black),
                         ),
                       ],
                     ),
@@ -403,7 +478,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 10.sp,
-                          color: Colors.grey[700],
+                          color: AppColors().black1,
                         ),
                       ),
                     ),
@@ -417,13 +492,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               padding: EdgeInsets.all(10.w),
               child: Row(
                 children: [
-                  Icon(Icons.reviews, size: 20.0.sp),
+                  Icon(Icons.reviews, size: 15.0.sp),
                   SizedBox(width: 10.0.w),
                   Text(
                     "Product Reviews",
                     style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 12.sp,
+                        color: AppColors().black,
+                        fontSize: 10.sp,
                         fontFamily: "Poppins",
                         fontWeight: FontWeight.bold),
                   ),
@@ -432,7 +507,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       onPressed: () {  },
                       child: Text('View All Reviews', style: TextStyle(
                         fontFamily: "Poppins",
-                        fontSize: 12.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors().red,
                       ), )
