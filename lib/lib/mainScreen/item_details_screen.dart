@@ -74,39 +74,24 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     final imageUrl = widget.model?.thumbnailUrl ?? 'default_image_url.jpg';
 
     return Scaffold(
-      body: Container(
-        child: CustomScrollView(
-          slivers: <Widget>[
-        SliverAppBar(
-        expandedHeight: 200.0.h,
+      backgroundColor: AppColors().white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(200.0), // Set the preferred height of the AppBar
+        child: AppBar(
           backgroundColor: Colors.transparent,
-          elevation: 1.0,
-          pinned: true,
+          elevation: 0.0, // Remove elevation
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(0, 2),
-                ),
-              ],
             ),
-            child: FlexibleSpaceBar(
-              centerTitle: false,
-              background: Stack(
+            child: ClipRRect(
+              child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                  Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
                   ),
                 ],
               ),
@@ -155,526 +140,276 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             ),
           ],
         ),
-        SliverList(
-          delegate: SliverChildListDelegate([
-            SizedBox(height: 15.0.h),
-            // Product Title, Price, and Ratings
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Color(0xFF890010), width: 1.0),
-                  borderRadius: BorderRadius.circular(10.0), // Adjust the value as needed
-                ),
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.fastfood_outlined, size: 20.0.sp, color: AppColors().red),
-                        SizedBox(width: 10.0),
-                        Expanded(
-                          child: Text(
-                            (widget.model!.productTitle.length > 20)
-                                ? ' ${widget.model!.productTitle.substring(0, 20)}...'
-                                : ' ${widget.model!.productTitle}',
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors().black,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            addToFavorites(widget.model.productsID, customersUID);
-                          },
-                          child: Icon(
-                            Icons.favorite_border,
-                            size: 30.0.sp,
-                            color: AppColors().red,
-                          ),
-                        ),
-                      ],
-                    ),
-
-
-                    SizedBox(height: 10.0),
-                    Row(
-                      children: [
-                        Image.asset(
-                          'images/peso.png',
-                          width: 14.w,
-                          height: 14.h,
-                          color: AppColors().red,
-                        ),
-                        SizedBox(width: 10.0),
-                        Text(
-                          ' ${selectedVariationPrice != '' ? selectedVariationPrice : widget.model.productPrice?.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 12.0.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors().black1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.0.h),
-                    buildRatingSection(),
-                  ],
-                ),
-              ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0), // Adjust the radius as needed
+            topRight: Radius.circular(20.0), // Adjust the radius as needed
+          ),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, 2),
             ),
-            SizedBox(height: 20.h,),
-            Container(
+          ],
+        ),
+        child: CustomScrollView(
+            slivers: <Widget>[
+        SliverList(
+        delegate: SliverChildListDelegate([
+            SizedBox(height: 15.0.h),
+        // Product Title, Price, and Ratings
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
               color: Colors.white,
-              height: 50.h,
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+              border: Border.all(color: Color(0xFF890010), width: 1.0),
+              borderRadius: BorderRadius.circular(10.0), // Adjust the value as needed
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Icon(Icons.delivery_dining, size: 24.sp, color: AppColors().red),
-                    Text(
-                      "  Cost ",
-                      style: TextStyle(
+                    Icon(Icons.fastfood_outlined, size: 20.0.sp, color: AppColors().red),
+                    SizedBox(width: 10.0),
+                    Expanded(
+                      child: Text(
+                        (widget.model!.productTitle.length > 20)
+                            ? ' ${widget.model!.productTitle.substring(0, 20)}...'
+                            : ' ${widget.model!.productTitle}',
+                        style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors().black),
+                          fontWeight: FontWeight.w600,
+                          color: AppColors().black,
+                        ),
+                      ),
                     ),
-                    Text(
-                      ' Php: 50',
-                      style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 12.sp,
+                    GestureDetector(
+                      onTap: () {
+                        addToFavorites(widget.model.productsID, customersUID);
+                      },
+                      child: Icon(
+                        Icons.favorite_border,
+                        size: 30.0.sp,
+                        color: AppColors().red,
                       ),
                     ),
                   ],
                 ),
-              ),
+                SizedBox(height: 10.0),
+                Row(
+                  children: [
+                    Image.asset(
+                      'images/peso.png',
+                      width: 14.w,
+                      height: 14.h,
+                      color: AppColors().red,
+                    ),
+                    SizedBox(width: 10.0),
+                    Text(
+                      ' ${selectedVariationPrice != '' ? selectedVariationPrice : widget.model.productPrice?.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 12.0.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors().black1,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.0.h),
+                buildRatingSection(),
+              ],
             ),
-            SizedBox(height: 20.sp,),
-            Container(
-              child: Padding(
-                  padding: EdgeInsets.all(8.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.set_meal, size: 20.sp,),
-                      SizedBox(width: 10.w,),
-                      Text(
-                        "Variations:",
-                        style: TextStyle(
+          ),
+        ),
+        SizedBox(height: 20.h,),
+        Container(
+          color: Colors.white,
+          height: 50.h,
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(Icons.delivery_dining, size: 24.sp, color: AppColors().red),
+                Text(
+                  "  Cost ",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors().black),
+                ),
+                Text(
+                  ' Php: 50',
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 10.h,),
+        // Product Description
+        Container(
+          color: AppColors().white,
+          child: Padding(
+            padding: EdgeInsets.all(16.0.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.description, size: 15.0.sp),
+                    SizedBox(width: 10.0.w),
+                    Text(
+                      "Product Description",
+                      style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w600,
-                        ),
-                      ),
-
-
-
-
-                    ],
-                  )
-                ],
-              ),),
-            ),
-            StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("items")
-                  .doc(widget.model.productsID)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
-                var variations = (snapshot.data!)['variations'] ?? [];
-
-
-                if (variations.isNotEmpty) {
-                  // If variations exist, show variation options UI
-                  return Row(
-                    children: [
-                      SizedBox(height: 10),
-                      // Display buttons for each variation
-                      Row(
-                        children: variations.map<Widget>((variation) {
-                          String variationName = variation['name'];
-                          String variationPrice = variation['price'];
-
-                          // Check if variation price is not null
-                          String firstLetter = variationName.substring(0, 1);
-
-                          // Return a button for each variation wrapped in padding for spacing
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.w)
-                                  )
-                              ),
-                              onPressed: () {
-                                // Set the selected variation price
-                                print('$variationPrice');
-                                setState(() {
-                                  selectedVariationPrice = variationPrice;
-                                });
-                                // Handle button press for this variation
-                                // You can implement the logic here to perform actions when a variation button is pressed
-                                print('Selected variation: $variationPrice');
-                              },
-                              child: Text(firstLetter,
-                              style: TextStyle(
-                                color: AppColors().black1,
-                                fontSize: 10.sp,
-                                fontFamily: "Poppins"
-                              ),),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
-            SizedBox(height: 20.sp,),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(8.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.set_meal, size: 20.sp,),
-                        SizedBox(width: 10.w,),
-                        Text(
-                          "Flavors:",
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-
-                      ],
-                    )
-                  ],
-
-                ),
-
-              ),
-            ),
-            StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("items")
-                  .doc(widget.model.productsID)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
-                var flavors = (snapshot.data!)['flavors'] ?? [];
-
-                if (flavors.isNotEmpty) {
-                  // If flavors exist, show flavor options UI
-                  return Row(
-                    children: [
-                      // Display buttons for each flavor
-                      Row(
-                        children: flavors.map<Widget>((flavor) {
-                          String flavorName = flavor['name'];
-
-                          // Return a button for each flavor wrapped in padding for spacing
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2.0), // Adjust the spacing as needed
-                            child: Container(
-                              height: 50.h, // Set the height to accommodate two lines of text
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8.w)
-                                    )
-                                ),
-                                onPressed: () {
-                                  // Handle button press for this flavor
-                                  // You can implement the logic here to perform actions when a flavor button is pressed
-                                  print('Selected flavor: $flavorName');
-                                },
-                                child: Text(
-                                  flavorName,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis, // Wrap text if exceeds available width
-                                  maxLines: 2, // Maximum lines for text
-                                  style: TextStyle(
-                                      color: AppColors().black1,
-                                      fontSize: 10.sp,
-                                      fontFamily: "Poppins"
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
-            SizedBox(height: 10.h,),
-
-
-
-
-
-            // Product Description
-            Container(
-              color: AppColors().white,
-              child: Padding(
-                padding: EdgeInsets.all(16.0.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.description, size: 15.0.sp),
-                        SizedBox(width: 10.0.w),
-                        Text(
-                          "Product Description",
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors().black),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.0.h),
-                    SingleChildScrollView(
-                      child: Text(
-                        widget.model.productDescription!,
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 10.sp,
-                          color: AppColors().black1,
-                        ),
-                      ),
+                          color: AppColors().black),
                     ),
                   ],
                 ),
-              ),
-            ),
-
-            // Product Reviews
-            Padding(
-              padding: EdgeInsets.all(10.w),
-              child: Row(
-                children: [
-                  Icon(Icons.reviews, size: 15.0.sp),
-                  SizedBox(width: 10.0.w),
-                  Text(
-                    "Product Reviews",
+                SizedBox(height: 10.0.h),
+                SingleChildScrollView(
+                  child: Text(
+                    widget.model.productDescription!,
                     style: TextStyle(
-                        color: AppColors().black,
-                        fontSize: 10.sp,
-                        fontFamily: "Poppins",
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 10.0.w),
-                  TextButton(
-                      onPressed: () {  },
-                      child: Text('View All Reviews', style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors().red,
-                      ), )
-                  ),
-                ],
-              ),
-            ),
-
-            // Display Single Review
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("items")
-                  .doc(widget.model.productsID)
-                  .collection("itemRecord")
-                  .limit(1)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-
-                var reviews = snapshot.data!.docs.map((doc) {
-                  final rating = (doc.data() as Map<String, dynamic>)['rating'] as num?;
-                  final comment = (doc.data() as Map<String, dynamic>)['comment'] as String?;
-                  final userName = (doc.data() as Map<String, dynamic>)['userName'] as String?;
-                  return {'rating': rating, 'comment': comment, 'userName': userName};
-                }).toList();
-
-                // Display Single Review
-                if (reviews.isNotEmpty) {
-                  return buildReviewItem(reviews[0]);
-                } else {
-                  return Container(); // No reviews to display
-                }
-              },
-            ),
-
-            // "View All Reviews" button
-
-          ],
-          )
-        )
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 60.h, // Adjust the height as needed
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Image.asset(
-                      'images/minus.png',
-                      width: 26.h,
-                      height: 26.h,
-                      color: AppColors().red,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
-                        if (currentValue > 1) {
-                          counterTextEditingController.text = (currentValue - 1).toString();
-                        }
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    width: 60.w,
-                    child: TextField(
-                      controller: counterTextEditingController,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(vertical: 8.h),
-                      ),
+                      fontFamily: "Poppins",
+                      fontSize: 10.sp,
+                      color: AppColors().black1,
                     ),
                   ),
-                  IconButton(
-                    icon: Image.asset(
-                      'images/adds.png',
-                      width: 26.h,
-                      height: 26.h,
-                      color: AppColors().red,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        int currentValue = int.tryParse(counterTextEditingController.text) ?? 0;
-                        counterTextEditingController.text = (currentValue + 1).toString();
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(width: 10.w),
-              ElevatedButton(
-                onPressed: () {
-                  int itemCounter = int.tryParse(counterTextEditingController.text) ?? 0;
-
-                  if (itemCounter <= 0) {
-                    Fluttertoast.showToast(msg: "Invalid quantity");
-                    return;
-                  }
-
-                  List<String> separateItemIDsList = separateItemIDs();
-                  if (separateItemIDsList.contains(widget.model.productsID)) {
-                    Fluttertoast.showToast(msg: "Item is already in a cart");
-                  } else {
-                    // Check if a variation price is selected
-                    if (selectedVariationPrice.isNotEmpty) {
-                      double price = double.parse(selectedVariationPrice);
-
-                      addItemToCart(
-                        widget.model.productsID,
-                        context,
-                        itemCounter,
-                        widget.model.thumbnailUrl,
-                        widget.model.productTitle,
-                        price,
-                      );
-
-                    } else {
-                      // If no variation is selected, use the default product price
-                      double price = widget.model.productPrice.toDouble(); // Convert integer to double
-
-                      addItemToCart(
-                        widget.model.productsID,
-                        context,
-                        itemCounter,
-                        widget.model.thumbnailUrl,
-                        widget.model.productTitle,
-                        price,
-                      );
-                    }
-
-                    // Show the variations bottom sheet after adding to cart
-                    _showVariationsBottomSheet(context);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF890010),
                 ),
+              ],
+            ),
+          ),
+        ),
+        // Product Reviews
+        Padding(
+          padding: EdgeInsets.all(10.w),
+          child: Row(
+            children: [
+              Icon(Icons.reviews, size: 15.0.sp),
+              SizedBox(width: 10.0.w),
+              Text(
+                "Product Reviews",
+                style: TextStyle(
+                    color: AppColors().black,
+                    fontSize: 10.sp,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 10.0.w),
+              TextButton(
+                onPressed: () {},
                 child: Text(
-                  'Add to Cart',
+                  'View All Reviews',
                   style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 10.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors().red,
                   ),
                 ),
               ),
             ],
           ),
         ),
+        // Display Single Review
+        StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection("items")
+              .doc(widget.model.productsID)
+              .collection("itemRecord")
+              .limit(1)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            var reviews = snapshot.data!.docs.map((doc) {
+              final rating = (doc.data() as Map<String, dynamic>)['rating'] as num?;
+              final comment = (doc.data() as Map<String, dynamic>)['comment'] as String?;
+              final userName = (doc.data() as Map<String, dynamic>)['userName'] as String?;
+              return {'rating': rating, 'comment': comment, 'userName': userName};
+            }).toList();
+
+            // Display Single Review
+            if (reviews.isNotEmpty) {
+              return buildReviewItem(reviews[0]);
+            } else {
+              return Container(); // No reviews to display
+            }
+          },
+        ),
+        ],
       ),
+    ),
+    ]
+    ),
+    ),
+    bottomNavigationBar: BottomAppBar(
+    color: AppColors().backgroundWhite,
+    child: Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: ElevatedButton(
+    onPressed: () {
+    _showVariationsBottomSheet(context);
+    },
+    style: ElevatedButton.styleFrom(
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.w)
+    ),
+    backgroundColor: AppColors().red,
+    ),
+    child: Text(
+    'Add to Cart',
+    style: TextStyle(
+    fontFamily: "Poppins",
+    fontSize: 10.sp,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+    ),
+    ),
+    ),
+    ),
+    ),
     );
+
+
+
+
   }
 
   void _showVariationsBottomSheet(BuildContext context) {
+
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Allow the bottom sheet to occupy full screen height
@@ -692,22 +427,248 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("items")
+                      .doc(widget.model.productsID)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+
+                    var variations = (snapshot.data!)['variations'] ?? [];
+
+
+                    if (variations.isNotEmpty) {
+                      // If variations exist, show variation options UI
+                      return Row(
+                        children: [
+                          SizedBox(height: 10),
+                          // Display buttons for each variation
+                          Row(
+                            children: variations.map<Widget>((variation) {
+                              String variationName = variation['name'];
+                              String variationPrice = variation['price'];
+
+                              // Check if variation price is not null
+                              String firstLetter = variationName.substring(0, 1);
+
+                              // Return a button for each variation wrapped in padding for spacing
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.w)
+                                      )
+                                  ),
+                                  onPressed: () {
+                                    // Set the selected variation price
+                                    print('$variationPrice');
+                                    setState(() {
+                                      selectedVariationPrice = variationPrice;
+                                    });
+                                    // Handle button press for this variation
+                                    // You can implement the logic here to perform actions when a variation button is pressed
+                                    print('Selected variation: $variationPrice');
+                                  },
+                                  child: Text(firstLetter,
+                                    style: TextStyle(
+                                        color: AppColors().black1,
+                                        fontSize: 10.sp,
+                                        fontFamily: "Poppins"
+                                    ),),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
                 // Add your variation widgets here
                 Text(
                   'Flavors',
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("items")
+                      .doc(widget.model.productsID)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+
+                    var variations = (snapshot.data!)['variations'] ?? [];
+
+
+                    if (variations.isNotEmpty) {
+                      // If variations exist, show variation options UI
+                      return Row(
+                        children: [
+                          SizedBox(height: 10),
+                          // Display buttons for each variation
+                          Row(
+                            children: variations.map<Widget>((variation) {
+                              String variationName = variation['name'];
+                              String variationPrice = variation['price'];
+
+                              // Check if variation price is not null
+                              String firstLetter = variationName.substring(0, 1);
+
+                              // Return a button for each variation wrapped in padding for spacing
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.w)
+                                      )
+                                  ),
+                                  onPressed: () {
+                                    // Set the selected variation price
+                                    print('$variationPrice');
+                                    setState(() {
+                                      selectedVariationPrice = variationPrice;
+                                    });
+                                    // Handle button press for this variation
+                                    // You can implement the logic here to perform actions when a variation button is pressed
+                                    print('Selected variation: $variationPrice');
+                                  },
+                                  child: Text(firstLetter,
+                                    style: TextStyle(
+                                        color: AppColors().black1,
+                                        fontSize: 10.sp,
+                                        fontFamily: "Poppins"
+                                    ),),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
                 // Add your flavors widgets here
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Image.asset(
+                        'images/minus.png',
+                        width: 26.h,
+                        height: 26.h,
+                        color: AppColors().red,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
+                          if (currentValue > 1) {
+                            counterTextEditingController.text = (currentValue - 1).toString();
+                          }
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 60.w,
+                      child: TextField(
+                        controller: counterTextEditingController,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Image.asset(
+                        'images/adds.png',
+                        width: 26.h,
+                        height: 26.h,
+                        color: AppColors().red,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          int currentValue = int.tryParse(counterTextEditingController.text) ?? 0;
+                          counterTextEditingController.text = (currentValue + 1).toString();
+                        });
+                      },
+                    ),
+                  ],
+                ),
                 ElevatedButton(
                   onPressed: () {
-                    // Perform add to cart action here if needed
-                    Navigator.pop(context); // Close the bottom sheet
+                    int itemCounter = int.tryParse(counterTextEditingController.text) ?? 0;
+
+                    if (itemCounter <= 0) {
+                      Fluttertoast.showToast(msg: "Invalid quantity");
+                      return;
+                    }
+
+                    List<String> separateItemIDsList = separateItemIDs();
+                    if (separateItemIDsList.contains(widget.model.productsID)) {
+                      Fluttertoast.showToast(msg: "Item is already in a cart");
+                    } else {
+                      // Check if a variation price is selected
+                      if (selectedVariationPrice.isNotEmpty) {
+                        double price = double.parse(selectedVariationPrice);
+
+                        addItemToCart(
+                          widget.model.productsID,
+                          context,
+                          itemCounter,
+                          widget.model.thumbnailUrl,
+                          widget.model.productTitle,
+                          price,
+                        );
+
+                      } else {
+                        // If no variation is selected, use the default product price
+                        double price = widget.model.productPrice.toDouble(); // Convert integer to double
+
+                        addItemToCart(
+                          widget.model.productsID,
+                          context,
+                          itemCounter,
+                          widget.model.thumbnailUrl,
+                          widget.model.productTitle,
+                          price,
+                        );
+                      }
+
+                    }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    backgroundColor: AppColors().red,
                   ),
-                  child: Text('Add to Cart'),
+                  child: Text(
+                    'Add to Cart',
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -726,17 +687,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
+
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
