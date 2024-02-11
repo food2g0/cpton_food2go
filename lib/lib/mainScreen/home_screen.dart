@@ -421,8 +421,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors().white1,
+      backgroundColor: AppColors().backgroundWhite,
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: AppColors().white
+        ),
         title: Text(
           'Favorites',
           style: TextStyle(
@@ -433,7 +436,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: AppColors().black,
+            color: AppColors().red,
           ),
         ),
       ),

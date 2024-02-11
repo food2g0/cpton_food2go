@@ -19,6 +19,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildUserList(QuerySnapshot snapshot) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: AppColors().white
+        ),
         title: Text(
           'Messages',
           style: TextStyle(
@@ -29,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: AppColors().black,
+            color: AppColors().red,
           ),
         ),
       ),
@@ -45,11 +48,27 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildUserListItem(QueryDocumentSnapshot document) {
     final sellerData = document.data() as Map<String, dynamic>;
     final sellersUID = sellerData['sellersUID'];
+    final sellersImageUrl = sellerData['sellersImageUrl'];
 
     if (_auth.currentUser!.email != sellerData['sellersEmail']) {
       if (sellersUID is String) {
         return ListTile(
-          title: Text(sellerData['sellersName']),
+          title: Row(
+            children: [
+              CircleAvatar( // Wrap the image in a CircleAvatar
+                backgroundImage: sellersImageUrl != null ? NetworkImage(sellersImageUrl) : null,
+              ),
+              SizedBox(width: 10), // Add some space between the avatar and the text
+              Text(
+                sellerData['sellersName'],
+                style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+            ],
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -69,6 +88,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Container();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
