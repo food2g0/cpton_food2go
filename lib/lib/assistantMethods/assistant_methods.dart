@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/assistantMethods/total_ammount.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -69,12 +70,36 @@ separateItemIDs()
   return separateItemIDsList;
 }
 
-addItemToCart(String? foodItemId,
-    BuildContext context, int itemCounter, String? thumbnailUrl, String? productTitle, price,) async {
+void addItemToCart(
+    String? foodItemId,
+    BuildContext context,
+    int itemCounter,
+    String? thumbnailUrl,
+    String? productTitle,
+    double price,
+    ) async {
   try {
-    // Fetch user document reference
-    DocumentReference userDocRef = FirebaseFirestore.instance.collection("users").doc(firebaseAuth.currentUser!.uid);
-    String cartID = FirebaseFirestore.instance.collection("users").doc().id;
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Handle case where user is not authenticated
+      return;
+    }
+
+    // Reference to the user's cart collection
+    CollectionReference cartCollection = FirebaseFirestore.instance.collection("users").doc(user.uid).collection("cart");
+
+    // Query to check if the foodItemId already exists in the cart
+    QuerySnapshot querySnapshot = await cartCollection.where("foodItemId", isEqualTo: foodItemId).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Item already exists in the cart, show a message
+      Fluttertoast.showToast(msg: "Item is already in the cart");
+      return;
+    }
+
+    // Generate a unique cart ID
+    String cartID = cartCollection.doc().id;
 
     // Create a new cart item object
     Map<String, dynamic> cartItem = {
@@ -87,14 +112,11 @@ addItemToCart(String? foodItemId,
       // Add other properties as needed
     };
 
-    // Add the cart item to a new collection inside the user's document
-    await userDocRef.collection("cart").doc(cartID).set(cartItem);
+    // Add the cart item to the cart collection
+    await cartCollection.doc(cartID).set(cartItem);
 
     // Show success message
     Fluttertoast.showToast(msg: "Item Added Successfully.");
-
-    // Update the local cart if needed
-    // Not required in this scenario as we are not updating tempList
 
     // Update the badge
     Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
@@ -103,6 +125,7 @@ addItemToCart(String? foodItemId,
     // Handle error as needed
   }
 }
+
 
 addItemToCartnoItemCounter(String? foodItemId, BuildContext context)
 {

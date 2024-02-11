@@ -563,21 +563,61 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                width: 190.w,
-                child: NumberInputPrefabbed.roundedButtons(
-                  incDecBgColor: const Color(0xFF890010),
-                  controller: counterTextEditingController,
-                  min: 1,
-                  max: 5,
-                  initialValue: 1,
-                  buttonArrangement: ButtonArrangement.incRightDecLeft,
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Image.asset(
+                      'images/minus.png',
+                      width: 26.h,
+                      height: 26.h,
+                      color: AppColors().red,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
+                        if (currentValue > 1) {
+                          counterTextEditingController.text = (currentValue - 1).toString();
+                        }
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 60.w,
+                    child: TextField(
+                      controller: counterTextEditingController,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Image.asset(
+                      'images/adds.png',
+                      width: 26.h,
+                      height: 26.h,
+                      color: AppColors().red,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        int currentValue = int.tryParse(counterTextEditingController.text) ?? 0;
+                        counterTextEditingController.text = (currentValue + 1).toString();
+                      });
+                    },
+                  ),
+                ],
               ),
-              SizedBox(width: 10,),
+              SizedBox(width: 10.w),
               ElevatedButton(
                 onPressed: () {
-                  int itemCounter = int.parse(counterTextEditingController.text);
+                  int itemCounter = int.tryParse(counterTextEditingController.text) ?? 0;
+
+                  if (itemCounter <= 0) {
+                    Fluttertoast.showToast(msg: "Invalid quantity");
+                    return;
+                  }
 
                   List<String> separateItemIDsList = separateItemIDs();
                   if (separateItemIDsList.contains(widget.model.productsID)) {
@@ -587,16 +627,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     if (selectedVariationPrice.isNotEmpty) {
                       double price = double.parse(selectedVariationPrice);
 
-
                       addItemToCart(
-
                         widget.model.productsID,
                         context,
                         itemCounter,
                         widget.model.thumbnailUrl,
                         widget.model.productTitle,
                         price,
-
                       );
 
                     } else {
@@ -612,6 +649,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         price,
                       );
                     }
+
+                    // Show the variations bottom sheet after adding to cart
+                    _showVariationsBottomSheet(context);
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -620,20 +660,63 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 child: Text(
                   'Add to Cart',
                   style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
+                    fontFamily: "Poppins",
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
-
             ],
           ),
         ),
       ),
     );
   }
+
+  void _showVariationsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Allow the bottom sheet to occupy full screen height
+      builder: (context) {
+        return SingleChildScrollView( // Enable scrolling if content exceeds screen height
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Your bottom sheet content
+                Text(
+                  'Variations',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16.0),
+                // Add your variation widgets here
+                Text(
+                  'Flavors',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16.0),
+                // Add your flavors widgets here
+                ElevatedButton(
+                  onPressed: () {
+                    // Perform add to cart action here if needed
+                    Navigator.pop(context); // Close the bottom sheet
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Text('Add to Cart'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
 
   Widget buildReviewItem(Map<String, dynamic> reviewData) {

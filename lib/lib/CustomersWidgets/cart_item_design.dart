@@ -79,7 +79,22 @@ class _CartItemDesignState extends State<CartItemDesign> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return Dismissible(
+      key: Key(widget.cartID ?? ''), // Unique key for the dismissible item
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        // Remove the item from the cart when dismissed
+        String? cartIDToRemove = widget.cartID;
+        if (cartIDToRemove != null) {
+          removeCartItemFromCart(cartIDToRemove, context);
+        }
+      },
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.only(right: 20),
+        child: Icon(Icons.delete, color: Colors.white),
+      ),
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10).w,
         child: SizedBox(
@@ -127,19 +142,6 @@ class _CartItemDesignState extends State<CartItemDesign> {
                                 ),
                               ),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.delete_forever, color: AppColors().red), // Close (X) button
-                              onPressed: () {
-                                // Retrieve the cartID of the item to remove
-                                String? cartIDToRemove = widget.cartID;
-
-                                // Check if cartID is not null and then remove the item from the cart
-                                if (cartIDToRemove != null) {
-                                  removeCartItemFromCart(cartIDToRemove, context);
-                                }
-                              },
-                            ),
-
                           ],
                         ),
                         Text(

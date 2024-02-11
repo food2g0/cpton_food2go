@@ -136,7 +136,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                           itemCounter,
                           widget.model.thumbnailUrl,
                           widget.model.productTitle,
-                          price as String?,
+                          price,
 
                         );
                       }
