@@ -69,6 +69,12 @@ class _CheckOutState extends State<CheckOut> {
         };
       }).toList();
 
+
+
+
+
+
+
       await writeOrderDetailsForUser({
         "addressID": widget.addressId,
         "totalAmount": widget.totalAmount,
@@ -81,6 +87,8 @@ class _CheckOutState extends State<CheckOut> {
         "riderUID": "",
         "status": "normal",
         "orderId": orderId,
+        // "customerName": widget.model.name,
+        // "phoneNumber": widget.model.phoneNumber,
       });
 
       await writeOrderDetailsForSeller({
@@ -95,6 +103,8 @@ class _CheckOutState extends State<CheckOut> {
         "riderUID": "",
         "status": "normal",
         "orderId": orderId,
+        // "customerName": widget.model.name,
+        // "phoneNumber": widget.model.phoneNumber,
       });
 
       clearCartNow(context);
