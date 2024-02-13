@@ -1,10 +1,12 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +17,7 @@ import '../global/global.dart';
 import '../mainScreen/home_screen.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -29,8 +31,9 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController locationController = TextEditingController();
-
-
+  TextEditingController otpController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  var verificationId = ''.obs;
 
   XFile? imageXFile;
   final ImagePicker _picker = ImagePicker();
@@ -43,13 +46,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _getImage() async {
     imageXFile = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imageXFile;
-    });
+    setState(() {});
   }
 
-  getCurrentLocation() async
-  {
+  getCurrentLocation() async {
     Position newPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -63,10 +63,17 @@ class _SignUpPageState extends State<SignUpPage> {
 
     Placemark pMark = placeMarks![0];
 
-    completeAddress = '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
+    completeAddress =
+    '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
 
     locationController.text = completeAddress;
   }
+
+
+
+
+
+
 
   Future<void> formValidation() async {
     if (imageXFile == null) {
@@ -85,7 +92,6 @@ class _SignUpPageState extends State<SignUpPage> {
             nameController.text.isNotEmpty &&
             phoneController.text.isNotEmpty &&
             locationController.text.isNotEmpty) {
-          // Start uploading image
           showDialog(
             context: context,
             builder: (c) {
@@ -102,11 +108,11 @@ class _SignUpPageState extends State<SignUpPage> {
               .child(fileName);
           fStorage.UploadTask uploadTask =
           reference.putFile(File(imageXFile!.path));
-          fStorage.TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+          fStorage.TaskSnapshot taskSnapshot =
+          await uploadTask.whenComplete(() {});
 
           try {
             customerImageUrl = await taskSnapshot.ref.getDownloadURL();
-            // Save info to Firestore
             authenticateSellerAndSignUp();
           } catch (error) {
             Navigator.pop(context);
@@ -142,11 +148,10 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-
   void authenticateSellerAndSignUp() async {
     User? currentUser;
 
-    await firebaseAuth
+    await _auth
         .createUserWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
@@ -167,7 +172,6 @@ class _SignUpPageState extends State<SignUpPage> {
     if (currentUser != null) {
       saveDataToFirestore(currentUser!).then((value) {
         Navigator.pop(context);
-        //send user to homePage
         Route newRoute = MaterialPageRoute(builder: (c) => const HomeScreen());
         Navigator.pushReplacement(context, newRoute);
       });
@@ -184,26 +188,19 @@ class _SignUpPageState extends State<SignUpPage> {
       "address": completeAddress,
       "status": "approved",
       "earnings": 0.0,
-      "lat": position?.latitude ?? 0.0, // Handle null position gracefully
-      "lng": position?.longitude ?? 0.0, // Handle null position gracefully
-      "userCart": ['garbageValue'],
+      "lat": position?.latitude ?? 0.0,
+      "lng": position?.longitude ?? 0.0,
     });
 
-    // Save data locally
-     sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences!.setString("phone", phoneController.text);
-    sharedPreferences!.setString("uid", currentUser.uid);
-    sharedPreferences!.setString("address", completeAddress);
-    sharedPreferences!.setString("lat", (position?.latitude ?? 0.0).toString());
-    sharedPreferences!.setString("email", currentUser.email.toString());
-    sharedPreferences!.setString("name", nameController.text.trim());
-    sharedPreferences!.setString("customerImageUrl", customerImageUrl);
-    sharedPreferences!.setStringList("userCart", ['garbageValue']);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString("phone", phoneController.text);
+    sharedPreferences.setString("uid", currentUser.uid);
+    sharedPreferences.setString("address", completeAddress);
+    sharedPreferences.setString("lat", (position?.latitude ?? 0.0).toString());
+    sharedPreferences.setString("email", currentUser.email.toString());
+    sharedPreferences.setString("name", nameController.text.trim());
+    sharedPreferences.setString("customerImageUrl", customerImageUrl);
   }
-
-
-
-
 
 
   @override
