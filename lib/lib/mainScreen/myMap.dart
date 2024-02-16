@@ -57,8 +57,8 @@ class _MyMapState extends State<MyMap> {
   }
 
   Future<void> _updateUserLocationOnMap(DocumentSnapshot snapshot) async {
-    double originlatitude = snapshot['latitude1'];
-    double originlongitude = snapshot['longitude1'];
+    double originlatitude = snapshot['latitude'];
+    double originlongitude = snapshot['longitude'];
 
     setState(() {
       _origin = Marker(
