@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../authentication/auth_screen.dart';
 import '../global/global.dart';
 import '../mainScreen/home_screen.dart';
@@ -45,47 +47,55 @@ class _MySplashScreenState extends State<MySplashScreen>
 @override
   void initState() {
     super.initState();
-
     startTimer();
+    // startTimer();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        color: Colors.black,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  "images/appIcon.png",
-                  width: 150, // Adjust the width as needed
-                  height: 150, // Adjust the height as needed
+    return Scaffold(
+      body: Center(
+        child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Center the content vertically
+              children: [
+                SvgPicture.asset(
+                  "images/onboard.svg",
+                  height: 300,
                 ),
-              ),
-              const SizedBox(height: 10,),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Welcome To Food2Go ",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF890010),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: "Poppins",
+                SizedBox(height: 20), // Add some space between the image and text
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Welcome to ",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      TextSpan(
+                        text: "Food2Go",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red, // Change the color to red
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+              ],
+                  ),
+      )
+            );
+
+
+
+
   }
+
 }
 
 
