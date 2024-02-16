@@ -185,7 +185,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
             .collection("users")
             .doc(sharedPreferences!.getString("uid"))
             .collection("orders")
-            .where("status", isEqualTo: "normal")
+            .where("status", isEqualTo: "accepted")
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
