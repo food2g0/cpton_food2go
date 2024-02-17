@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
@@ -210,7 +212,7 @@ class _SignUpPageState extends State<SignUpPage> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: AppColors().white,
       body: SingleChildScrollView(
         // Wrap with SingleChildScrollView
         child: Column(
@@ -284,21 +286,21 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: "Enter your Phone Number",
                         isObscure: false,
                       ),
-                      const SizedBox(height: 20),
+                     SizedBox(height: 20.h),
                       CustomTextField(
                         controller: passwordController,
                         data: Icons.password,
                         hintText: "Enter your Password",
                         isObscure: true,
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       CustomTextField(
                         controller: confirmPasswordController,
                         data: Icons.password_rounded,
                         hintText: "Confirm your Password",
                         isObscure: true,
                       ),
-                      const SizedBox(height: 20),
+                     SizedBox(height: 20.h),
                       CustomTextField(
                         controller: locationController,
                         data: Icons.location_city,
@@ -308,24 +310,26 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       const SizedBox(height: 20),
                       Container(
-                          width: 400,
-                          height: 40,
+                          width: 400.w,
+                          height: 40.h,
                           alignment: Alignment.center,
                           child: ElevatedButton.icon(
-                              label:  const Text(
+                              label:  Text(
                              ("Get my current location")
                             ,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: AppColors().white,
+                              fontFamily: "Poppins",
+                              fontSize: 12.sp),
                             ),
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.location_on,
-                              color: Colors.red,
+                              color: AppColors().black,
                             ),
                             onPressed: () {
                               getCurrentLocation();
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black45,
+                                backgroundColor: AppColors().red,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 )),
@@ -341,26 +345,31 @@ class _SignUpPageState extends State<SignUpPage> {
                       formValidation();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black45,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.w)
+                      ),
+                      backgroundColor: AppColors().red,
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
-                    child: const Row(
+                    child:  Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Next",
+                          "Sign Up",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                              color: AppColors().white,
+                              fontFamily: "Poppins",
+
+                              fontWeight: FontWeight.w600),
                         ),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                        ),
+
                       ],
                     ),
+
                   ),
+
                 ),
+                SizedBox(height: 20.h,)
               ],
             ),
           ],

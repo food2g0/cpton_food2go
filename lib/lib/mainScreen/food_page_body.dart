@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/Category_design_widget.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/card_design.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/fastfood_screen.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
@@ -103,11 +104,9 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                     onTap: () {
                       switch (index) {
                         case 0:
-                        // Navigate to FastFoodScreen
-                        //   Navigator.push(
-                        //     context,
-                        //      MaterialPageRoute(builder: (context) => FastFoodScreen()),
-                        //   );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => FastFoodScreen()));
                           break;
                         case 1:
                         // Navigate to CoffeeScreen
@@ -119,7 +118,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         // Navigate to FastFoodScreen
                           Navigator.push(
                             context,
-                             MaterialPageRoute(builder: (context) => MilkTeaScreen(model: widget.model)));
+                             MaterialPageRoute(builder: (context) => MilkTeaScreen()));
                           break;
                         case 3:
                         // Navigate to BuffetScreen
