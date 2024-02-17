@@ -142,6 +142,20 @@ class _CartItemDesignState extends State<CartItemDesign> {
                                 ),
                               ),
                             ),
+                            IconButton(
+                              icon: Icon(Icons.delete_forever, color: AppColors().red), // Close (X) button
+                              onPressed: () {
+                                // Handle close button action
+                                // For example, you can call a function to remove the item from the cart.
+                                String? cartIDToRemove = widget.cartID;
+
+                                // Check if cartID is not null and then remove the item from the cart
+                                if (cartIDToRemove != null) {
+                                  removeCartItemFromCart(cartIDToRemove, context);
+                                }
+
+                              },
+                            ),
                           ],
                         ),
                         Text(

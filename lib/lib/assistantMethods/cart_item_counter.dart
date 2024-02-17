@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import '../global/global.dart';
 
@@ -8,20 +9,31 @@ class CartItemCounter extends ChangeNotifier {
 
   Future<void> displayCartListItemNumber() async {
     try {
-      QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+      // Listen for real-time updates to the cart collection
+      FirebaseFirestore.instance
           .collection("users")
-          .doc(firebaseAuth.currentUser!.uid)
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("cart")
-          .get();
-      _cartListItemCounter = cartSnapshot.docs.length; // Update the counter with the number of documents in the "cart" collection
+          .snapshots()
+          .listen((querySnapshot) {
+        if (querySnapshot.docs.isEmpty) {
+          _cartListItemCounter = 0;
+        } else {
+          _cartListItemCounter = querySnapshot.size;
+        }
 
-      // Notify listeners after a delay
-      await Future.delayed(const Duration(milliseconds: 100), () {
+        print('Cart item counter updated: $_cartListItemCounter');
+
+        // Notify listeners
         notifyListeners();
       });
     } catch (e) {
       print("Error fetching cart items: $e");
-      _cartListItemCounter = 0; // Set the counter to 0 if there's an error
+      _cartListItemCounter = 0;
     }
   }
+
+
 }
+
+

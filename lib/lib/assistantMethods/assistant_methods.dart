@@ -77,6 +77,8 @@ void addItemToCart(
     String? thumbnailUrl,
     String? productTitle,
     double price,
+    String? selectedVariationName, // Pass selected variation name
+    String? selectedFlavorsName,   // Pass selected flavors name
     ) async {
   try {
     // Get the current user
@@ -109,6 +111,8 @@ void addItemToCart(
       "thumbnailUrl": thumbnailUrl,
       "productTitle": productTitle,
       "productPrice": price,
+      "selectedVariationName": selectedVariationName, // Pass selected variation name
+      "selectedFlavorsName": selectedFlavorsName,
       // Add other properties as needed
     };
 

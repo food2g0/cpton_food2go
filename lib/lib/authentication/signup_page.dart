@@ -361,29 +361,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: w * 0.08),
-                RichText(
-                    text: const TextSpan(
-                  text: "Sign up using one of the following methods:",
-                  style: TextStyle(color: Colors.white, fontSize: 15),
-                )),
-                const SizedBox(height: 23),
-                Wrap(
-                  children: List<Widget>.generate(3, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundImage:
-                              AssetImage("images/" + images[index]),
-                        ),
-                      ),
-                    );
-                  }),
-                )
               ],
             ),
           ],

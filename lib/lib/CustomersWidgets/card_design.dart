@@ -120,26 +120,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                   width: 150.w,
                   child: InkWell(
                     onTap: () {
-                      int itemCounter = 1;
 
-                      List<String> separateItemIDsList = separateItemIDs();
-                      if (separateItemIDsList.contains(widget.model.productsID)) {
-                        Fluttertoast.showToast(msg: "Item is already in the cart");
-                      } else {
-                        // Add to cart
-                        double price = double.parse(widget.model.productPrice);
-
-                        addItemToCart(
-
-                          widget.model.productsID,
-                          context,
-                          itemCounter,
-                          widget.model.thumbnailUrl,
-                          widget.model.productTitle,
-                          price,
-
-                        );
-                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(

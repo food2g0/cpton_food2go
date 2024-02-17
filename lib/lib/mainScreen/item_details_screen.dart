@@ -32,6 +32,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   late String customersUID; // Declare customersUID without initialization
   String selectedVariationPrice = '';
   String selectedFlavorsPrice = '';
+  String selectedVariationName = ''; // Define selected variation name
+  String selectedFlavorsName = '';
 
   @override
   void initState() {
@@ -593,7 +595,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       ),
                       onPressed: () {
                         setState(() {
-                          int currentValue = int.tryParse(counterTextEditingController.text) ?? 0;
+                          int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
                           counterTextEditingController.text = (currentValue + 1).toString();
                         });
                       },
@@ -602,10 +604,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    int itemCounter = int.tryParse(counterTextEditingController.text) ?? 0;
+                    int itemCounter = int.tryParse(counterTextEditingController.text) ?? 1;
 
                     if (itemCounter <= 0) {
-                      Fluttertoast.showToast(msg: "Invalid quantity");
+                      Fluttertoast.showToast(msg: "Quantity must not be 0");
                       return;
                     }
 
@@ -615,6 +617,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     } else {
                       // Check if a variation price is selected
                       if (selectedVariationPrice.isNotEmpty) {
+
                         double price = double.parse(selectedVariationPrice);
 
                         addItemToCart(
@@ -624,6 +627,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           widget.model.thumbnailUrl,
                           widget.model.productTitle,
                           price,
+                          selectedVariationName,
+                          selectedFlavorsName,
+
                         );
 
                       } else {
@@ -637,6 +643,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           widget.model.thumbnailUrl,
                           widget.model.productTitle,
                           price,
+                          selectedVariationName,
+                          selectedFlavorsName,
                         );
                       }
 

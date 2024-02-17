@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/check_out.dart';
 import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
@@ -91,6 +93,10 @@ class _CartScreenState extends State<CartScreen> {
               if (cartSnapshot.connectionState == ConnectionState.waiting) {
                 return SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
               }
+
+              // Check if the cart is empty
+              bool isCartEmpty = cartSnapshot.data!.docs.isEmpty;
+
               return isCartEmpty
                   ? SliverFillRemaining(
                 child: Center(
@@ -310,6 +316,7 @@ class _CartScreenState extends State<CartScreen> {
         .collection("cart")
         .get();
     cartSnapshot.docs.forEach((cartItem) {
+
       double price = cartItem['productPrice']; // Directly assign the value
       int quantity = cartItem['itemCounter'];
       subtotal += (price * quantity);
