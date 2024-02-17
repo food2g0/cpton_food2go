@@ -12,16 +12,16 @@ import '../models/items.dart';
 import '../models/menus.dart';
 import '../theme/colors.dart';
 
-class categoryScreen extends StatefulWidget {
+class MilkTeaScreen extends StatefulWidget {
   final Menus? model;
 
-  const categoryScreen({super.key, this.model});
+  const MilkTeaScreen({super.key, this.model});
 
   @override
-  State<categoryScreen> createState() => _categoryScreenState();
+  State<MilkTeaScreen> createState() => _MilkTeaScreenState();
 }
 
-class _categoryScreenState extends State<categoryScreen> {
+class _MilkTeaScreenState extends State<MilkTeaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,9 +89,9 @@ class _categoryScreenState extends State<categoryScreen> {
                     itemBuilder: (context, index) {
                       Items item = Items.fromJson( snapshot.data!.docs[index].data()! as Map<String, dynamic>,);
                       return ItemsDesignWidget(
-                                  model: item,
-                                  context: context,
-                                );
+                        model: item,
+                        context: context,
+                      );
                     },
                     itemCount: snapshot.data!.docs.length,
                   );

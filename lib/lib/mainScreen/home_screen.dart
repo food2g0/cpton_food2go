@@ -14,13 +14,14 @@ import '../CustomersWidgets/progress_bar.dart';
 import '../assistantMethods/cart_item_counter.dart';
 import '../global/global.dart';
 import '../models/items.dart';
+import '../models/menus.dart';
 import 'SearchResultScreen.dart';
 import 'cart_screen.dart';
 import 'food_page_body.dart';
 import 'chat_screen.dart'; // Import the ChatScreen
 
 class HomeScreen extends StatefulWidget {
-  final dynamic model;
+  final Menus? model;
   final String? sellersUID;
   final BuildContext? context;
   const HomeScreen({Key? key, this.model, this.sellersUID, this.context})

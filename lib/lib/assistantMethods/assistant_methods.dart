@@ -250,7 +250,7 @@ void clearCartNow(BuildContext context) {
   });
 }
 
-void removeCartItemFromCart(String cartID, BuildContext context) {
+Future<void> removeCartItemFromCart(String cartID, BuildContext context) async  {
   // Remove the cart item from Firestore
   FirebaseFirestore.instance
       .collection("users")
@@ -262,8 +262,8 @@ void removeCartItemFromCart(String cartID, BuildContext context) {
     // Show success message
     Fluttertoast.showToast(msg: "Item removed from cart.");
 
-    // Update the local cart if needed
-    // Not required in this scenario as we are not updating any local cart list
+    // Recalculate subtotal and update total amount
+    calculateSubtotalAndUpdateTotalAmount(context);
 
     // Notify listeners to update the UI
     Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
@@ -275,6 +275,20 @@ void removeCartItemFromCart(String cartID, BuildContext context) {
 }
 
 
+Future<void> calculateSubtotalAndUpdateTotalAmount(BuildContext context) async {
+  double subtotal = 0;
+  QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection("cart")
+      .get();
+  cartSnapshot.docs.forEach((cartItem) {
+    double price = cartItem['productPrice'];
+    int quantity = cartItem['itemCounter'];
+    subtotal += (price * quantity);
+  });
+  Provider.of<TotalAmount>(context, listen: false).updateSubtotal(subtotal);
+}
 
 
 

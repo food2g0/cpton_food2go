@@ -596,10 +596,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       onPressed: () {
                         setState(() {
                           int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
-                          counterTextEditingController.text = (currentValue + 1).toString();
+                          if (currentValue < 5) { // Limit the increment to 5
+                            counterTextEditingController.text = (currentValue + 1).toString();
+                          }
                         });
                       },
                     ),
+
                   ],
                 ),
                 ElevatedButton(

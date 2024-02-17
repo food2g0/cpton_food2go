@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/Category_design_widget.dart';
 import 'package:cpton_foodtogo/lib/CustomersWidgets/card_design.dart';
+import 'package:cpton_foodtogo/lib/mainScreen/home_screen.dart';
 import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import '../CustomersWidgets/dimensions.dart';
 import '../CustomersWidgets/menu_design.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../CustomersWidgets/sellers_design.dart';
 import '../models/items.dart';
 import '../models/menus.dart';
+import 'milktea_screen.dart';
 
 class FoodPageBody extends StatefulWidget {
   final String? sellersUID;
@@ -96,30 +99,68 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundColor: AppColors().white,
-                        child: Image.asset(
-                          categoryImages[index],
-                          height: 40,
+                  child: GestureDetector(
+                    onTap: () {
+                      switch (index) {
+                        case 0:
+                        // Navigate to FastFoodScreen
+                        //   Navigator.push(
+                        //     context,
+                        //      MaterialPageRoute(builder: (context) => FastFoodScreen()),
+                        //   );
+                          break;
+                        case 1:
+                        // Navigate to CoffeeScreen
+                        // Add code for navigation to CoffeeScreen here
+                          break;
+                        case 2:
+                        // Navigate to MilkTeaScreen
+                        // Add code for navigation to MilkTeaScreen here
+                        // Navigate to FastFoodScreen
+                          Navigator.push(
+                            context,
+                             MaterialPageRoute(builder: (context) => MilkTeaScreen(model: widget.model)));
+                          break;
+                        case 3:
+                        // Navigate to BuffetScreen
+                        // Add code for navigation to BuffetScreen here
+
+                          break;
+                        case 4:
+                        // Navigate to DessertScreen
+                        // Add code for navigation to DessertScreen here
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundColor: AppColors().white,
+                          child: Image.asset(
+                            categoryImages[index],
+                            height: 40,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        categoryLabels[index],
-                        style: TextStyle(
-                          fontSize: 8.sp,
-                          fontFamily: "Poppins",
+                        SizedBox(height: 8),
+                        Text(
+                          categoryLabels[index],
+                          style: TextStyle(
+                            fontSize: 8.sp,
+                            fontFamily: "Poppins",
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+
                 );
               },
             ),
           ),
+
 
 
 

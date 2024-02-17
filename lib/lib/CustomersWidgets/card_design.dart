@@ -113,32 +113,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                 ),
               ),
               SizedBox(height: 10.h,),
-              Padding(
-                padding: EdgeInsets.all(8.0.w),
-                child: Container(
-                  height: 40.h,
-                  width: 150.w,
-                  child: InkWell(
-                    onTap: () {
 
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color:AppColors().red,
-                        borderRadius: BorderRadius.circular(8.0.w),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0.w),
-                        child: Icon(
-                          Icons.shopping_cart,
-                          size: 20.sp,
-                          color: AppColors().white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

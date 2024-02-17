@@ -27,6 +27,7 @@ class CartItemCounter extends ChangeNotifier {
         // Notify listeners
         notifyListeners();
       });
+
     } catch (e) {
       print("Error fetching cart items: $e");
       _cartListItemCounter = 0;
