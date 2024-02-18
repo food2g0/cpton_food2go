@@ -1,3 +1,4 @@
+import 'package:cpton_foodtogo/lib/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class ErrorDialog extends StatelessWidget
@@ -19,8 +20,12 @@ class ErrorDialog extends StatelessWidget
           {
             Navigator.pop(context);
           },
-          child: const Center(
-            child: Text("Ok"),
+          child: Center(
+            child: Text("Ok",
+            style: TextStyle(
+              color: AppColors().white,
+              fontFamily: "Poppins"
+            ),),
           ),
         )
       ],

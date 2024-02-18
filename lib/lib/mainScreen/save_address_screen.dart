@@ -219,7 +219,7 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
 
   Future<void> getUserLocationAddress() async {
     Position newPosition = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      desiredAccuracy: LocationAccuracy.best,
     );
     position = newPosition;
     placemarks = await placemarkFromCoordinates(
@@ -229,17 +229,40 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
 
     Placemark pMark = placemarks![0];
 
+    // Check if "Pinamalayan" is present in the address line
+    if (!(pMark.subLocality ?? '').toLowerCase().contains('Pinamalayan')) {
+      // Show error message
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Location Error'),
+          content: Text('Pinamalayan does not exist in the address line.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Construct the full address
     String fullAddress =
-        '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality}, ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea}, ${pMark.postalCode}, ${pMark.country}';
+        '${pMark.subThoroughfare ?? ''} ${pMark.thoroughfare ?? ''}, ${pMark.subLocality ?? ''}, ${pMark.locality ?? ''}, ${pMark.subAdministrativeArea ?? ''}, ${pMark.administrativeArea ?? ''}, ${pMark.postalCode ?? ''}, ${pMark.country ?? ''}';
 
     setState(() {
       _locationController.text = fullAddress;
       _flatNumber.text =
-      '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality}, ${pMark.locality}';
-      _city.text = '${pMark.subAdministrativeArea}, ${pMark.administrativeArea}';
-      _state.text = '${pMark.country}';
-      _postalCode.text = pMark.postalCode!;
+      '${pMark.subThoroughfare ?? ''} ${pMark.thoroughfare ?? ''}, ${pMark.subLocality ?? ''}, ${pMark.locality ?? ''}';
+      _city.text = '${pMark.subAdministrativeArea ?? ''}, ${pMark.administrativeArea ?? ''}';
+      _state.text = '${pMark.country ?? ''}';
+      _postalCode.text = pMark.postalCode ?? '';
       _completeAddress.text = fullAddress;
     });
   }
+
 }

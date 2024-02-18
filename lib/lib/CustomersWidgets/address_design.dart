@@ -87,6 +87,19 @@ class _AddressDesignState extends State<AddressDesign> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                //button
+                ElevatedButton(
+                  child: const Text("Check on Maps"),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black54,
+                  ),
+                  onPressed: ()
+                  {
+                    MapsUtils.openMapWithPosition(widget.model!.lat!, widget.model!.lng!);
+
+                    //MapsUtils.openMapWithAddress(widget.model!.fullAddress!);
+                  },
+                ),
 
 
                 ElevatedButton(

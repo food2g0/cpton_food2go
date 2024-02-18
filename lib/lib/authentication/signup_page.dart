@@ -260,8 +260,16 @@ class _SignUpPageState extends State<SignUpPage> {
                           )
                         : null,
                   ),
+
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 10.h),
+                Text("Choose your profile",
+                style: TextStyle(
+                  color: AppColors().black,
+                  fontFamily: "Poppins",
+                  fontSize: 12.sp
+                ),),
+                SizedBox(height: 20.h),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -272,35 +280,35 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: "Enter your Full Name",
                         isObscure: false,
                       ),
-                      const SizedBox(height: 20),
+                SizedBox(height: 10.h),
                       CustomTextField(
                         controller: emailController,
                         data: Icons.email,
                         hintText: "Enter your Email",
                         isObscure: false,
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 10.h),
                       CustomTextField(
                         controller: phoneController,
                         data: Icons.phone_android,
                         hintText: "Enter your Phone Number",
                         isObscure: false,
                       ),
-                     SizedBox(height: 20.h),
+                      SizedBox(height: 10.h),
                       CustomTextField(
                         controller: passwordController,
                         data: Icons.password,
                         hintText: "Enter your Password",
                         isObscure: true,
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 10.h),
                       CustomTextField(
                         controller: confirmPasswordController,
                         data: Icons.password_rounded,
                         hintText: "Confirm your Password",
                         isObscure: true,
                       ),
-                     SizedBox(height: 20.h),
+                      SizedBox(height: 10.h),
                       CustomTextField(
                         controller: locationController,
                         data: Icons.location_city,
@@ -308,7 +316,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         isObscure: false,
                         enabled: true,
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 10.h),
                       Container(
                           width: 400.w,
                           height: 40.h,

@@ -161,248 +161,249 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         ),
         child: CustomScrollView(
             slivers: <Widget>[
-        SliverList(
-        delegate: SliverChildListDelegate([
-            SizedBox(height: 15.0.h),
-        // Product Title, Price, and Ratings
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Color(0xFF890010), width: 1.0),
-              borderRadius: BorderRadius.circular(10.0), // Adjust the value as needed
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.fastfood_outlined, size: 20.0.sp, color: AppColors().red),
-                    SizedBox(width: 10.0),
-                    Expanded(
-                      child: Text(
-                        (widget.model!.productTitle.length > 20)
-                            ? ' ${widget.model!.productTitle.substring(0, 20)}...'
-                            : ' ${widget.model!.productTitle}',
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors().black,
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  SizedBox(height: 15.0.h),
+                  // Product Title, Price, and Ratings
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Color(0xFF890010), width: 1.0),
+                        borderRadius: BorderRadius.circular(10.0), // Adjust the value as needed
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.fastfood_outlined, size: 20.0.sp, color: AppColors().red),
+                              SizedBox(width: 10.0),
+                              Expanded(
+                                child: Text(
+                                  (widget.model!.productTitle.length > 20)
+                                      ? ' ${widget.model!.productTitle.substring(0, 20)}...'
+                                      : ' ${widget.model!.productTitle}',
+                                  style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors().black,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  addToFavorites(widget.model.productsID, customersUID);
+                                },
+                                child: Icon(
+                                  Icons.favorite_border,
+                                  size: 30.0.sp,
+                                  color: AppColors().red,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.0),
+                          Row(
+                            children: [
+                              Image.asset(
+                                'images/peso.png',
+                                width: 14.w,
+                                height: 14.h,
+                                color: AppColors().red,
+                              ),
+                              SizedBox(width: 10.0),
+                              Text(
+                                ' ${selectedVariationPrice != '' ? selectedVariationPrice : widget.model.productPrice?.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 12.0.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors().black1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.0.h),
+                          buildRatingSection(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h,),
+                  Container(
+                    color: Colors.white,
+                    height: 50.h,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.delivery_dining, size: 24.sp, color: AppColors().red),
+                          Text(
+                            "  Cost ",
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors().black),
+                          ),
+                          Text(
+                            ' Php: 50',
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h,),
+                  // Product Description
+                  Container(
+                    color: AppColors().white,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.description, size: 15.0.sp),
+                              SizedBox(width: 10.0.w),
+                              Text(
+                                "Product Description",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors().black),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.0.h),
+                          SingleChildScrollView(
+                            child: Text(
+                              widget.model.productDescription!,
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 10.sp,
+                                color: AppColors().black1,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Product Reviews
+                  Padding(
+                    padding: EdgeInsets.all(10.w),
+                    child: Row(
+                      children: [
+                        Icon(Icons.reviews, size: 15.0.sp),
+                        SizedBox(width: 10.0.w),
+                        Text(
+                          "Product Reviews",
+                          style: TextStyle(
+                              color: AppColors().black,
+                              fontSize: 10.sp,
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        addToFavorites(widget.model.productsID, customersUID);
-                      },
-                      child: Icon(
-                        Icons.favorite_border,
-                        size: 30.0.sp,
-                        color: AppColors().red,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.0),
-                Row(
-                  children: [
-                    Image.asset(
-                      'images/peso.png',
-                      width: 14.w,
-                      height: 14.h,
-                      color: AppColors().red,
-                    ),
-                    SizedBox(width: 10.0),
-                    Text(
-                      ' ${selectedVariationPrice != '' ? selectedVariationPrice : widget.model.productPrice?.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 12.0.sp,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors().black1,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.0.h),
-                buildRatingSection(),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 20.h,),
-        Container(
-          color: Colors.white,
-          height: 50.h,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.delivery_dining, size: 24.sp, color: AppColors().red),
-                Text(
-                  "  Cost ",
-                  style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors().black),
-                ),
-                Text(
-                  ' Php: 50',
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 12.sp,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 10.h,),
-        // Product Description
-        Container(
-          color: AppColors().white,
-          child: Padding(
-            padding: EdgeInsets.all(16.0.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.description, size: 15.0.sp),
-                    SizedBox(width: 10.0.w),
-                    Text(
-                      "Product Description",
-                      style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors().black),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.0.h),
-                SingleChildScrollView(
-                  child: Text(
-                    widget.model.productDescription!,
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 10.sp,
-                      color: AppColors().black1,
+                        SizedBox(width: 10.0.w),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'View All Reviews',
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors().red,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        // Product Reviews
-        Padding(
-          padding: EdgeInsets.all(10.w),
-          child: Row(
-            children: [
-              Icon(Icons.reviews, size: 15.0.sp),
-              SizedBox(width: 10.0.w),
-              Text(
-                "Product Reviews",
-                style: TextStyle(
-                    color: AppColors().black,
-                    fontSize: 10.sp,
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 10.0.w),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'View All Reviews',
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors().red,
+                  // Display Single Review
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection("items")
+                        .doc(widget.model.productsID)
+                        .collection("itemRecord")
+                        .limit(1)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator(
+                        ));
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
+
+                      var reviews = snapshot.data!.docs.map((doc) {
+                        final rating = (doc.data() as Map<String, dynamic>)['rating'] as num?;
+                        final comment = (doc.data() as Map<String, dynamic>)['comment'] as String?;
+                        final userName = (doc.data() as Map<String, dynamic>)['userName'] as String?;
+                        return {'rating': rating, 'comment': comment, 'userName': userName};
+                      }).toList();
+
+                      // Display Single Review
+                      if (reviews.isNotEmpty) {
+                        return buildReviewItem(reviews[0]);
+                      } else {
+                        return Container(); // No reviews to display
+                      }
+                    },
                   ),
+                ],
                 ),
               ),
-            ],
+            ]
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: AppColors().backgroundWhite,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ElevatedButton(
+            onPressed: () {
+              _showVariationsBottomSheet(context);
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.w)
+              ),
+              backgroundColor: AppColors().red,
+            ),
+            child: Text(
+              'Add to Cart',
+              style: TextStyle(
+                fontFamily: "Poppins",
+                fontSize: 10.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
-        // Display Single Review
-        StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection("items")
-              .doc(widget.model.productsID)
-              .collection("itemRecord")
-              .limit(1)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-
-            var reviews = snapshot.data!.docs.map((doc) {
-              final rating = (doc.data() as Map<String, dynamic>)['rating'] as num?;
-              final comment = (doc.data() as Map<String, dynamic>)['comment'] as String?;
-              final userName = (doc.data() as Map<String, dynamic>)['userName'] as String?;
-              return {'rating': rating, 'comment': comment, 'userName': userName};
-            }).toList();
-
-            // Display Single Review
-            if (reviews.isNotEmpty) {
-              return buildReviewItem(reviews[0]);
-            } else {
-              return Container(); // No reviews to display
-            }
-          },
-        ),
-        ],
       ),
-    ),
-      ]
-      ),
-    ),
-    bottomNavigationBar: BottomAppBar(
-      color: AppColors().backgroundWhite,
-      child: Container(
-         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-         child: ElevatedButton(
-          onPressed: () {
-           _showVariationsBottomSheet(context);
-          },
-          style: ElevatedButton.styleFrom(
-           shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.w)
-    ),
-          backgroundColor: AppColors().red,
-    ),
-        child: Text(
-        'Add to Cart',
-        style: TextStyle(
-        fontFamily: "Poppins",
-        fontSize: 10.sp,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-        ),
-       ),
-     ),
-        ),
-     ),
-        );
+    );
 
 
 

@@ -3,14 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../assistantMethods/assistant_methods.dart';
 import '../mainScreen/item_details_screen.dart';
+import '../models/items.dart';
 import '../theme/colors.dart';
 
 
 class CardDesignWidget extends StatefulWidget {
-  final dynamic model;
+  final Items model;
   final BuildContext? context;
 
-  const CardDesignWidget({super.key, this.model, this.context});
+  const CardDesignWidget({super.key, required this.model, this.context});
 
   @override
   State<CardDesignWidget> createState() => _CardDesignWidgetState();
