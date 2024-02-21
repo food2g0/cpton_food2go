@@ -1,4 +1,3 @@
-
 import 'package:cpton_foodtogo/mainScreen/payment_screen.dart';
 import 'package:cpton_foodtogo/mainScreen/save_address_screen.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +44,6 @@ class _CheckOutState extends State<CheckOut> {
   void initializeSharedPreferences() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,17 +104,19 @@ class _CheckOutState extends State<CheckOut> {
                                 ),
                               );
                             }),
-                          if (!showAllAddresses)
-                            AddressDesign(
-                              currentIndex: address.count,
-                              value: 1,
-                              addressId: snapshot.data!.docs[0].id,
-                              totalAmount: widget.totalAmount,
-                              sellersUID: widget.sellersUID,
-                              model: Address.fromJson(
-                                snapshot.data!.docs[0].data()! as Map<String, dynamic>,
-                              ),
-                            ),
+                          if (!showAllAddresses && snapshot.data!.docs.length > 1)
+                            ...List.generate(snapshot.data!.docs.length, (index) {
+                              return AddressDesign(
+                                currentIndex: address.count,
+                                value: index,
+                                addressId: snapshot.data!.docs[index].id,
+                                totalAmount: widget.totalAmount,
+                                sellersUID: widget.sellersUID,
+                                model: Address.fromJson(
+                                  snapshot.data!.docs[index].data()! as Map<String, dynamic>,
+                                ),
+                              );
+                            }),
                           if (snapshot.data!.docs.length > 1)
                             TextButton(
                               onPressed: () {
@@ -134,9 +133,6 @@ class _CheckOutState extends State<CheckOut> {
                 );
               },
             ),
-
-
-
           ],
         ),
       ),

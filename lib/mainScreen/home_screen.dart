@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../CustomersWidgets/CustomShape.dart';
 import '../CustomersWidgets/Favorite_design_widget.dart';
 import '../CustomersWidgets/customers_drawer.dart';
+import '../CustomersWidgets/order_card.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../assistantMethods/cart_item_counter.dart';
 import '../global/global.dart';
@@ -105,11 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
-                      'images/bell.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
+                      'images/approved.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
                       width: 24, // Adjust width as needed
                       height: 24, // Adjust height as needed
                     ),
-                    label: 'Notification',
+                    label: 'Orders',
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
@@ -323,11 +324,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
-                        'images/bell.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
+                        'images/approved.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
                         width: 24, // Adjust width as needed
                         height: 24, // Adjust height as needed
                       ),
-                      label: 'Notification',
+                      label: 'Orders',
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
@@ -499,16 +500,76 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black, // Set the color you want for the notification screen
-      child: Center(
-        child: Text(
-          'Notification Screen',
+    return Scaffold(
+      backgroundColor: AppColors().backgroundWhite,
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: AppColors().white
+        ),
+        title: Text(
+          'Orders',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 24.0,
+            fontFamily: "Poppins",
+            fontSize: 14.sp,
+            color: AppColors().white,
           ),
         ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            color: AppColors().red,
+          ),
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(sharedPreferences!.getString("uid"))
+            .collection("orders")
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          // Extract orders data from snapshot
+          List<DocumentSnapshot> orders = snapshot.data!.docs;
+
+          // Build your UI using the orders data
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              // Extract order details from each document snapshot
+              dynamic productsData = orders[index].get("products");
+              List<Map<String, dynamic>> productList = [];
+              if (productsData != null && productsData is List) {
+                productList =
+                List<Map<String, dynamic>>.from(productsData);
+              }
+
+              print("Product List: $productList"); // Print productList
+
+              return Column(
+                children: [
+                  OrderCard(
+                    itemCount: productList.length,
+                    data: productList,
+                    orderID: snapshot.data!.docs[index].id,
+                    sellerName: "", // Pass the seller's name
+                    paymentDetails:
+                    snapshot.data!.docs[index].get("paymentDetails"),
+                    totalAmount: snapshot.data!.docs[index].get("totalAmount").toString(),
+                    cartItems: productList, // Pass the products list
+                  ),
+                  if (productList.length > 1)
+                    SizedBox(height: 10), // Adjust the height as needed
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }

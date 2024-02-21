@@ -161,12 +161,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                addOrderDetails(context);
-                // Add your logic for processing the payment with the reference number
-              },
-              child: Text('Submit Payment'),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (referenceNumberController.text.isEmpty || referenceNumberController.text.length != 13) {
+                    // Show error if reference number is empty or not 13 digits long
+                    Fluttertoast.showToast(msg: "Please enter a valid 13-digit reference number.");
+                  } else {
+                    addOrderDetails(context);
+                    // Add your logic for processing the payment with the reference number
+                  }
+                },
+                child: Text('Submit Payment',
+                  style: TextStyle(color: AppColors().white,
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp),),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors().red,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.w)
+                    )
+                ),
+              ),
+
             ),
           ],
         ),

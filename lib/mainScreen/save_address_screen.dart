@@ -1,17 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../CustomersWidgets/dimensions.dart';
 import '../CustomersWidgets/text_field.dart';
+import '../theme/colors.dart';
 import '../global/global.dart';
 import '../models/address.dart';
-import '../theme/colors.dart';
+import '../CustomersWidgets/dimensions.dart';
+import '../mainScreen/check_out.dart'; // Importing CheckOut screen if not already imported
 
 class SaveAddressScreen extends StatefulWidget {
   @override
@@ -20,7 +18,7 @@ class SaveAddressScreen extends StatefulWidget {
 
 class _SaveAddressScreenState extends State<SaveAddressScreen> {
   final _name = TextEditingController();
-  final _phoneNumber = TextEditingController();
+  final _phoneNumber = TextEditingController(text: '+63'); // Prefixing with +63
   final _locationController = TextEditingController();
   final _state = TextEditingController();
   final _city = TextEditingController();
@@ -40,7 +38,7 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
           "New Address",
           style: TextStyle(
             fontFamily: "Poppins",
-            fontSize: 14.sp,
+            fontSize: 14,
             color: AppColors().white,
           ),
         ),
@@ -71,7 +69,7 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                   "Address",
                   style: TextStyle(
                     color: AppColors().black1,
-                    fontSize: 12.sp,
+                    fontSize: 12,
                     fontFamily: "Poppins",
                     fontWeight: FontWeight.w600,
                   ),
@@ -82,7 +80,7 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
               leading: Icon(
                 Icons.pin_drop,
                 color: AppColors().black,
-                size: 20.sp,
+                size: 20,
               ),
               title: Container(
                 width: 300,
@@ -91,18 +89,14 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                   controller: _locationController,
                   decoration: InputDecoration(
                     hintText: "What's your address?",
-                    hintStyle:
-                    TextStyle(fontFamily: "Poppins", fontSize: 12.sp),
+                    hintStyle: TextStyle(fontFamily: "Poppins", fontSize: 12),
                   ),
-                  onEditingComplete: () {
-                    // Handle completion or other actions if needed
-                  },
+                  onEditingComplete: () {},
                 ),
               ),
             ),
             ElevatedButton.icon(
               onPressed: () async {
-                // Call getUserLocationAddress when the button is pressed
                 await getUserLocationAddress();
               },
               icon: const Icon(
@@ -114,9 +108,8 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                 style: TextStyle(color: Colors.white, fontFamily: "Poppins"),
               ),
               style: ButtonStyle(
-                backgroundColor:
-                MaterialStatePropertyAll<Color>(AppColors().endColor),
-                shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                backgroundColor: MaterialStateProperty.all<Color>(AppColors().endColor),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -135,7 +128,9 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                   MyTextField(
                     hint: "Phone Number",
                     controller: _phoneNumber,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.phone,
+                    maxLength: 14, // Setting maximum length
+                    validator: phoneNumberValidator,
                   ),
                   MyTextField(
                     hint: "Address Line",
@@ -156,6 +151,7 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                     hint: "Postal Code",
                     controller: _postalCode,
                     keyboardType: TextInputType.number,
+                    validator: postalCodeValidator,
                   ),
                   MyTextField(
                     hint: "Complete Address",
@@ -186,31 +182,33 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                         .collection("users")
                         .doc(sharedPreferences!.getString("uid"))
                         .collection("userAddress")
-                        .doc(DateTime.now()
-                        .millisecondsSinceEpoch
-                        .toString())
+                        .doc(DateTime.now().millisecondsSinceEpoch.toString())
                         .set(model)
                         .then((value) {
-                      Fluttertoast.showToast(
-                          msg: "New Address has been saved.");
+                      Fluttertoast.showToast(msg: "New Address has been saved.");
                       _formKey.currentState!.reset();
                     });
                   }
+
                 },
                 style: ButtonStyle(
-                  backgroundColor:
-                  MaterialStateProperty.all<Color>(AppColors().red),
+                  backgroundColor: MaterialStateProperty.all<Color>(AppColors().red),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                 ),
                 child: Text(
                   "Submit",
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 14,
                     fontFamily: "Poppins",
                     color: AppColors().white,
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -227,42 +225,47 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
       position!.longitude,
     );
 
-    Placemark pMark = placemarks![0];
+    if (placemarks != null && placemarks!.isNotEmpty) {
+      Placemark pMark = placemarks![0];
 
-    // Check if "Pinamalayan" is present in the address line
-    if (!(pMark.subLocality ?? '').toLowerCase().contains('Pinamalayan')) {
-      // Show error message
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Location Error'),
-          content: Text('Pinamalayan does not exist in the address line.'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-      return;
+      // Construct the full address
+      String fullAddress =
+          '${pMark.subThoroughfare ?? ''} ${pMark.thoroughfare ?? ''}, ${pMark.subLocality ?? ''}, ${pMark.locality ?? ''}, ${pMark.subAdministrativeArea ?? ''}, ${pMark.administrativeArea ?? ''}, ${pMark.postalCode ?? ''}, ${pMark.country ?? ''}';
+
+      setState(() {
+        _locationController.text = fullAddress;
+        _flatNumber.text =
+        '${pMark.subThoroughfare ?? ''} ${pMark.thoroughfare ?? ''}, ${pMark.subLocality ?? ''}, ${pMark.locality ?? ''}';
+        _city.text = '${pMark.subAdministrativeArea ?? ''}, ${pMark.administrativeArea ?? ''}';
+        _state.text = '${pMark.country ?? ''}';
+        _postalCode.text = pMark.postalCode ?? '';
+        _completeAddress.text = fullAddress;
+      });
+    } else {
+      print('Placemarks not found.');
     }
-
-    // Construct the full address
-    String fullAddress =
-        '${pMark.subThoroughfare ?? ''} ${pMark.thoroughfare ?? ''}, ${pMark.subLocality ?? ''}, ${pMark.locality ?? ''}, ${pMark.subAdministrativeArea ?? ''}, ${pMark.administrativeArea ?? ''}, ${pMark.postalCode ?? ''}, ${pMark.country ?? ''}';
-
-    setState(() {
-      _locationController.text = fullAddress;
-      _flatNumber.text =
-      '${pMark.subThoroughfare ?? ''} ${pMark.thoroughfare ?? ''}, ${pMark.subLocality ?? ''}, ${pMark.locality ?? ''}';
-      _city.text = '${pMark.subAdministrativeArea ?? ''}, ${pMark.administrativeArea ?? ''}';
-      _state.text = '${pMark.country ?? ''}';
-      _postalCode.text = pMark.postalCode ?? '';
-      _completeAddress.text = fullAddress;
-    });
   }
 
+  String? postalCodeValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Postal code is required';
+    }
+    if (value != '5208') {
+      return 'Invalid postal Code';
+    }
+    return null;
+  }
+
+  String? phoneNumberValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number is required';
+    }
+    if (!value.startsWith('+63')) {
+      return 'Must be valid number';
+    }
+    if (value.length != 13) {
+      return 'Phone number must be 13 digits including +63';
+    }
+    return null;
+  }
 }
