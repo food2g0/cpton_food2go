@@ -36,38 +36,7 @@ separateOrderItemIDs(orderId)
   return separateItemIDsList;
 }
 
-separateItemIDs()
-{
-  List<String> separateItemIDsList=[], defaultItemList=[];
-  int i=0;
 
-  defaultItemList = sharedPreferences!.getStringList("userCart")!;
-
-  for(i; i<defaultItemList.length; i++)
-  {
-    //56557657:7
-    String item = defaultItemList[i].toString();
-    var pos = item.lastIndexOf(":");
-
-    //56557657
-    String getItemId = (pos != -1) ? item.substring(0, pos) : item;
-    //
-    // if (kDebugMode) {
-    //   print("\nThis is itemID now = $getItemId");
-    // }
-
-    separateItemIDsList.add(getItemId);
-  }
-
-  // if (kDebugMode) {
-  //   print("\nThis is Items List now = ");
-  // }
-  // if (kDebugMode) {
-  //   print(separateItemIDsList);
-  // }
-
-  return separateItemIDsList;
-}
 
 void addItemToCart(
     String? foodItemId,

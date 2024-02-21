@@ -22,27 +22,17 @@ class MySplashScreen extends StatefulWidget {
 class _MySplashScreenState extends State<MySplashScreen>
 {
 
-  startTimer()
-  {
-
-
-    Timer(const Duration(seconds: 4),()async{
-
-      //if seller is already logged in
-
-      if(firebaseAuth.currentUser != null)
-      {
-        Navigator.push(context, MaterialPageRoute(builder: (c)=> const HomeScreen()));
+  startTimer() {
+    Timer(const Duration(seconds: 4), () async {
+      // Check if firebaseAuth is not null and currentUser is not null
+      if (firebaseAuth != null && firebaseAuth.currentUser != null) {
+        Navigator.push(context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+      } else {
+        Navigator.push(context, MaterialPageRoute(builder: (c) => const AuthScreen()));
       }
-      //if rider is not logged in
-      else
-        {
-          Navigator.push(context, MaterialPageRoute(builder: (c)=> const AuthScreen()));
-        }
-
-
     });
   }
+
 
 @override
   void initState() {

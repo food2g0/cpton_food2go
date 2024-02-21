@@ -24,9 +24,8 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController counterTextEditingController = TextEditingController();
-  bool isCartEmpty = separateItemIDs().isEmpty;
+
   int cartItemCount = 0;
   late String customersUID; // Declare customersUID without initialization
   String selectedVariationPrice = '';
@@ -614,11 +613,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       return;
                     }
 
-                    List<String> separateItemIDsList = separateItemIDs();
-                    if (separateItemIDsList.contains(widget.model.productsID)) {
-                      Fluttertoast.showToast(msg: "Item is already in a cart");
-                    } else {
-                      // Check if a variation price is selected
+
                       if (selectedVariationPrice.isNotEmpty) {
 
                         double price = double.parse(selectedVariationPrice);
@@ -651,8 +646,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         );
                       }
 
-                    }
-                  },
+                    },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),

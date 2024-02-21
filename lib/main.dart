@@ -1,5 +1,6 @@
 import 'package:cpton_foodtogo/splashScreen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -13,8 +14,19 @@ import 'global/global.dart';
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+
+
   sharedPreferences = await SharedPreferences.getInstance();
-  await Firebase.initializeApp();
+
+
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyCqwdH0M0TWiLwU6vFGj7StF3MHqjQr9nk",
+      appId: "1:82585542874:android:ef64b5755dfecd372cc5e3",
+      messagingSenderId: "82585542874",
+      projectId: "foodtogo-b2974",
+    ),
+  );
   runApp(const MyApp());
 }
 
