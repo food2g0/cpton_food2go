@@ -475,7 +475,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                     setState(() {
                                       selectedVariationPrice = variationPrice;
                                     });
-                                    // Handle button press for this variation
                                     // You can implement the logic here to perform actions when a variation button is pressed
                                     print('Selected variation: $variationPrice');
                                   },

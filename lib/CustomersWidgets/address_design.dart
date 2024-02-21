@@ -1,6 +1,8 @@
 
+import 'package:cpton_foodtogo/mainScreen/checkout_order_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -89,18 +91,17 @@ class _AddressDesignState extends State<AddressDesign> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //button
-                ElevatedButton(
-                  child: const Text("Check on Maps"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black54,
-                  ),
-                  onPressed: ()
-                  {
-                    MapsUtils.openMapWithPosition(widget.model!.lat!, widget.model!.lng!);
+                IconButton(
+                  icon: Icon(Icons.map,
+                  size: 26.sp,),
 
+                  color: AppColors().black, // Icon color
+                  onPressed: () {
+                    MapsUtils.openMapWithPosition(widget.model!.lat!, widget.model!.lng!);
                     //MapsUtils.openMapWithAddress(widget.model!.fullAddress!);
                   },
                 ),
+
 
 
                 ElevatedButton(
@@ -122,7 +123,7 @@ class _AddressDesignState extends State<AddressDesign> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (c) => CheckOut(
+                            builder: (c) => CheckoutOrderScreen(
                               addressId: widget.addressId,
                               sellersUID: widget.sellersUID,
                               totalAmount: widget.totalAmount,

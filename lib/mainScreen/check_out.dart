@@ -34,7 +34,7 @@ class _CheckOutState extends State<CheckOut> {
   String orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
   SharedPreferences? sharedPreferences;
-  bool showAllAddresses = false; // Flag to show all addresses
+  bool showAllAddresses = true; // Flag to show all addresses
 
   @override
   void initState() {
@@ -46,93 +46,7 @@ class _CheckOutState extends State<CheckOut> {
     sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  Future<void> addOrderDetails(BuildContext context) async {
-    if (sharedPreferences == null) return;
-    try {
-      DocumentReference userDocRef =
-      FirebaseFirestore.instance.collection("users").doc(firebaseAuth.currentUser!.uid);
 
-      QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(firebaseAuth.currentUser!.uid)
-          .collection("cart")
-          .get();
-
-      List<Map<String, dynamic>> products = cartSnapshot.docs.map((cartItem) {
-        return {
-          "foodItemId": cartItem['foodItemId'],
-          "itemCounter": cartItem['itemCounter'],
-          "cartID": cartItem['cartID'],
-          "thumbnailUrl": cartItem['thumbnailUrl'],
-          "productTitle": cartItem['productTitle'],
-          "productPrice": cartItem['productPrice'],
-        };
-      }).toList();
-
-
-
-
-
-
-
-      await writeOrderDetailsForUser({
-        "addressID": widget.addressId,
-        "totalAmount": widget.totalAmount,
-        "orderBy": sharedPreferences?.getString("uid"),
-        "products": products,
-        "paymentDetails": selectedPaymentMethod,
-        "orderTime": orderId,
-        "isSuccess": true,
-        "sellerUID": widget.sellersUID,
-        "riderUID": "",
-        "status": "normal",
-        "orderId": orderId,
-        // "customerName": widget.model.name,
-        // "phoneNumber": widget.model.phoneNumber,
-      });
-
-      await writeOrderDetailsForSeller({
-        "addressID": widget.addressId,
-        "totalAmount": widget.totalAmount,
-        "orderBy": sharedPreferences?.getString("uid"),
-        "products": products,
-        "paymentDetails": selectedPaymentMethod,
-        "orderTime": orderId,
-        "isSuccess": true,
-        "sellerUID": widget.sellersUID,
-        "riderUID": "",
-        "status": "normal",
-        "orderId": orderId,
-        // "customerName": widget.model.name,
-        // "phoneNumber": widget.model.phoneNumber,
-      });
-
-      clearCartNow(context);
-
-      setState(() {
-        orderId = "";
-      });
-
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MyOrderScreen()));
-
-      Fluttertoast.showToast(msg: "Congratulations, order placed successfully!");
-    } catch (error) {
-      print("Error adding order details: $error");
-    }
-  }
-
-  Future writeOrderDetailsForUser(Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(sharedPreferences?.getString("uid"))
-        .collection("orders")
-        .doc(orderId)
-        .set(data);
-  }
-
-  Future writeOrderDetailsForSeller(Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance.collection("orders").doc(orderId).set(data);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +54,8 @@ class _CheckOutState extends State<CheckOut> {
       appBar: AppBar(
         backgroundColor: AppColors().red,
         title: Text(
-          "Checkout",
-          style: TextStyle(fontFamily: "Poppins", color: Colors.white, fontSize: 14.sp),
+          "Choose Address",
+          style: TextStyle(fontFamily: "Poppins", color: Colors.white, fontSize: 12.sp),
         ),
       ),
       body: SingleChildScrollView(
@@ -196,7 +110,7 @@ class _CheckOutState extends State<CheckOut> {
                           if (!showAllAddresses)
                             AddressDesign(
                               currentIndex: address.count,
-                              value: 0,
+                              value: 1,
                               addressId: snapshot.data!.docs[0].id,
                               totalAmount: widget.totalAmount,
                               sellersUID: widget.sellersUID,
@@ -220,100 +134,7 @@ class _CheckOutState extends State<CheckOut> {
                 );
               },
             ),
-            SizedBox(height: 16.h),
-            // Container for Payment Methods
-            Container(
-              padding: EdgeInsets.all(16.w),
-              color: Colors.grey[200],
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Choose Payment Method:",
-                    style: TextStyle(
-                      color: AppColors().black,
-                      fontFamily: "Poppins",
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  // Radio buttons for payment methods
-                  RadioListTile(
-                    title: Text(
-                      "Pay with Gcash",
-                      style: TextStyle(
-                        color: AppColors().black,
-                        fontFamily: "Poppins",
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                    value: "Gcash",
-                    groupValue: selectedPaymentMethod,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPaymentMethod = value as String?;
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    title: Text(
-                      "Cash on Delivery",
-                      style: TextStyle(
-                        color: AppColors().black,
-                        fontFamily: "Poppins",
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                    value: "CashOnDelivery",
-                    groupValue: selectedPaymentMethod,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPaymentMethod = value as String?;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16.h),
-            // Place Order button
-            // Place Order button
-            ElevatedButton(
-              onPressed: () {
-                if (widget.addressId == null) {
-                  // Show toast message or alert dialog indicating that the user needs to choose an address
-                  Fluttertoast.showToast(msg: "Please choose an address.");
-                } else if (selectedPaymentMethod == null) {
-                  // Show toast message or alert dialog indicating that the user needs to select a payment method
-                  Fluttertoast.showToast(msg: "Please select a payment method.");
-                } else if (widget.sellersUID == null) {
-                  // Show toast message or alert dialog indicating that the sellersUID is missing
-                  Fluttertoast.showToast(msg: "Seller's UID is missing.");
-                } else {
-                  if (selectedPaymentMethod == "Gcash") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (c) => PaymentScreen(
-                          addressID: widget.addressId,
-                          totalAmount: widget.totalAmount,
-                          paymentMethod: selectedPaymentMethod,
-                          sellersUID: widget.sellersUID,
-                        ),
-                      ),
-                    );
-                  } else {
-                    addOrderDetails(context);
-                  }
-                }
-              },
-              child: Text("Place Order", style: TextStyle(fontWeight: FontWeight.w600, fontFamily: "Poppins", fontSize: 12.sp)),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: AppColors().red,
-                minimumSize: Size(200.w, 50.h),
-              ),
-            ),
+
 
 
           ],
