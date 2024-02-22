@@ -16,6 +16,7 @@ class Menus
   String? sellersName;
   String? sellersAddress;
   String? menuTitle;
+  String? Open;
 
  Menus
       ({
@@ -33,6 +34,7 @@ class Menus
     this.sellersImageUrl,
     this.sellersName,
     this.sellersAddress,
+   this.Open
   });
 
   Menus.fromJson(Map<String, dynamic> json)
@@ -51,6 +53,7 @@ class Menus
     sellersImageUrl = json['sellersImageUrl'];
     sellersName = json['sellersName'];
     sellersAddress = json['sellersAddress'];
+    Open = json['open'];
   }
 
 
@@ -71,6 +74,7 @@ class Menus
     data["sellersImageUrl"] = sellersImageUrl;
     data["sellersName"] = sellersName;
     data["sellersAddress"] = sellersAddress;
+    data["open"] = Open;
 
     return data;
   }

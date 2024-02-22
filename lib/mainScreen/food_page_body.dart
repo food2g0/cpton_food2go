@@ -189,7 +189,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           SizedBox(height: 10.h),
           // List of restaurants
           StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection("sellers").where("status", isEqualTo: "approved")
+            stream: FirebaseFirestore.instance.collection("sellers").where("status", isEqualTo: "approved").where("open", isEqualTo: "open")
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {

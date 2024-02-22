@@ -10,7 +10,7 @@ class InfoDesignWidget extends StatefulWidget {
   final Menus? model;
   final BuildContext? context;
 
-  const InfoDesignWidget({super.key, this.model, this.context});
+  const InfoDesignWidget({Key? key, this.model, this.context}) : super(key: key);
 
   @override
   State<InfoDesignWidget> createState() => _InfoDesignWidgetState();
@@ -22,6 +22,17 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
     double containerWidth = 200;
     double containerHeight = 200;
     double imageBorderRadius = 10.0; // Set the desired border radius
+
+    IconData statusIcon = Icons.circle; // Default icon for status
+    Color statusColor = Colors.green; // Default color for status text
+
+    if (widget.model!.Open == 'open') {
+      statusIcon = Icons.circle; // Change this to your active icon
+      statusColor = Colors.green; // Change the color as needed
+    } else if (widget.model!.Open == 'close') {
+      statusIcon = Icons.circle; // Change this to your inactive icon
+      statusColor = Colors.red; // Change the color as needed
+    }
 
     return SizedBox(
       child: Container(
@@ -53,12 +64,12 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                          Icon(
+                            Icon(
                               Icons.fastfood, // Replace with your desired icon
                               color: AppColors().red,
                               size: 12.sp,
                             ),
-                           SizedBox(width: 4.w), // Add spacing between the icon and text
+                            SizedBox(width: 4.w), // Add spacing between the icon and text
                             Expanded(
                               child: Text(
                                 widget.model!.sellersName!,
@@ -71,11 +82,25 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                                 overflow: TextOverflow.ellipsis, // Add ellipsis when text overflows
                               ),
                             ),
+                            Icon(
+                              statusIcon,
+                              color: statusColor,
+                              size: 12.sp,
+                            ),
+                            SizedBox(width: 2.w), // Add spacing between the icon and text
+                            Text(
+                              widget.model!.Open == 'open' ? 'Open' : 'Close',
+                              style: TextStyle(
+                                color: statusColor,
+                                fontFamily: "Poppins",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 9.sp,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -86,3 +111,5 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
     );
   }
 }
+
+
