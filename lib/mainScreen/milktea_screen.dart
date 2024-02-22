@@ -12,7 +12,7 @@ class MilkTeaScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors().red,
-        title: Text('Fast Food Restaurant',
+        title: Text('Milk Tea Shop',
           style: TextStyle(
               color: AppColors().white,
               fontFamily: "Poppins",

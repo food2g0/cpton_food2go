@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/mainScreen/DessertScreen.dart';
+import 'package:cpton_foodtogo/mainScreen/coffee_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -110,14 +112,18 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         case 1:
                         // Navigate to CoffeeScreen
                         // Add code for navigation to CoffeeScreen here
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => CoffeeScreen()));
                           break;
                         case 2:
                         // Navigate to MilkTeaScreen
                         // Add code for navigation to MilkTeaScreen here
                         // Navigate to FastFoodScreen
                           Navigator.push(
-                            context,
-                             MaterialPageRoute(builder: (context) => MilkTeaScreen()));
+                              context,
+                              MaterialPageRoute(builder: (context) => MilkTeaScreen()));
+
                           break;
                         case 3:
                         // Navigate to BuffetScreen
@@ -127,6 +133,9 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         case 4:
                         // Navigate to DessertScreen
                         // Add code for navigation to DessertScreen here
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => DessertScreen()));
                           break;
                         default:
                           break;

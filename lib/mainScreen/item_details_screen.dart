@@ -24,7 +24,7 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
-  TextEditingController counterTextEditingController = TextEditingController();
+
 
   int cartItemCount = 0;
   late String customersUID; // Declare customersUID without initialization
@@ -32,12 +32,15 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   String selectedFlavorsPrice = '';
   String selectedVariationName = ''; // Define selected variation name
   String selectedFlavorsName = '';
-
+  String selectedVariation = '';
+  late TextEditingController counterTextEditingController;
+  int initialValue = 1;
   @override
   void initState() {
     super.initState();
     customersUID = getCurrentUserUID(); // Initialize customersUID in initState
     print('Debug: customersUID in initState: $customersUID');
+    counterTextEditingController = TextEditingController(text: initialValue.toString());
   }
 
   String getCurrentUserUID() {
@@ -68,6 +71,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
     return averageRating;
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -62,11 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Future<QuerySnapshot>? restaurantsDocumentsList;
     String sellerNameText = "";
     double displayWidth = MediaQuery.of(context).size.width;
-    initSearchingRestaurant(String textEntered) {
-          restaurantsDocumentsList = FirebaseFirestore.instance.collection("sellers")
-          .where("sellersName", isGreaterThanOrEqualTo: textEntered)
-          .get();
-    }
+
 
     // Check if it's not the ChatScreen
     if (_selectedIndex != 0) {

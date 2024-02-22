@@ -19,13 +19,16 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   Future<QuerySnapshot>? restaurantsDocumentsList;
   String sellerNameText = "";
 
-  initSearchingRestaurant(String textEntered)
-  {
+  initSearchingRestaurant(String textEntered) {
     restaurantsDocumentsList = FirebaseFirestore.instance
         .collection("sellers")
-        .where("sellersName", isGreaterThanOrEqualTo: textEntered)
+        .where("sellersName", isEqualTo: textEntered)
         .get();
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
