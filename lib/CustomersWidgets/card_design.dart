@@ -10,8 +10,9 @@ import '../theme/colors.dart';
 class CardDesignWidget extends StatefulWidget {
   final Items model;
   final BuildContext? context;
+  final sellersUID;
 
-  const CardDesignWidget({super.key, required this.model, this.context});
+  const CardDesignWidget({super.key, required this.model, this.context, this.sellersUID});
 
   @override
   State<CardDesignWidget> createState() => _CardDesignWidgetState();
@@ -22,7 +23,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model,)));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model,sellersUID: widget.sellersUID,)));
       },
       child: Card(
         child: Padding(

@@ -13,8 +13,9 @@ import '../theme/colors.dart';
 class CategoryDesignWidget extends StatefulWidget {
   final dynamic model;
   final BuildContext? context;
+  final sellersUID;
 
-  const CategoryDesignWidget({super.key, this.model, this.context});
+  const CategoryDesignWidget({super.key, this.model, this.context, this.sellersUID});
 
   @override
   State<CategoryDesignWidget> createState() => _CategoryDesignWidgetState();
@@ -25,7 +26,7 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model, )));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model, sellersUID: widget.sellersUID,)));
       },
       child: Padding(
         padding: EdgeInsets.all(4.0.w),

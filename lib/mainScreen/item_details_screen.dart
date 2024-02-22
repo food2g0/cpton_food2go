@@ -33,6 +33,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   String selectedVariationName = ''; // Define selected variation name
   String selectedFlavorsName = '';
   String selectedVariation = '';
+  String variationPrice = '';
+  Color? selectedFlavorColor;
+  Color? selectedVariationColor;
   late TextEditingController counterTextEditingController;
   int initialValue = 1;
   @override
@@ -411,15 +414,20 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
 
   }
-
+  // String? sellersUID = await fetchSellersUID();
   void _showVariationsBottomSheet(BuildContext context) {
+    selectedFlavorColor = Colors.red;
+    selectedVariationColor = Colors.red;
+    Color flavorButtonColor(String flavorsName, String selectedFlavor) {
+      return selectedFlavor == flavorsName ? Colors.green : Colors.grey;
+    }
 
 
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allow the bottom sheet to occupy full screen height
+      isScrollControlled: true,
       builder: (context) {
-        return SingleChildScrollView( // Enable scrolling if content exceeds screen height
+        return SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(16.0),
             child: Column(
@@ -429,9 +437,11 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 // Your bottom sheet content
                 Text(
                   'Variations',
-                  style: TextStyle(fontSize: 10.0.sp,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 10.0.sp,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 SizedBox(height: 16.0),
                 StreamBuilder<DocumentSnapshot>(
@@ -449,64 +459,60 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
                     var variations = (snapshot.data!)['variations'] ?? [];
 
-
                     if (variations.isNotEmpty) {
-                      // If variations exist, show variation options UI
                       return Row(
-                        children: [
-                          SizedBox(height: 10),
-                          // Display buttons for each variation
-                          Row(
-                            children: variations.map<Widget>((variation) {
-                              String variationName = variation['name'];
-                              String variationPrice = variation['price'];
+                        children: variations.map<Widget>((variation) {
+                          String variationName = variation['name'];
+                          String firstLetter = variationName.substring(0, 1);
 
-                              // Check if variation price is not null
-                              String firstLetter = variationName.substring(0, 1);
-
-                              // Return a button for each variation wrapped in padding for spacing
-                              return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.w)
-                                      )
-                                  ),
-                                  onPressed: () {
-                                    // Set the selected variation price
-                                    print('$variationPrice');
-                                    setState(() {
-                                      selectedVariationPrice = variationPrice;
-                                    });
-                                    // You can implement the logic here to perform actions when a variation button is pressed
-                                    print('Selected variation: $variationPrice');
-                                  },
-                                  child: Text(firstLetter,
-                                    style: TextStyle(
-                                        color: AppColors().black,
-                                        fontSize: 10.sp,
-                                        fontFamily: "Poppins"
-                                    ),),
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.w),
                                 ),
-                              );
-                            }).toList(),
-                          ),
-                        ],
+                                backgroundColor: selectedVariationName == variationName
+                                    ? selectedVariationColor // Use selected color for the selected variation button
+                                    : Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  selectedVariationName = variationName;
+                                  selectedVariationPrice = variation['price']; // Update selected variation price
+                                  selectedVariationColor = Colors.green; // Update color for selected variation buttond variation button// Update selected variation price
+                                });
+    print('Selected variation: $variationName');
+    print('Selected price: $selectedVariationPrice');
+    },
+
+                              child: Text(
+                                firstLetter,
+                                style: TextStyle(
+                                  color: AppColors().black,
+                                  fontSize: 10.sp,
+                                  fontFamily: "Poppins",
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       );
                     } else {
                       return Container();
                     }
                   },
                 ),
-                // Add your variation widgets here
+                // Add your flavor widgets here
                 Text(
                   'Flavors',
-                  style: TextStyle(fontSize: 10.0.sp,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 10.0.sp,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                SizedBox(height: 16.0.h),
+                SizedBox(height: 16.0),
                 StreamBuilder<DocumentSnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection("items")
@@ -523,31 +529,45 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     var flavors = (snapshot.data!)['flavors'] ?? [];
 
                     if (flavors.isNotEmpty) {
-                      // If variations exist, show variation options UI
                       return Wrap(
-                        children: flavors.map<Widget>((variation) {
-                          String flavorsName = variation['name'];
+                        children: flavors.map<Widget>((flavor) {
+                          String flavorsName = flavor['name'];
                           String firstLetter = flavorsName;
 
-                          // Return a button for each variation wrapped in padding for spacing
                           return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0), // Adjust the spacing as needed
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.w)
-                                  )
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.w),
+                                color: selectedFlavorsName == flavorsName ? Colors.green : Colors.grey,
                               ),
-                              onPressed: () {},
-                              child: Text(
-                                firstLetter,
-                                style: TextStyle(
-                                    color: AppColors().black,
-                                    fontSize: 10.sp,
-                                    fontFamily: "Poppins"
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedFlavorsName = flavorsName;
+                                  });
+                                  print('Selected flavor: $flavorsName');
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                  child: Text(
+                                    firstLetter,
+                                    style: TextStyle(
+                                      color: AppColors().black,
+                                      fontSize: 10.sp,
+                                      fontFamily: "Poppins",
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            )
+
+
+
+
+
+
+
                           );
                         }).toList(),
                       );
@@ -556,8 +576,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     }
                   },
                 ),
-
-                // Add your flavors widgets here
+                // Add your quantity widgets here
                 Row(
                   children: [
                     IconButton(
@@ -598,15 +617,15 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       onPressed: () {
                         setState(() {
                           int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
-                          if (currentValue < 5) { // Limit the increment to 5
+                          if (currentValue < 5) {
                             counterTextEditingController.text = (currentValue + 1).toString();
                           }
                         });
                       },
                     ),
-
                   ],
                 ),
+                // Add to cart button
                 ElevatedButton(
                   onPressed: () {
                     int itemCounter = int.tryParse(counterTextEditingController.text) ?? 1;
@@ -616,40 +635,22 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       return;
                     }
 
-
-                      if (selectedVariationPrice.isNotEmpty) {
-
-                        double price = double.parse(selectedVariationPrice);
-
-                        addItemToCart(
-                          widget.model.productsID,
-                          context,
-                          itemCounter,
-                          widget.model.thumbnailUrl,
-                          widget.model.productTitle,
-                          price,
-                          selectedVariationName,
-                          selectedFlavorsName,
-
-                        );
-
-                      } else {
-                        // If no variation is selected, use the default product price
-                        double price = widget.model.productPrice.toDouble(); // Convert integer to double
-
-                        addItemToCart(
-                          widget.model.productsID,
-                          context,
-                          itemCounter,
-                          widget.model.thumbnailUrl,
-                          widget.model.productTitle,
-                          price,
-                          selectedVariationName,
-                          selectedFlavorsName,
-                        );
-                      }
-
-                    },
+                    double price = selectedVariationPrice != null
+                        ? double.parse(selectedVariationPrice!)
+                        : widget.model.productPrice.toDouble();
+                    print("Seller's UID: ${widget.sellersUID}");
+                    addItemToCart(
+                      widget.model.productsID,
+                      context,
+                      itemCounter,
+                      widget.model.thumbnailUrl,
+                      widget.model.productTitle,
+                      price,
+                      selectedVariationName,
+                      selectedFlavorsName,
+                      widget.sellersUID,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -805,7 +806,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         'productQuantity': widget.model.productQuantity,
         'productDescription': widget.model.productDescription,
         'menuID': widget.model.menuID,
-        'sellersUID': widget.model.sellersUID,
+        'sellersUID': widget.sellersUID,
         'timestamp': FieldValue.serverTimestamp(),
       });
       Fluttertoast.showToast(

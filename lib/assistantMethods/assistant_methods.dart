@@ -45,8 +45,9 @@ void addItemToCart(
     String? thumbnailUrl,
     String? productTitle,
     double price,
-    String? selectedVariationName, // Pass selected variation name
-    String? selectedFlavorsName,   // Pass selected flavors name
+    String? selectedVariationName,
+    String? selectedFlavorsName,
+    String? sellersUID,
     ) async {
   try {
     // Get the current user
@@ -59,13 +60,19 @@ void addItemToCart(
     // Reference to the user's cart collection
     CollectionReference cartCollection = FirebaseFirestore.instance.collection("users").doc(user.uid).collection("cart");
 
-    // Query to check if the foodItemId already exists in the cart
-    QuerySnapshot querySnapshot = await cartCollection.where("foodItemId", isEqualTo: foodItemId).get();
-
+    // Check if there are any items in the cart
+    QuerySnapshot querySnapshot = await cartCollection.limit(1).get();
     if (querySnapshot.docs.isNotEmpty) {
-      // Item already exists in the cart, show a message
-      Fluttertoast.showToast(msg: "Item is already in the cart");
-      return;
+      // Get the seller UID of the first item in the cart
+      String? existingSellersUID = (querySnapshot.docs.first.data() as Map<String, dynamic>?)?["sellersUID"];
+
+
+      // Check if the existing seller UID matches the new seller UID
+      if (existingSellersUID != sellersUID) {
+        // Display error message indicating items from different sellers cannot be added to the cart
+        Fluttertoast.showToast(msg: "Items from different sellers cannot be added to the cart");
+        return;
+      }
     }
 
     // Generate a unique cart ID
@@ -79,9 +86,9 @@ void addItemToCart(
       "thumbnailUrl": thumbnailUrl,
       "productTitle": productTitle,
       "productPrice": price,
-      "selectedVariationName": selectedVariationName, // Pass selected variation name
+      "selectedVariationName": selectedVariationName,
       "selectedFlavorsName": selectedFlavorsName,
-      // Add other properties as needed
+      "sellersUID": sellersUID
     };
 
     // Add the cart item to the cart collection
@@ -97,6 +104,9 @@ void addItemToCart(
     // Handle error as needed
   }
 }
+
+
+
 
 
 addItemToCartnoItemCounter(String? foodItemId, BuildContext context)

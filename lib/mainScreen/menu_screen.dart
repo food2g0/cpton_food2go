@@ -327,6 +327,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     itemBuilder: (context, index) {
                       Items item = itemsList[index];
                       return CardDesignWidget(
+                        sellersUID: widget.model?.sellersUID,
                         model: item,
                         context: context,
                       );
