@@ -307,6 +307,7 @@ class _MenuScreenState extends State<MenuScreen> {
               stream: FirebaseFirestore.instance
                   .collection("items")
                   .where("sellersUID", isEqualTo: widget.model?.sellersUID)
+                  .where("status", isEqualTo: "available")
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

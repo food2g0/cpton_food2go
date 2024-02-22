@@ -10,6 +10,7 @@ import 'assistantMethods/address_changer.dart';
 import 'assistantMethods/cart_item_counter.dart';
 import 'assistantMethods/total_ammount.dart';
 import 'global/global.dart';
+import 'firebase_options.dart';
 
 void main() async {
 
@@ -20,12 +21,7 @@ void main() async {
 
 
   await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyCqwdH0M0TWiLwU6vFGj7StF3MHqjQr9nk",
-      appId: "1:82585542874:android:ef64b5755dfecd372cc5e3",
-      messagingSenderId: "82585542874",
-      projectId: "foodtogo-b2974",
-    ),
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }

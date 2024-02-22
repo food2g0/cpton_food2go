@@ -189,7 +189,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           SizedBox(height: 10.h),
           // List of restaurants
           StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
+            stream: FirebaseFirestore.instance.collection("sellers").where("status", isEqualTo: "approved")
+                .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: circularProgress());
@@ -232,10 +233,11 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               ],
             ),
           ),
-SizedBox(height: 10.h,),
+          SizedBox(height: 10.h,),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection("items")
+                .where("status", isEqualTo: "available") // Filter by status
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -262,9 +264,10 @@ SizedBox(height: 10.h,),
                     );
                   },
                 );
-    }
+              }
             },
           ),
+
         ],
       ),
     );

@@ -75,6 +75,7 @@ class _categoryScreenState extends State<categoryScreen> {
                   .collection("menus")
                   .doc(widget.model!.menuID)
                   .collection("items")
+                  .where("status", isEqualTo: "available")
                   .orderBy("publishedDate", descending: true)
                   .snapshots(),
               builder: (context, snapshot) {

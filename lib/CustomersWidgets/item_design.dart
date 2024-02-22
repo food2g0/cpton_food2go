@@ -27,120 +27,97 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
       },
       child: Padding(
         padding: EdgeInsets.all(4.0.w),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors().white,
-            border: Border.all(color: AppColors().red, width: 1.0), // Add border styling
-          ),
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 150.h,
-                width: MediaQuery.of(context).size.width,
-                child: AspectRatio(
-                  aspectRatio: 3 / 4,
-                  child: Image.network(
-                    widget.model!.thumbnailUrl!,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 4.0),
-                            child: Icon(
-                              Icons.fastfood,
-                              size: 16.sp,
-                              color: AppColors().yellow,
-                            ),
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' ${widget.model!.productTitle}',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: AppColors().black,
-                            fontWeight: FontWeight.w700,
-                            overflow: TextOverflow.ellipsis,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                      ],
+        child: Card(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10), // Adjust the border radius as needed
+                  child: SizedBox(
+                    height: 127.h,
+                    width: MediaQuery.of(context).size.width,
+                    child: AspectRatio(
+                      aspectRatio: 4 / 3,
+                      child: Image.network(
+                        widget.model!.thumbnailUrl!,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        WidgetSpan(
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(
-                              Icons.currency_ruble,
-                              size: 16.sp,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                        TextSpan(
-                          text: "Php: " + '${widget.model!.productPrice}',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w700,
-                            overflow: TextOverflow.ellipsis,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10.h,),
-              Padding(
-                padding: EdgeInsets.all(8.0.w),
-                child: Container(
-                  height: 40.h,
-                  width: 150.w,
-                  child: InkWell(
-                    onTap: () {
 
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors().red,
-                        borderRadius: BorderRadius.circular(8.0.w),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0.w),
-                        child: Icon(
-                          Icons.shopping_cart,
-                          size: 20.sp,
-                          color: Colors.white,
-                        ),
+
+                SizedBox(height: 10.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 4.0),
+                              child: Icon(
+                                Icons.fastfood,
+                                size: 16.sp,
+                                color: AppColors().yellow,
+                              ),
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' ${widget.model!.productTitle}',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors().black,
+                              fontWeight: FontWeight.w700,
+                              overflow: TextOverflow.ellipsis,
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height: 5),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          WidgetSpan(
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 10.0),
+                              child: Icon(
+                                Icons.currency_ruble,
+                                size: 16.sp,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Php: " + '${widget.model!.productPrice}',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.black45,
+                              fontWeight: FontWeight.w700,
+                              overflow: TextOverflow.ellipsis,
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h,),
+              ],
+            ),
           ),
         ),
       ),
