@@ -16,14 +16,16 @@ import 'cart_screen.dart';
 class ItemDetailsScreen extends StatefulWidget {
   final dynamic model;
   final String? sellersUID;
+  final double? distanceInKm;
 
-  const ItemDetailsScreen({Key? key, required this.model, this.sellersUID}) : super(key: key);
+  const ItemDetailsScreen({Key? key, required this.model, this.sellersUID, this.distanceInKm}) : super(key: key);
 
   @override
   State<ItemDetailsScreen> createState() => _ItemDetailsScreenState();
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
+
 
 
   int cartItemCount = 0;
@@ -37,12 +39,16 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   Color? selectedFlavorColor;
   Color? selectedVariationColor;
   late TextEditingController counterTextEditingController;
+   double distanceInKm = 0.0 ;
   int initialValue = 1;
   @override
   void initState() {
     super.initState();
+    distanceInKm = widget.distanceInKm as double;
     customersUID = getCurrentUserUID(); // Initialize customersUID in initState
     print('Debug: customersUID in initState: $customersUID');
+    print('Debug: Distance in initState: $distanceInKm');
+
     counterTextEditingController = TextEditingController(text: initialValue.toString());
   }
 

@@ -18,7 +18,7 @@ class CartScreen extends StatefulWidget {
   final String? sellersUID;
   final Menus? model;
 
-  const CartScreen({Key? key, this.sellersUID, this.model}) : super(key: key);
+  const CartScreen({Key? key, this.sellersUID, this.model, double? distanceInKm}) : super(key: key);
 
   @override
   _CartScreenState createState() => _CartScreenState();

@@ -1,7 +1,9 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import '../CustomersWidgets/card_design.dart';
@@ -16,16 +18,61 @@ import 'cart_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   final dynamic model;
-
   final String? sellersName;
 
-  const MenuScreen({super.key, this.model,  this.sellersName});
+  const MenuScreen({Key? key, this.model, this.sellersName}) : super(key: key);
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
 class _MenuScreenState extends State<MenuScreen> {
+  Position? _currentUserPosition;
+  double? distanceInMeter = 0.0;
+  double? distanceInKm;
+
+  Future<void> _getDistance(double storeLat, double storeLng) async {
+    _currentUserPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    distanceInMeter = await Geolocator.distanceBetween(
+      _currentUserPosition!.latitude,
+      _currentUserPosition!.longitude,
+      storeLat,
+      storeLng,
+    );
+    _convertDistanceToKm(); // Convert distance to kilometers
+  }
+
+  void _convertDistanceToKm() {
+    if (distanceInMeter != null) {
+      setState(() {
+        distanceInKm = distanceInMeter! / 1000; // Convert meters to kilometers
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchStoreLocation();
+  }
+
+  Future<void> _fetchStoreLocation() async {
+    // Fetch the store location from Firestore collection
+    DocumentSnapshot storeSnapshot = await FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(widget.model.sellersUID)
+        .get();
+
+    if (storeSnapshot.exists) {
+      Map<String, dynamic> storeData = storeSnapshot.data() as Map<String, dynamic>;
+      double storeLat = storeData['lat'];
+      double storeLng = storeData['lng'];
+      await _getDistance(storeLat, storeLng); // Wait for _getDistance to complete
+      print("Distance between user and store: $distanceInKm km"); // Print distance
+    } else {
+      print('Store not found in Firestore');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +118,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     IconButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (c)=>
-                            CartScreen(sellersUID: widget.model!.sellersUID,
-                            )));
+                            CartScreen(sellersUID: widget.model!.sellersUID, distanceInKm: distanceInKm,)));
                       },
                       icon: const Icon(
                         Icons.shopping_cart_rounded,
@@ -110,12 +156,10 @@ class _MenuScreenState extends State<MenuScreen> {
               child: Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: Container(
-
                   decoration: BoxDecoration(
-                      color: AppColors().white,
+                    color: AppColors().white,
                     borderRadius: BorderRadius.circular(10.w),
                     border: Border.all(color: AppColors().red, width: 1),
-
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(16.0.w),
@@ -130,7 +174,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      SizedBox(height: 10.h,),
+                        SizedBox(height: 10.h,),
                         Row(
                           children: [
                             Icon(
@@ -232,15 +276,23 @@ class _MenuScreenState extends State<MenuScreen> {
                               ),
                             )
                           ],
-                        )
-
+                        ),
+                        Text(
+                          'Distance: ${distanceInKm != null ? distanceInKm!.toStringAsFixed(2) + " km" : "Calculating..."}',
+                          style: TextStyle(
+                            color: AppColors().black1,
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9.sp,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-      SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: Text(
@@ -289,7 +341,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 }
               },
             ),
-         SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: Text(
@@ -320,9 +372,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   }).toList();
 
                   return SliverStaggeredGrid.countBuilder(
-                      crossAxisCount: 2, // Number of items in each row
-                      crossAxisSpacing: 8.0, // Spacing between items horizontally
-                      mainAxisSpacing: 8.0,
+                    crossAxisCount: 2, // Number of items in each row
+                    crossAxisSpacing: 8.0, // Spacing between items horizontally
+                    mainAxisSpacing: 8.0,
                     staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
                     itemBuilder: (context, index) {
                       Items item = itemsList[index];
@@ -330,6 +382,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         sellersUID: widget.model?.sellersUID,
                         model: item,
                         context: context,
+                          distanceInKm: distanceInKm
                       );
                     },
                     itemCount: itemsList.length,

@@ -17,9 +17,13 @@ class Menus
   String? sellersAddress;
   String? menuTitle;
   String? Open;
+  double? lat;
+  double? lng;
 
  Menus
       ({
+   this.lat,
+   this.lng,
     this.menuID,
     this.menuTitle,
     this.sellersUID,
@@ -54,6 +58,8 @@ class Menus
     sellersName = json['sellersName'];
     sellersAddress = json['sellersAddress'];
     Open = json['open'];
+    lat = json['lat'];
+    lng = json['lng'];
   }
 
 
@@ -61,6 +67,8 @@ class Menus
   {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data["menuID"] = menuID;
+    data["lat"] = lat;
+    data["lng"] = lng;
     data["menuTitle"] = menuTitle;
     data["sellerUID"] = sellersUID;
     data["productsID"] = productsID;

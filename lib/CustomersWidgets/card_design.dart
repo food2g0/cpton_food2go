@@ -11,8 +11,9 @@ class CardDesignWidget extends StatefulWidget {
   final Items model;
   final BuildContext? context;
   final sellersUID;
+  final double? distanceInKm;
 
-  const CardDesignWidget({super.key, required this.model, this.context, this.sellersUID});
+  const CardDesignWidget({Key? key, required this.model, this.context, this.sellersUID, this.distanceInKm});
 
   @override
   State<CardDesignWidget> createState() => _CardDesignWidgetState();
@@ -23,7 +24,12 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model,sellersUID: widget.sellersUID,)));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(
+          distanceInKm: widget.distanceInKm ?? 0.0,
+
+          model: widget.model,
+          sellersUID: widget.sellersUID,
+        )));
       },
       child: Card(
         child: Padding(
@@ -39,7 +45,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                     child: AspectRatio(
                       aspectRatio: 3 / 4,
                       child: Image.network(
-                        widget.model!.thumbnailUrl!,
+                        widget.model.thumbnailUrl!,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -67,7 +73,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                           ),
                         ),
                         TextSpan(
-                          text: ' ${widget.model!.productTitle}',
+                          text: ' ${widget.model.productTitle}',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: AppColors().black,
@@ -100,7 +106,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                           ),
                         ),
                         TextSpan(
-                          text: "Php: " + '${widget.model!.productPrice}',
+                          text: "Php: " + '${widget.model.productPrice}',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black45,
@@ -115,12 +121,10 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                 ),
               ),
               SizedBox(height: 10.h,),
-
             ],
           ),
         ),
       ),
     );
-
   }
 }

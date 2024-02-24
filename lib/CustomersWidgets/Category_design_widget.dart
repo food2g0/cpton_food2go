@@ -14,8 +14,9 @@ class CategoryDesignWidget extends StatefulWidget {
   final dynamic model;
   final BuildContext? context;
   final sellersUID;
+  final double? distanceInKm;
 
-  const CategoryDesignWidget({super.key, this.model, this.context, this.sellersUID});
+  const CategoryDesignWidget({super.key, this.model, this.context, this.sellersUID, this.distanceInKm});
 
   @override
   State<CategoryDesignWidget> createState() => _CategoryDesignWidgetState();
@@ -26,7 +27,7 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model, sellersUID: widget.sellersUID,)));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model, sellersUID: widget.sellersUID, distanceInKm: widget.distanceInKm??0.0,)));
       },
       child: Padding(
         padding: EdgeInsets.all(4.0.w),
