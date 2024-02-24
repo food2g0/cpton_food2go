@@ -75,7 +75,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                         TextSpan(
                           text: ' ${widget.model.productTitle}',
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 14.sp,
                             color: AppColors().black,
                             fontWeight: FontWeight.w700,
                             overflow: TextOverflow.ellipsis,
@@ -106,10 +106,10 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                           ),
                         ),
                         TextSpan(
-                          text: "Php: " + '${widget.model.productPrice}',
+                          text:  '${widget.model.productPrice}',
                           style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.black45,
+                            fontSize: 12.sp,
+                            color: AppColors().black1,
                             fontWeight: FontWeight.w700,
                             overflow: TextOverflow.ellipsis,
                             fontFamily: "Poppins",

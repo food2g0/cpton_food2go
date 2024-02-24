@@ -1,3 +1,4 @@
+import 'package:cpton_foodtogo/assistantMethods/message_counter.dart';
 import 'package:cpton_foodtogo/splashScreen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiProvider(
           providers: [
+            ChangeNotifierProvider(create: (c)=> MessageCounter()),
             ChangeNotifierProvider(create: (c) => CartItemCounter()),
             ChangeNotifierProvider(create: (c) => TotalAmount()),
             ChangeNotifierProvider(create: (c) => AddressChanger()),

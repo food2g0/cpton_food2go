@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
-
+import 'dart:math';
 import '../assistantMethods/assistant_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../assistantMethods/cart_item_counter.dart';
@@ -41,6 +41,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   late TextEditingController counterTextEditingController;
    double distanceInKm = 0.0 ;
   int initialValue = 1;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +62,23 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       return 'default_uid';
     }
   }
+
+
+
+  double calculateShippingFee(double distanceInKm) {
+    if (distanceInKm <= 4) {
+      // If distance is less than or equal to 5km, shipping fee is 50
+      return 50.0;
+    } else {
+      // If distance is more than 5km, add 10 to the shipping fee for every extra km
+      return 50.0 + (distanceInKm - 4) * 10.0;
+    }
+  }
+
+// Inside the build method, you can call this method to get the shipping fee
+// Replace the line where you set the text for shipping cost with the following:
+
+
 
   // Function to calculate average rating from Firestore document snapshots
   double calculateAverageRating(List<DocumentSnapshot> docs) {
@@ -118,7 +136,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (c) => CartScreen(sellersUID: widget.model!.sellersUID),
+                        builder: (c) => CartScreen( calculateShippingFee: calculateShippingFee,distanceInKm: distanceInKm,sellersUID: widget.model!.sellersUID),
                       ),
                     );
                   },
@@ -212,6 +230,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                     color: AppColors().black,
                                   ),
                                 ),
+
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -270,8 +289,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                 fontWeight: FontWeight.w700,
                                 color: AppColors().black),
                           ),
+
                           Text(
-                            ' Php: 50',
+                            ' Php: ${calculateShippingFee(distanceInKm).toStringAsFixed(2)}',
                             style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 12.sp,
@@ -334,19 +354,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(width: 10.0.w),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'View All Reviews',
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors().red,
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),
@@ -389,9 +397,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: AppColors().backgroundWhite,
+        color: AppColors().black,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: ElevatedButton(
             onPressed: () {
               _showVariationsBottomSheet(context);
@@ -539,7 +547,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         children: flavors.map<Widget>((flavor) {
                           String flavorsName = flavor['name'];
                           String firstLetter = flavorsName;
-
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
@@ -567,13 +574,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                 ),
                               ),
                             )
-
-
-
-
-
-
-
                           );
                         }).toList(),
                       );

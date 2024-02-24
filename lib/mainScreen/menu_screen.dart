@@ -182,6 +182,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               size: 14.sp,
                               color: AppColors().green,
                             ),
+                            SizedBox(width: 10.w,),
                             Text(
                               ' ${widget.model!.sellersName}',
                               style: TextStyle(
@@ -258,6 +259,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             },
                           ),
                         ),
+                        SizedBox(height: 10.h,),
                         Row(
                           children: [
                             Icon(
@@ -265,26 +267,42 @@ class _MenuScreenState extends State<MenuScreen> {
                               size: 16.sp,
                               color: AppColors().red,
                             ),
-                            Text(
-                              '${widget.model!.sellersAddress}'.substring(0, 33) + '...', // Truncate text to 20 characters
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: AppColors().black,
-                                fontWeight: FontWeight.w500,
-                                overflow: TextOverflow.ellipsis,
-                                fontFamily: "Poppins",
+                            SizedBox(width: 10.w,),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.75, // Set width to 80% of the screen width
+                              child: Text(
+                                '${widget.model!.sellersAddress}',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: AppColors().black,
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontFamily: "Poppins",
+                                ),
                               ),
                             )
+
                           ],
                         ),
-                        Text(
-                          'Distance: ${distanceInKm != null ? distanceInKm!.toStringAsFixed(2) + " km" : "Calculating..."}',
-                          style: TextStyle(
-                            color: AppColors().black1,
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 9.sp,
-                          ),
+                        SizedBox(height: 10.h,),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.social_distance_rounded,
+                              size: 16.sp,
+                              color: AppColors().red,
+                            ),
+                            SizedBox(width: 10.w,),
+                            Text(
+                              'Distance: ${distanceInKm != null ? distanceInKm!.toStringAsFixed(2) + " km" : "Calculating..."}',
+                              style: TextStyle(
+                                color: AppColors().black1,
+                                fontFamily: "Poppins",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 9.sp,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

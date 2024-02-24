@@ -165,6 +165,9 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
               width: 200,
               child: ElevatedButton(
                 onPressed: () {
+
+
+
                   if (_formKey.currentState!.validate()) {
                     final model = Address(
                       name: _name.text.trim(),
@@ -189,6 +192,7 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
                       _formKey.currentState!.reset();
                     });
                   }
+                  Navigator.push(context, MaterialPageRoute(builder: (c)=> CheckOut()));
 
                 },
                 style: ButtonStyle(

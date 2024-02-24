@@ -22,7 +22,6 @@ class CartItemCounter extends ChangeNotifier {
           _cartListItemCounter = querySnapshot.size;
         }
 
-        print('Cart item counter updated: $_cartListItemCounter');
 
         // Notify listeners
         notifyListeners();

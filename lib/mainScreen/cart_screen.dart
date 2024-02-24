@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/cart_item_design.dart';
 import '../assistantMethods/assistant_methods.dart';
+
 import '../assistantMethods/total_ammount.dart';
 import '../global/global.dart';
 import '../models/menus.dart';
@@ -17,8 +18,10 @@ import 'home_screen.dart';
 class CartScreen extends StatefulWidget {
   final String? sellersUID;
   final Menus? model;
+  final double? distanceInKm;
+  final double? Function(double)? calculateShippingFee;
 
-  const CartScreen({Key? key, this.sellersUID, this.model, double? distanceInKm}) : super(key: key);
+  const CartScreen({Key? key,  this.sellersUID, this.model, this.calculateShippingFee, this.distanceInKm}) : super(key: key);
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -28,6 +31,16 @@ class _CartScreenState extends State<CartScreen> {
   bool isEditing = false;
   List<int>? separateItemQuantityList;
   bool isCartEmpty = true; // Initially set to true
+
+  double? calculateShippingFeeForItem(double distanceInKm) {
+    if (widget.calculateShippingFee != null) {
+      return widget.calculateShippingFee!(distanceInKm);
+    } else {
+      // Handle if calculateShippingFee is not provided
+      return 0.0;
+    }
+  }
+
 
   @override
   void initState() {
@@ -49,7 +62,9 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double defaultShippingFee = 50.0;
+    double? defaultShippingFee = calculateShippingFeeForItem(widget.distanceInKm ?? 0.0);
+
+
 
     return Scaffold(
       backgroundColor: AppColors().backgroundWhite,
@@ -224,7 +239,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                       Text(
-                        "${defaultShippingFee.toStringAsFixed(2)}",
+                        "${defaultShippingFee?.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors().black,
@@ -252,7 +267,7 @@ class _CartScreenState extends State<CartScreen> {
                   Consumer<TotalAmount>(
                     builder: (context, totalAmountProvider, _) {
                       return Text(
-                        (totalAmountProvider.tAmount + defaultShippingFee).toStringAsFixed(2),
+                        (totalAmountProvider.tAmount + defaultShippingFee!).toStringAsFixed(2),
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors().black,
@@ -276,7 +291,7 @@ class _CartScreenState extends State<CartScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (c) => CheckOut(
-                              totalAmount: Provider.of<TotalAmount>(context, listen: false).tAmount + defaultShippingFee,
+                              totalAmount: Provider.of<TotalAmount>(context, listen: false).tAmount + defaultShippingFee!,
                               sellersUID: widget.sellersUID,
                             ),
                           ),

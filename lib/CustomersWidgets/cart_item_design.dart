@@ -56,8 +56,6 @@ class _CartItemDesignState extends State<CartItemDesign> {
           .collection("cart")
           .doc(widget.cartID)
           .update({"itemCounter": newQuantity});
-
-      // Notify the CartItemCounter Provider to update the cart item count
       Provider.of<CartItemCounter>(context, listen: false).displayCartListItemNumber();
     } catch (error) {
       print("Failed to update item counter in Firestore: $error");

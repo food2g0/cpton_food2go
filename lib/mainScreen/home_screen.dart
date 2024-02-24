@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:provider/provider.dart';
 import '../CustomersWidgets/CustomShape.dart';
@@ -11,6 +12,7 @@ import '../CustomersWidgets/customers_drawer.dart';
 import '../CustomersWidgets/order_card.dart';
 import '../CustomersWidgets/progress_bar.dart';
 import '../assistantMethods/cart_item_counter.dart';
+import '../assistantMethods/message_counter.dart';
 import '../global/global.dart';
 import '../models/items.dart';
 import '../models/menus.dart';
@@ -34,11 +36,42 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   List<Widget> _pages = [];
+  Position? _currentUserPosition;
+  double? distanceInMeter = 0.0;
+  double? distanceInKm;
+
+  Future<void> _getDistance(double storeLat, double storeLng) async {
+    _currentUserPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    distanceInMeter = await Geolocator.distanceBetween(
+      _currentUserPosition!.latitude,
+      _currentUserPosition!.longitude,
+      storeLat,
+      storeLng,
+    );
+    _convertDistanceToKm(); // Convert distance to kilometers
+  }
+
+  void _convertDistanceToKm() {
+    if (distanceInMeter != null) {
+      setState(() {
+        distanceInKm = distanceInMeter! / 1000; // Convert meters to kilometers
+      });
+    }
+  }
+  double calculateShippingFee(double distanceInKm) {
+    if (distanceInKm <= 4) {
+      // If distance is less than or equal to 5km, shipping fee is 50
+      return 50.0;
+    } else {
+      // If distance is more than 5km, add 10 to the shipping fee for every extra km
+      return 50.0 + (distanceInKm - 4) * 10.0;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
+    _fetchStoreLocation();
     // Initialize the _pages list here
     _pages = [
       const FoodPageBody(),
@@ -46,6 +79,23 @@ class _HomeScreenState extends State<HomeScreen> {
       NotificationScreen(),
       ChatScreen(),
     ];
+  }
+  Future<void> _fetchStoreLocation() async {
+    // Fetch the store location from Firestore collection
+    DocumentSnapshot storeSnapshot = await FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(widget.model?.sellersUID)
+        .get();
+
+    if (storeSnapshot.exists) {
+      Map<String, dynamic> storeData = storeSnapshot.data() as Map<String, dynamic>;
+      double storeLat = storeData['lat'];
+      double storeLng = storeData['lng'];
+      await _getDistance(storeLat, storeLng); // Wait for _getDistance to complete
+      print("Distance between user and store: $distanceInKm km"); // Print distance
+    } else {
+      print('Store not found in Firestore');
+    }
   }
 
   void _onItemTapped(int index) {
@@ -109,10 +159,36 @@ class _HomeScreenState extends State<HomeScreen> {
                     label: 'Orders',
                   ),
                   BottomNavigationBarItem(
-                    icon: Image.asset(
-                      'images/message.png', // Replace 'path_to_messages_icon' with the path to your messages icon asset
-                      width: 24, // Adjust width as needed
-                      height: 24, // Adjust height as needed
+                    icon: Stack(
+                      children: [
+                        Image.asset(
+                          'images/message.png',
+                          width: 24,
+                          height: 24,
+                        ),
+                        Positioned(
+                          top: -9,
+                          right: 2,
+                          child: Consumer<MessageCounter>(
+                            builder: (context, counter, c) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors().white,
+                                ),
+                                padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
+                                child: Text(
+                                  counter.count.toString(),
+                                  style: TextStyle(
+                                    color: AppColors().red,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     ),
                     label: 'Messages',
                   ),
@@ -191,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (c) => CartScreen(sellersUID: '',)));
+                          MaterialPageRoute(builder: (c) => CartScreen()));
                     },
                     icon:  Icon(
                       Icons.shopping_cart_rounded,
@@ -327,14 +403,41 @@ class _HomeScreenState extends State<HomeScreen> {
                       label: 'Orders',
                     ),
                     BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'images/message.png', // Replace 'path_to_messages_icon' with the path to your messages icon asset
-                        width: 24, // Adjust width as needed
-                        height: 24, // Adjust height as needed
+                      icon: Stack(
+                        children: [
+                          Image.asset(
+                            'images/message.png',
+                            width: 24,
+                            height: 24,
+                          ),
+                          Positioned(
+                            top: -9,
+                            right: 2,
+                            child: Consumer<MessageCounter>(
+                              builder: (context, counter, c) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors().white,
+                                  ),
+                                  padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
+                                  child: Text(
+                                    counter.count.toString(),
+                                    style: TextStyle(
+                                      color: AppColors().red,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                );
+                              },
+                          ),
+                          )
+                        ],
                       ),
                       label: 'Messages',
                     ),
                   ],
+
                   currentIndex: _selectedIndex,
                   selectedItemColor: AppColors().red,
                   unselectedItemColor: AppColors().black1,

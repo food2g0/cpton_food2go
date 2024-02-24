@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import '../assistantMethods/assistant_methods.dart';
@@ -23,11 +24,59 @@ class CategoryDesignWidget extends StatefulWidget {
 }
 
 class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
+  Position? _currentUserPosition;
+  double? distanceInMeter = 0.0;
+  double? distanceInKm;
+
+  Future<void> _getDistance(double storeLat, double storeLng) async {
+    _currentUserPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    distanceInMeter = await Geolocator.distanceBetween(
+      _currentUserPosition!.latitude,
+      _currentUserPosition!.longitude,
+      storeLat,
+      storeLng,
+    );
+    _convertDistanceToKm(); // Convert distance to kilometers
+  }
+
+  void _convertDistanceToKm() {
+    if (distanceInMeter != null) {
+      setState(() {
+        distanceInKm = distanceInMeter! / 1000; // Convert meters to kilometers
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchStoreLocation();
+  }
+
+  Future<void> _fetchStoreLocation() async {
+    // Fetch the store location from Firestore collection
+    DocumentSnapshot storeSnapshot = await FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(widget.model.sellersUID)
+        .get();
+
+    if (storeSnapshot.exists) {
+      Map<String, dynamic> storeData = storeSnapshot.data() as Map<String, dynamic>;
+      double storeLat = storeData['lat'];
+      double storeLng = storeData['lng'];
+      await _getDistance(storeLat, storeLng); // Wait for _getDistance to complete
+      print("Distance between user and store: $distanceInKm km"); // Print distance
+    } else {
+      print('Store not found in Firestore');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model, sellersUID: widget.sellersUID, distanceInKm: widget.distanceInKm??0.0,)));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model, sellersUID: widget.sellersUID, distanceInKm: distanceInKm??0.0,)));
       },
       child: Padding(
         padding: EdgeInsets.all(4.0.w),
@@ -80,11 +129,26 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                             fontFamily: "Poppins",
                           ),
                         ),
+
                       ],
                     ),
                   ),
                 ),
               ),
+              // SizedBox(height: 4.h), // Add spacing between seller's name/status and distance
+              // if (distanceInMeter != null) // Display distance if available
+              //   Align(
+              //     alignment: Alignment.centerLeft,
+              //     child: Text(
+              //       'Distance: ${distanceInMeter!.toStringAsFixed(2)} meters',
+              //       style: TextStyle(
+              //         color: AppColors().black1,
+              //         fontFamily: "Poppins",
+              //         fontWeight: FontWeight.w500,
+              //         fontSize: 9.sp,
+              //       ),
+              //     ),
+              //   ),
               Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: StreamBuilder<QuerySnapshot>(

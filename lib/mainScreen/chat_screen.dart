@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,9 +19,8 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildUserList(QuerySnapshot snapshot) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-            color: AppColors().white
-        ),
+        automaticallyImplyLeading: false,
+        iconTheme: IconThemeData(color: AppColors().white),
         title: Text(
           'Messages',
           style: TextStyle(
@@ -46,39 +44,74 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildUserListItem(QueryDocumentSnapshot document) {
+  Widget _buildUserListItem(QueryDocumentSnapshot document,) {
     final sellerData = document.data() as Map<String, dynamic>;
     final sellersUID = sellerData['sellersUID'];
     final sellersImageUrl = sellerData['sellersImageUrl'];
 
     if (_auth.currentUser!.email != sellerData['sellersEmail']) {
       if (sellersUID is String) {
-        return ListTile(
-          title: Row(
-            children: [
-              CircleAvatar( // Wrap the image in a CircleAvatar
-                backgroundImage: sellersImageUrl != null ? NetworkImage(sellersImageUrl) : null,
+        final userId = FirebaseAuth.instance.currentUser!.uid;
+        return StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('chat_rooms')
+              .where("receiverId", isEqualTo: userId)
+              .where('status', isEqualTo: 'not seen')
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+
+            final hasNewMessage = snapshot.data!.docs.isNotEmpty;
+
+            return ListTile(
+              title: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: sellersImageUrl != null
+                        ? NetworkImage(sellersImageUrl)
+                        : null,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    sellerData['sellersName'],
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  if (hasNewMessage) Text('New Message'),
+                ],
               ),
-              SizedBox(width: 10), // Add some space between the avatar and the text
-              Text(
-                sellerData['sellersName'],
-                style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600
-                ),
-              ),
-            ],
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (c) => ChatPage(
-                  receiverUserEmail: sellerData['sellersName'],
-                  receiverUserID: sellersUID,
-                ),
-              ),
+              onTap: () {
+                // Update the status to 'seen' when the user clicks on the message
+                // FirebaseFirestore.instance
+                //     .collection('chat_rooms')
+                //     .where('status', isEqualTo: 'not seen')
+                //     .get()
+                //     .then((querySnapshot) {
+                //   querySnapshot.docs.forEach((doc) {
+                //     doc.reference.update({'status': 'seen'});
+                //   });
+                // });
+
+                // Navigate to the ChatPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) => ChatPage(
+                      receiverUserEmail: sellerData['sellersName'],
+                      receiverUserID: sellersUID,
+                    ),
+                  ),
+                );
+              },
             );
           },
         );
@@ -91,22 +124,26 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text('Loading....');
-        }
-
-        return _buildUserList(snapshot.data!);
+    return WillPopScope(
+      onWillPop: () async {
+        // Return false to disable the back button
+        return false;
       },
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text('Loading....');
+          }
+
+          return _buildUserList(snapshot.data!);
+        },
+      ),
     );
   }
 }
-
