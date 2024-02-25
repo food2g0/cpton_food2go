@@ -31,6 +31,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   int cartItemCount = 0;
   late String customersUID; // Declare customersUID without initialization
   String selectedVariationPrice = '';
+
   String selectedFlavorsPrice = '';
   String selectedVariationName = ''; // Define selected variation name
   String selectedFlavorsName = '';
@@ -259,6 +260,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                 style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 12.0.sp,
+
                                   fontWeight: FontWeight.w500,
                                   color: AppColors().black1,
                                 ),
@@ -397,7 +399,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: AppColors().black,
+        color: AppColors().white,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: ElevatedButton(
@@ -430,11 +432,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   }
   // String? sellersUID = await fetchSellersUID();
   void _showVariationsBottomSheet(BuildContext context) {
-    selectedFlavorColor = Colors.red;
-    selectedVariationColor = Colors.red;
-    Color flavorButtonColor(String flavorsName, String selectedFlavor) {
-      return selectedFlavor == flavorsName ? Colors.green : Colors.grey;
-    }
+    Color selectedFlavorColor = Colors.red;
+    Color selectedVariationColor = Colors.red;
 
 
     showModalBottomSheet(
@@ -493,13 +492,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               onPressed: () {
                                 setState(() {
                                   selectedVariationName = variationName;
-                                  selectedVariationPrice = variation['price']; // Update selected variation price
-                                  selectedVariationColor = Colors.green; // Update color for selected variation buttond variation button// Update selected variation price
+                                  selectedVariationPrice = variation['price'];
+                                  selectedVariationColor = Colors.green;
                                 });
-    print('Selected variation: $variationName');
-    print('Selected price: $selectedVariationPrice');
-    },
-
+                                print('Selected variation: $variationName');
+                                print('Selected price: $selectedVariationPrice');
+                              },
                               child: Text(
                                 firstLetter,
                                 style: TextStyle(
@@ -573,7 +571,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           );
                         }).toList(),
                       );
@@ -633,7 +631,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 ),
                 // Add to cart button
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: (selectedVariationName != null && selectedFlavorsName != null)
+                      ? () {
                     int itemCounter = int.tryParse(counterTextEditingController.text) ?? 1;
 
                     if (itemCounter <= 0) {
@@ -641,9 +640,17 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       return;
                     }
 
-                    double price = selectedVariationPrice != null
-                        ? double.parse(selectedVariationPrice!)
-                        : widget.model.productPrice.toDouble();
+                    if (selectedVariationPrice == null) {
+                      Fluttertoast.showToast(msg: "Please choose a variation");
+                      return;
+                    }
+
+                    double price = double.tryParse(selectedVariationPrice!) ?? 0.0;
+                    if (price <= 0.0) {
+                      Fluttertoast.showToast(msg: "Please choose variation and flavor");
+                      return;
+                    }
+
                     print("Seller's UID: ${widget.sellersUID}");
                     addItemToCart(
                       widget.model.productsID,
@@ -656,7 +663,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       selectedFlavorsName,
                       widget.sellersUID,
                     );
-                  },
+                  }
+                      : () {
+                    Fluttertoast.showToast(msg: "Please choose variation and flavors");
+                  }, // Show toast if variation or flavor is not selected
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -672,7 +682,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       color: Colors.white,
                     ),
                   ),
-                ),
+                )
+
+
+
               ],
             ),
           ),
@@ -680,6 +693,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       },
     );
   }
+
 
 
 

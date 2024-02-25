@@ -58,14 +58,28 @@ void addItemToCart(
     }
 
     // Reference to the user's cart collection
-    CollectionReference cartCollection = FirebaseFirestore.instance.collection("users").doc(user.uid).collection("cart");
+    CollectionReference cartCollection =
+    FirebaseFirestore.instance.collection("users").doc(user.uid).collection("cart");
+
+    // Check if an identical item already exists in the cart
+    QuerySnapshot duplicateQuery = await cartCollection
+        .where("foodItemId", isEqualTo: foodItemId)
+        .where("selectedVariationName", isEqualTo: selectedVariationName)
+        .where("selectedFlavorsName", isEqualTo: selectedFlavorsName)
+        .where("itemCounter", isEqualTo: itemCounter)
+        .get();
+
+    if (duplicateQuery.docs.isNotEmpty) {
+      // Display error message indicating the item already exists in the cart
+      Fluttertoast.showToast(msg: "This item is already in your cart.");
+      return;
+    }
 
     // Check if there are any items in the cart
     QuerySnapshot querySnapshot = await cartCollection.limit(1).get();
     if (querySnapshot.docs.isNotEmpty) {
       // Get the seller UID of the first item in the cart
       String? existingSellersUID = (querySnapshot.docs.first.data() as Map<String, dynamic>?)?["sellersUID"];
-
 
       // Check if the existing seller UID matches the new seller UID
       if (existingSellersUID != sellersUID) {
@@ -104,6 +118,7 @@ void addItemToCart(
     // Handle error as needed
   }
 }
+
 
 
 
