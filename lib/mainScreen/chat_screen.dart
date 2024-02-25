@@ -61,6 +61,7 @@ class ChatScreen extends StatelessWidget {
   Widget _buildUserListItem(QueryDocumentSnapshot document) {
     final sellerData = document.data() as Map<String, dynamic>;
     final sellersUID = sellerData['sellersUID'];
+    final sellersEmail = sellerData['sellersEmail'];
     final sellersImageUrl = sellerData['sellersImageUrl'];
     final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
 
@@ -71,6 +72,7 @@ class ChatScreen extends StatelessWidget {
           stream: FirebaseFirestore.instance
               .collection('chat_rooms')
               .where("receiverId", isEqualTo: userId)
+              .where("senderEmail", isEqualTo: sellersEmail)
               .where('status', isEqualTo: 'not seen')
               .snapshots(),
           builder: (context, snapshot) {
@@ -97,14 +99,29 @@ class ChatScreen extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
+                      color: AppColors().black,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(width: 10),
-                  if (hasNewMessage) Text('New Message'),
+                  if (hasNewMessage) Icon(Icons.circle, color: Colors.red, size: 12.sp,),
+
                 ],
               ),
-              onTap: () {
+              onTap: () async {
+                // Update the status of the message to "seen"
+                final userId = FirebaseAuth.instance.currentUser!.uid;
+                final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                    .collection('chat_rooms')
+                    .where("receiverId", isEqualTo: userId)
+                    .where('senderId', isEqualTo: sellersUID)
+                    // .where('status', isEqualTo: 'not seen')
+                    .get();
+                querySnapshot.docs.forEach((doc) {
+                  doc.reference.update({'status': 'seen'});
+                });
+
+                // Navigate to the ChatPage
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -115,6 +132,9 @@ class ChatScreen extends StatelessWidget {
                   ),
                 );
               },
+
+
+
             );
           },
         );

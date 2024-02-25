@@ -29,7 +29,6 @@ class _ChatPageState extends State<ChatPage> {
   void sendMessage () async{
     if (_messageController.text.isNotEmpty){
       await _chatService.sendMessage(widget.receiverUserID, _messageController.text);
-
       // clear controller
       _messageController.clear();
     }
@@ -41,7 +40,10 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors().red,
-        title: Text(widget.receiverUserEmail),
+        title: Text(widget.receiverUserEmail,
+        style: TextStyle(color: AppColors().white,
+        fontFamily: "Poppins",
+        fontSize: 12.sp),),
       ),
       body: Column(
         children: [
@@ -90,7 +92,8 @@ class _ChatPageState extends State<ChatPage> {
           mainAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid) ? MainAxisAlignment.end
           : MainAxisAlignment.start,
           children: [
-            Text(data['senderEmail']),
+            Text(data['senderEmail'],style:
+              TextStyle(fontFamily: "Poppins"),),
             SizedBox(height: 5.sp,),
             ChatBubble(message: data['message']),
           ],
