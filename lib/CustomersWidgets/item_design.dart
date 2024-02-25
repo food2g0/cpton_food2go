@@ -35,13 +35,13 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10), // Adjust the border radius as needed
                   child: SizedBox(
-                    height: 127.h,
+                    height: 110.h,
                     width: MediaQuery.of(context).size.width,
                     child: AspectRatio(
                       aspectRatio: 4 / 3,
                       child: Image.network(
                         widget.model!.thumbnailUrl!,
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -70,7 +70,7 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
                           TextSpan(
                             text: ' ${widget.model!.productTitle}',
                             style: TextStyle(
-                              fontSize: 16.sp,
+                              fontSize: 14.sp,
                               color: AppColors().black,
                               fontWeight: FontWeight.w700,
                               overflow: TextOverflow.ellipsis,
@@ -103,7 +103,7 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
                           TextSpan(
                             text: "Php: " + '${widget.model!.productPrice}',
                             style: TextStyle(
-                              fontSize: 16.sp,
+                              fontSize: 14.sp,
                               color: Colors.black45,
                               fontWeight: FontWeight.w700,
                               overflow: TextOverflow.ellipsis,
@@ -115,7 +115,7 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10.h,),
+                SizedBox(height: 50.h,),
               ],
             ),
           ),

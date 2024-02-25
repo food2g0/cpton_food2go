@@ -12,7 +12,8 @@ class InfoDesignWidget extends StatefulWidget {
   final Menus? model;
   final BuildContext? context;
 
-  const InfoDesignWidget({Key? key, this.model, this.context}) : super(key: key);
+
+  const InfoDesignWidget({Key? key, this.model, this.context,}) : super(key: key);
 
   @override
   State<InfoDesignWidget> createState() => _InfoDesignWidgetState();
@@ -21,20 +22,27 @@ class InfoDesignWidget extends StatefulWidget {
 class _InfoDesignWidgetState extends State<InfoDesignWidget> {
   Position? _currentUserPosition;
   double? distanceInMeter = 0.0;
+  double? distanceInKm;
 
-  Future _getDistance(double storeLat, double storeLng) async {
-    _currentUserPosition =
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
+  Future<void> _getDistance(double storeLat, double storeLng) async {
+    _currentUserPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     distanceInMeter = await Geolocator.distanceBetween(
       _currentUserPosition!.latitude,
       _currentUserPosition!.longitude,
       storeLat,
       storeLng,
     );
-
-
+    _convertDistanceToKm(); // Convert distance to kilometers
   }
+
+  void _convertDistanceToKm() {
+    if (distanceInMeter != null) {
+      setState(() {
+        distanceInKm = distanceInMeter! / 1000; // Convert meters to kilometers
+      });
+    }
+  }
+
 
   @override
   void initState() {
@@ -158,7 +166,7 @@ class _InfoDesignWidgetState extends State<InfoDesignWidget> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Distance: ${distanceInMeter!.toStringAsFixed(2)} meters',
+                                  'Distance: ${distanceInMeter!.toStringAsFixed(1)} meters',
                                   style: TextStyle(
                                     color: AppColors().black1,
                                     fontFamily: "Poppins",

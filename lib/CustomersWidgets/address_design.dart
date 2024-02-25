@@ -34,9 +34,26 @@ class _AddressDesignState extends State<AddressDesign> {
   Widget build(BuildContext context) {
     final isAddressSelected = widget.value == Provider.of<AddressChanger>(context).count;
 
-    return InkWell(
-      onTap: () {
-        Provider.of<AddressChanger>(context, listen: false).displayResult(widget.value);
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        color: Colors.red,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+      onDismissed: (direction) {
+        if (widget.addressId != null) {
+          Provider.of<AddressChanger>(context, listen: false).deleteAddress(widget.addressId!);
+        }
       },
       child: Card(
         color: Colors.white,
@@ -84,22 +101,6 @@ class _AddressDesignState extends State<AddressDesign> {
                           )
                         ],
                       ),
-                      Align(
-                        alignment: Alignment.topRight, // Align the delete button to the top right
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                            color: AppColors().red,
-                          ),
-                          onPressed: () {
-                            if (widget.addressId != null) {
-                              // Call the deleteAddress method when the delete button is pressed
-                              Provider.of<AddressChanger>(context, listen: false)
-                                  .deleteAddress(widget.addressId!);
-                            }
-                          },
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -144,5 +145,6 @@ class _AddressDesignState extends State<AddressDesign> {
     );
   }
 }
+
 
 

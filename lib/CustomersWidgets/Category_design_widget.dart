@@ -81,7 +81,7 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
       child: Padding(
         padding: EdgeInsets.all(4.0.w),
         child: Card(
-          elevation: 2,
+          elevation: 1.0,
           child: Column(
             children: [
               SizedBox(
@@ -123,9 +123,9 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                               ? ' ${widget.model!.productTitle.substring(0, 13)}...'
                               : ' ${widget.model!.productTitle}',
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 12.sp,
                             color: AppColors().black,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                             fontFamily: "Poppins",
                           ),
                         ),
@@ -228,7 +228,7 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                               'images/peso.png',
                               width: 14,
                               height: 14,
-                              color: AppColors().green,
+                              color: AppColors().red,
                             ),
                           ),
                         ),
@@ -237,7 +237,7 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors().black1,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                             overflow: TextOverflow.ellipsis,
                             fontFamily: "Poppins",
                           ),

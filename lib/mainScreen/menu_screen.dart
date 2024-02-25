@@ -391,8 +391,8 @@ class _MenuScreenState extends State<MenuScreen> {
 
                   return SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 2, // Number of items in each row
-                    crossAxisSpacing: 8.0, // Spacing between items horizontally
-                    mainAxisSpacing: 8.0,
+                    crossAxisSpacing: 10.0, // Spacing between items horizontally
+                    mainAxisSpacing: 10.0,
                     staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
                     itemBuilder: (context, index) {
                       Items item = itemsList[index];

@@ -38,7 +38,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
             children: [
               Card(
                 child: Container(
-                  height: 150.h,
+                  height: 120.h,
                   width: MediaQuery.of(context).size.width,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0), // Set the desired border radius
@@ -120,7 +120,7 @@ class _CardDesignWidgetState extends State<CardDesignWidget> {
                   ),
                 ),
               ),
-              SizedBox(height: 10.h,),
+              SizedBox(height: 50.h,),
             ],
           ),
         ),
