@@ -8,3 +8,6 @@ FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
 double countRatingStars = 0.0;
 String titleStarRatings="";
+String getCurrentUserId() {
+  return FirebaseAuth.instance.currentUser!.uid;
+}

@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Positioned(
                           top: -9,
                           right: 2,
-                          child: Consumer<MessageCounter>(
+                          child: Consumer<ChatRoomProvider>(
                             builder: (context, counter, c) {
                               return Container(
                                 decoration: BoxDecoration(
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
                                 child: Text(
-                                  counter.count.toString(),
+                                  counter.unseenMessagesCount.toString(),
                                   style: TextStyle(
                                     color: AppColors().red,
                                     fontWeight: FontWeight.w900,
@@ -413,8 +413,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           Positioned(
                             top: -9,
                             right: 2,
-                            child: Consumer<MessageCounter>(
+                            child: Consumer<ChatRoomProvider>(
                               builder: (context, counter, c) {
+                                // Print the message counter
+                                print('Message counter: ${counter.unseenMessagesCount}');
+
                                 return Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -422,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
                                   child: Text(
-                                    counter.count.toString(),
+                                    counter.unseenMessagesCount.toString(),
                                     style: TextStyle(
                                       color: AppColors().red,
                                       fontWeight: FontWeight.w900,
@@ -430,7 +433,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                          ),
+                            ),
+
                           )
                         ],
                       ),

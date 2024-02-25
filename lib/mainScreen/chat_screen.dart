@@ -2,54 +2,69 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../CustomersWidgets/Chat_page.dart';
+import '../assistantMethods/message_counter.dart'; // Assuming this is where your ChatRoomProvider is imported from
 import '../theme/colors.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends StatelessWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Widget _buildUserList(QuerySnapshot snapshot) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        iconTheme: IconThemeData(color: AppColors().white),
-        title: Text(
-          'Messages',
-          style: TextStyle(
-            fontFamily: "Poppins",
-            fontSize: 14.sp,
-            color: AppColors().white,
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: AppColors().red,
-          ),
-        ),
+        backgroundColor: AppColors().red,
+        title: Text('Messages',
+        style: TextStyle(color: AppColors().white,
+        fontSize: 12.sp,
+        fontFamily: "Poppins"),),
       ),
-      body: ListView.builder(
-        itemCount: snapshot.docs.length,
-        itemBuilder: (context, index) {
-          return _buildUserListItem(snapshot.docs[index]);
+      body: FutureBuilder(
+        future: Provider.of<ChatRoomProvider>(context, listen: false)
+            .fetchUnseenMessagesCount(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return _buildUserList();
+          }
         },
       ),
     );
   }
 
-  Widget _buildUserListItem(QueryDocumentSnapshot document,) {
+  Widget _buildUserList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text('Loading....');
+        }
+
+        return ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            return _buildUserListItem(snapshot.data!.docs[index]);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildUserListItem(QueryDocumentSnapshot document) {
     final sellerData = document.data() as Map<String, dynamic>;
     final sellersUID = sellerData['sellersUID'];
     final sellersImageUrl = sellerData['sellersImageUrl'];
+    final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
 
-    if (_auth.currentUser!.email != sellerData['sellersEmail']) {
+    if (currentUserEmail != sellerData['sellersEmail']) {
       if (sellersUID is String) {
         final userId = FirebaseAuth.instance.currentUser!.uid;
         return StreamBuilder<QuerySnapshot>(
@@ -90,18 +105,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
               onTap: () {
-                // Update the status to 'seen' when the user clicks on the message
-                // FirebaseFirestore.instance
-                //     .collection('chat_rooms')
-                //     .where('status', isEqualTo: 'not seen')
-                //     .get()
-                //     .then((querySnapshot) {
-                //   querySnapshot.docs.forEach((doc) {
-                //     doc.reference.update({'status': 'seen'});
-                //   });
-                // });
-
-                // Navigate to the ChatPage
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -120,30 +123,6 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }
 
-    return Container();
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Return false to disable the back button
-        return false;
-      },
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("sellers").snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('Loading....');
-          }
-
-          return _buildUserList(snapshot.data!);
-        },
-      ),
-    );
+    return Container(); // Return an empty container by default
   }
 }

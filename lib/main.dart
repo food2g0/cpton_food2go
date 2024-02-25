@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (c)=> MessageCounter()),
+            ChangeNotifierProvider(create: (c)=> ChatRoomProvider()),
             ChangeNotifierProvider(create: (c) => CartItemCounter()),
             ChangeNotifierProvider(create: (c) => TotalAmount()),
             ChangeNotifierProvider(create: (c) => AddressChanger()),

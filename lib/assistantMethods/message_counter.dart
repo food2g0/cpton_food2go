@@ -1,15 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MessageCounter extends ChangeNotifier {
-  int _messageCounter = 0;
+import '../global/global.dart';
 
-  int get count => _messageCounter;
+class ChatRoomProvider extends ChangeNotifier {
+  int _unseenMessagesCount = 0;
 
-  Future<void> displayMessageCounter() async {
+  int get unseenMessagesCount => _unseenMessagesCount;
+
+  Future<void> fetchUnseenMessagesCount() async {
     try {
       final userId = FirebaseAuth.instance.currentUser!.uid;
+      print('userID : $userId');
 
       // Listen for real-time updates to the chat_rooms collection
       FirebaseFirestore.instance
@@ -19,9 +23,9 @@ class MessageCounter extends ChangeNotifier {
           .snapshots()
           .listen((querySnapshot) {
         if (querySnapshot.docs.isEmpty) {
-          _messageCounter = 0;
+          _unseenMessagesCount = 0;
         } else {
-          _messageCounter = querySnapshot.size;
+          _unseenMessagesCount = querySnapshot.size;
         }
 
 
@@ -30,7 +34,7 @@ class MessageCounter extends ChangeNotifier {
       });
     } catch (e) {
       print("Error fetching messages: $e");
-      _messageCounter = 1;
+      _unseenMessagesCount = 0;
     }
   }
 }
