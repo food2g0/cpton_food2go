@@ -12,23 +12,27 @@ class ChatService extends ChangeNotifier {
     final String currentUserId = _fireBaseAuth.currentUser!.uid;
     final String currentUserEmail = _fireBaseAuth.currentUser!.email.toString();
     final Timestamp timestamp = Timestamp.now();
+
+    // Fetch seller data to get seller's name
+    DocumentSnapshot sellerSnapshot =
+    await _firestore.collection('users').doc(currentUserId).get();
+    String sellersName = sellerSnapshot['customersName'];
+
     // Create new Message
     Message newMessage = Message(
       senderId: currentUserId,
       senderEmail: currentUserEmail,
+      senderName: sellersName,
       receiverId: receiverId,
       message: message,
       timestamp: timestamp,
-      messageId: message,
+      messageId: _firestore.collection('chat_rooms').doc().id, // Unique message ID
     );
 
     // Construct chat room id from current user
     List<String> ids = [currentUserId, receiverId];
     ids.sort();
     String chatRoomId = ids.join("_");
-
-
-
 
     // Add new message to database
     await _firestore
@@ -43,10 +47,12 @@ class ChatService extends ChangeNotifier {
       'lastMessage': newMessage.message,
       'timestamp': timestamp,
       'senderEmail': currentUserEmail,
+      'senderName': sellersName,
       'receiverId': receiverId,
-      'status': 'not seen',
+      'status': "not seen"
     });
   }
+
 
   Stream<QuerySnapshot> getMessages(String userId, String otherUserId) {
     List<String> ids = [userId, otherUserId];
