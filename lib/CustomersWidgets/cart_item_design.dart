@@ -125,7 +125,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10).w,
         child: SizedBox(
-          height: 125.h,
+          height: 135.h,
           width: double.infinity,
           child: Card(
             elevation: 0,
@@ -195,7 +195,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
                           ],
                         ),
                         Container(
-                          width: 70.w,
+                          width: double.infinity,
                           decoration: BoxDecoration(
 
                             borderRadius: BorderRadius.circular(10),

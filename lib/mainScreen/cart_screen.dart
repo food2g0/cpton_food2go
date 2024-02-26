@@ -194,7 +194,6 @@ class _CartScreenState extends State<CartScreen> {
         height: 200.h,
         decoration: BoxDecoration(
           color: AppColors().white,
-          border: Border.all(color: AppColors().red, width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.all(19.w),
@@ -209,9 +208,9 @@ class _CartScreenState extends State<CartScreen> {
                         "Sub Total:",
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors().black,
+                          color: AppColors().black1,
                           fontFamily: "Poppins",
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       Consumer<TotalAmount>(
@@ -220,9 +219,9 @@ class _CartScreenState extends State<CartScreen> {
                             "${totalAmountProvider.tAmount}",
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: AppColors().black,
+                              color: AppColors().black1,
                               fontFamily: "Poppins",
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                             ),
                           );
                         },
@@ -237,18 +236,18 @@ class _CartScreenState extends State<CartScreen> {
                         "Shipping Fee:",
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors().black,
+                          color: AppColors().black1,
                           fontFamily: "Poppins",
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
                         "${defaultShippingFee?.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors().black,
+                          color: AppColors().black1,
                           fontFamily: "Poppins",
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -283,7 +282,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 20.h),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Row(
@@ -302,12 +301,15 @@ class _CartScreenState extends State<CartScreen> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)
+                        ),
                         backgroundColor: AppColors().red,
-                        minimumSize: Size(300.w, 50.h),
+                        minimumSize: Size(180.w, 45.h),
                       ),
                       child: Text(
                         "Check Out",
-                        style: TextStyle(fontSize: 16.sp, fontFamily: "Poppins", color: AppColors().white),
+                        style: TextStyle(fontSize: 12.sp, fontFamily: "Poppins", color: AppColors().white),
                       ),
                     ),
                   ],

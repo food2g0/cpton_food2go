@@ -399,31 +399,36 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             ]
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: AppColors().white,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: ElevatedButton(
-            onPressed: () {
-              _showVariationsBottomSheet(context);
-            },
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.w)
-              ),
-              backgroundColor: AppColors().red,
+      bottomNavigationBar: Container(
+        height: 50.h,
+        decoration: BoxDecoration(
+          color: AppColors().white,
+
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+        child: ElevatedButton(
+          onPressed: () {
+            _showVariationsBottomSheet(context);
+          },
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8)
             ),
-            child: Text(
-              'Add to Cart',
-              style: TextStyle(
-                fontFamily: "Poppins",
-                fontSize: 10.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+            backgroundColor: AppColors().red,
+            minimumSize: Size(180.w, 45.h),
+          ),
+          child: Text(
+            'Add to Cart',
+            style: TextStyle(
+              fontFamily: "Poppins",
+              fontSize: 10.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
+
         ),
+
       ),
     );
 
