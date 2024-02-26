@@ -153,6 +153,8 @@ class _CartScreenState extends State<CartScreen> {
                     String thumbnailUrl = cartItem['thumbnailUrl'];
                     String productTitle = cartItem['productTitle'];
                     String productPrice = cartItem['productPrice'].toString();
+                    String selectedFlavorsName = cartItem['selectedFlavorsName'];
+                    String selectedVariationName = cartItem['selectedVariationName'].toString();
                     String cartID = cartItem.id;
 
                     return CartItemDesign(
@@ -161,6 +163,8 @@ class _CartScreenState extends State<CartScreen> {
                       productTitle: productTitle,
                       productPrice: productPrice,
                       quanNumber: itemCount,
+                      selectedVariationName: selectedVariationName,
+                      selectedFlavorsName: selectedFlavorsName,
                       context: context,
                       onQuantityChanged: (newQuantity) async {
                         // Update quantity in Firestore

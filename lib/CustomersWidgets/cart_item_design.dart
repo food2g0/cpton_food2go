@@ -17,6 +17,8 @@ class CartItemDesign extends StatefulWidget {
   final String? thumbnailUrl;
   final String? productTitle;
   final String? productPrice;
+  final String? selectedFlavorsName;
+  final String? selectedVariationName;
   final String? cartID;
   final int quanNumber;
   final BuildContext? context;
@@ -30,7 +32,7 @@ class CartItemDesign extends StatefulWidget {
     required this.productPrice,
     required this.quanNumber,
     this.context,
-    required this.onQuantityChanged, this.cartID,
+    required this.onQuantityChanged, this.cartID, this.selectedFlavorsName, this.selectedVariationName,
   }) : super(key: key);
 
   @override
@@ -123,18 +125,18 @@ class _CartItemDesignState extends State<CartItemDesign> {
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10).w,
         child: SizedBox(
-          height: 145.h,
+          height: 125.h,
           width: double.infinity,
           child: Card(
-            elevation: 2,
+            elevation: 0,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Card(
                   elevation: 2,
                   child: Container(
-                    width: 150.w,
-                    height: 120.h,
+                    width: 100.w,
+                    height: 100.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
@@ -167,29 +169,80 @@ class _CartItemDesignState extends State<CartItemDesign> {
                                 ),
                               ),
                             ),
+                            SizedBox(width: 8.w),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'images/peso.png', // Replace with the path to your currency icon image file
+                                    width: 15, // Adjust the width as needed
+                                    height: 15, // Adjust the height as needed
+                                  ),
+                                  Text(
+                                    widget.productPrice!,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+
                           ],
                         ),
-                        Text(
-                          "Php ${widget.productPrice}",
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 10,),
                         Container(
-                          height: 40.h,
-                          width: 110.w,
+                          width: 70.w,
                           decoration: BoxDecoration(
-                            color: AppColors().white1,
+
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child:Row(
+                          child: Row(
+                            children: [
+                              Text(
+                                (widget.selectedVariationName != null && widget.selectedVariationName!.isNotEmpty)
+                                    ? widget.selectedVariationName![0].toUpperCase()
+                                    : '',
+                                style: TextStyle(
+                                  color: AppColors().black,
+                                  fontSize: 12.sp,
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                (widget.selectedFlavorsName != null && widget.selectedFlavorsName!.isNotEmpty)
+                                    ? ', ${widget.selectedFlavorsName}'
+                                    : '',
+                                style: TextStyle(
+                                  color: AppColors().black,
+                                  fontSize: 12.sp,
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
+
+
+                        SizedBox(height: 10.h,),
+                        Container(
+                          height: 30.h,
+                          width: 100.w,
+                          decoration: BoxDecoration(
+                            color: AppColors().white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.remove_circle, color: AppColors().red, size: 20),
-                                onPressed: quantity > 1 ? _decrementQuantity : null, // Disable the button when quantity is 0
+                                icon: Icon(Icons.remove_circle, color: AppColors().red, size: 14),
+                                onPressed: quantity > 1 ? _decrementQuantity : null,
                               ),
                               Text(
                                 quantity.toString(),
@@ -201,19 +254,20 @@ class _CartItemDesignState extends State<CartItemDesign> {
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.add_circle_outlined, color: AppColors().red, size: 20,),
+                                icon: Icon(Icons.add_circle_outlined, color: AppColors().red, size: 14,),
                                 onPressed: _incrementQuantity,
                               ),
                             ],
                           ),
-
                         ),
+                        SizedBox(height: 5.h,),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
+
           ),
         ),
       ),

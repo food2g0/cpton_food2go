@@ -11,8 +11,10 @@ class FavoriteDesignWidget extends StatefulWidget {
   final dynamic model;
   final BuildContext? context;
   final VoidCallback? onRemove;
+  final double? distanceInKm;
 
-  const FavoriteDesignWidget({super.key, this.model, this.context, this.onRemove});
+
+  const FavoriteDesignWidget({super.key, this.model, this.context, this.onRemove, this.distanceInKm});
 
   @override
   State<FavoriteDesignWidget> createState() => _FavoriteDesignWidgetState();
@@ -23,7 +25,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model,)));
+        Navigator.push(context, MaterialPageRoute(builder: (c) => ItemDetailsScreen(model: widget.model,   distanceInKm: widget.distanceInKm ?? 0.0,)));
       },
       child: Padding(
         padding: EdgeInsets.all(4.0.w),
@@ -70,9 +72,9 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                               ? widget.model!.productTitle!
                               : widget.model!.productTitle!.substring(0, 14) + '...',
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 14.sp,
                             color: AppColors().black,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w500,
                             overflow: TextOverflow.ellipsis,
                             fontFamily: "Poppins",
                           ),
@@ -101,9 +103,9 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                           ),
                         ),
                         TextSpan(
-                          text: "Php: " + '${widget.model!.productPrice}',
+                          text:   '${widget.model!.productPrice}',
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 14.sp,
                             color: Colors.black45,
                             fontWeight: FontWeight.w700,
                             overflow: TextOverflow.ellipsis,
@@ -119,26 +121,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(1.0.w),
-                    child: Container(
-                      height: 40.h,
-                      width: 80.w,
-                      child: InkWell(
-                        onTap: () {
 
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0.w),
-                          child: Icon(
-                            Icons.shopping_cart_outlined,
-                            size: 28.sp,
-                            color: AppColors().green,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   Padding(
                     padding: EdgeInsets.all(4.0.w),
                     child: Container(

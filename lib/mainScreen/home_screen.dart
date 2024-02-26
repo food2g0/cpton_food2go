@@ -478,12 +478,55 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   String customersUID = 'default_uid'; // Default UID
+  Position? _currentUserPosition;
+  double? distanceInMeter = 0.0;
+  double? distanceInKm;
+
+  Future<void> _getDistance(double storeLat, double storeLng) async {
+    _currentUserPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    distanceInMeter = await Geolocator.distanceBetween(
+      _currentUserPosition!.latitude,
+      _currentUserPosition!.longitude,
+      storeLat,
+      storeLng,
+    );
+    _convertDistanceToKm(); // Convert distance to kilometers
+  }
+
+  void _convertDistanceToKm() {
+    if (distanceInMeter != null) {
+      setState(() {
+        distanceInKm = distanceInMeter! / 1000; // Convert meters to kilometers
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    customersUID = getCurrentUserUID(); // Initialize customersUID in initState
+    _fetchStoreLocation();
+    customersUID = getCurrentUserUID();
   }
+
+  Future<void> _fetchStoreLocation() async {
+    // Fetch the store location from Firestore collection
+    DocumentSnapshot storeSnapshot = await FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(widget.model.sellersUID)
+        .get();
+
+    if (storeSnapshot.exists) {
+      Map<String, dynamic> storeData = storeSnapshot.data() as Map<String, dynamic>;
+      double storeLat = storeData['lat'];
+      double storeLng = storeData['lng'];
+      await _getDistance(storeLat, storeLng); // Wait for _getDistance to complete
+      print("Distance between user and store: $distanceInKm km"); // Print distance
+    } else {
+      print('Store not found in Firestore');
+    }
+  }
+
+
 
   String getCurrentUserUID() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -524,6 +567,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: AppColors().backgroundWhite,
       appBar: AppBar(
@@ -583,6 +627,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 Items item = itemsList[index];
                 return FavoriteDesignWidget(
                   model: item,
+                  distanceInKm: distanceInKm??0.0,
                   context: context,
                   onRemove: () {
                     final productId = item.productsID ?? ""; // Handle null case

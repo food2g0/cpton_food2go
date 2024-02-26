@@ -77,30 +77,39 @@ class _ChatPageState extends State<ChatPage> {
 
   //build message item
   Widget _buildMessageItems(DocumentSnapshot document){
-    Map<String, dynamic> data = document.data() as Map<String, dynamic >;
+    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
     var alignment = (data['senderId'] == _firebaseAuth.currentUser!.uid)
-    ? Alignment.centerRight
+        ? Alignment.centerRight
         : Alignment.centerLeft;
+
+    // Convert Firestore timestamp to DateTime
+    DateTime timeStamp = (data['timestamp'] as Timestamp).toDate();
+
     return Container(
       alignment: alignment,
       child: Padding(
         padding: EdgeInsets.all(8.0.w),
         child: Column(
-          crossAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid) ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
-
-          mainAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid) ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+          crossAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          mainAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
-            Text(data['senderName'],style:
-              TextStyle(fontFamily: "Poppins"),),
-            SizedBox(height: 5.sp,),
+            Text(data['senderName'], style: TextStyle(fontFamily: "Poppins",
+            fontSize: 10.sp)),
+            SizedBox(height: 5.sp),
             ChatBubble(message: data['message']),
+            SizedBox(height: 2.sp), // Adjust spacing between message and timestamp
+            // Display timestamp
+            Text(
+              '${timeStamp.hour}:${timeStamp.minute}', // Customize the format as per your requirement
+              style: TextStyle(fontSize: 10.sp, color: Colors.grey),
+            ),
           ],
         ),
       ),
     );
   }
+
+
 
 
   // build message input

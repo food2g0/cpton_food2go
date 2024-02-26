@@ -37,6 +37,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   String selectedFlavorsName = '';
   String selectedVariation = '';
   String variationPrice = '';
+  String variationName = '';
   Color? selectedFlavorColor;
   Color? selectedVariationColor;
   late TextEditingController counterTextEditingController;
@@ -491,6 +492,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               ),
                               onPressed: () {
                                 setState(() {
+                                  variationName = variationName;
                                   selectedVariationName = variationName;
                                   selectedVariationPrice = variation['price'];
                                   selectedVariationColor = Colors.green;
