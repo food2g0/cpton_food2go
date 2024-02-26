@@ -1,7 +1,6 @@
 import 'package:cpton_foodtogo/assistantMethods/message_counter.dart';
 import 'package:cpton_foodtogo/splashScreen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -12,10 +11,15 @@ import 'assistantMethods/cart_item_counter.dart';
 import 'assistantMethods/total_ammount.dart';
 import 'global/global.dart';
 import 'firebase_options.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
 
   sharedPreferences = await SharedPreferences.getInstance();
