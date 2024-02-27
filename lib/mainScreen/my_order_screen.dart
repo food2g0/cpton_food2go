@@ -40,6 +40,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           child: Scaffold(
             backgroundColor: AppColors().white1,
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: AppColors().red,
               title:  Text(
                 "Orders",
@@ -52,7 +53,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 tabs: [
 
                   Tab(
-                    icon: Icon(Icons.directions_bike, size: 16.sp),
+                    icon: Icon(Icons.payment, size: 16.sp),
                     child: Text(
                       'To Pay',
                       style: TextStyle(
@@ -63,7 +64,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                     ),
                   ),
                   Tab(
-                    icon: Icon(Icons.directions_bike, size: 16.sp),
+                    icon: Icon(Icons.reorder, size: 16.sp),
                     child: Text(
                       'Order Placed',
                       style: TextStyle(
@@ -75,7 +76,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                   ),
 
                   Tab(
-                    icon: Icon(Icons.directions_bike, size: 16.sp),
+                    icon: Icon(Icons.delivery_dining, size: 16.sp),
                     child: Text(
                       'Delivered',
                       style: TextStyle(
@@ -86,7 +87,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                     ),
                   ),
                   Tab(
-                    icon: Icon(Icons.directions_bike, size: 16.sp),
+                    icon: Icon(Icons.star, size: 16.sp),
                     child: Text(
                       'To Rate',
                       style: TextStyle(

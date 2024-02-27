@@ -65,6 +65,8 @@ class ChatScreen extends StatelessWidget {
     final sellersImageUrl = sellerData['sellersImageUrl'];
     final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
 
+    print(sellersEmail);
+
     if (currentUserEmail != sellerData['sellersEmail']) {
       if (sellersUID is String) {
         final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -115,7 +117,7 @@ class ChatScreen extends StatelessWidget {
                     .collection('chat_rooms')
                     .where("receiverId", isEqualTo: userId)
                     .where('senderId', isEqualTo: sellersUID)
-                    // .where('status', isEqualTo: 'not seen')
+                    .where('status', isEqualTo: 'not seen')
                     .get();
                 querySnapshot.docs.forEach((doc) {
                   doc.reference.update({'status': 'seen'});

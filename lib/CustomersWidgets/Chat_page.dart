@@ -41,9 +41,9 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         backgroundColor: AppColors().red,
         title: Text(widget.receiverUserEmail,
-        style: TextStyle(color: AppColors().white,
-        fontFamily: "Poppins",
-        fontSize: 12.sp),),
+          style: TextStyle(color: AppColors().white,
+              fontFamily: "Poppins",
+              fontSize: 12.sp),),
       ),
       body: Column(
         children: [
@@ -65,12 +65,12 @@ class _ChatPageState extends State<ChatPage> {
           if (snapshot.hasError){
             return Text('Error${snapshot.error}');
           }
-            if (snapshot.connectionState == ConnectionState.waiting){
-              return const Text('Loading..');
-            }
-            return ListView(
-              children: snapshot.data!.docs.map((document) => _buildMessageItems(document)).toList(),
-            );
+          if (snapshot.connectionState == ConnectionState.waiting){
+            return const Text('Loading..');
+          }
+          return ListView(
+            children: snapshot.data!.docs.map((document) => _buildMessageItems(document)).toList(),
+          );
 
         });
   }
@@ -93,8 +93,8 @@ class _ChatPageState extends State<ChatPage> {
           crossAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid) ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           mainAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid) ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
-            Text(data['senderName'], style: TextStyle(fontFamily: "Poppins",
-            fontSize: 10.sp)),
+            Text(  data['senderName'] ?? 'Unknown Sender', style: TextStyle(fontFamily: "Poppins",
+                fontSize: 10.sp)),
             SizedBox(height: 5.sp),
             ChatBubble(message: data['message']),
             SizedBox(height: 2.sp), // Adjust spacing between message and timestamp

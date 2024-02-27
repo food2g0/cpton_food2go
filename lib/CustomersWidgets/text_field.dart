@@ -5,7 +5,7 @@ import 'package:flutter/services.dart'; // Import this
 class MyTextField extends StatefulWidget {
   final String? hint;
   final TextEditingController? controller;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final FocusNode? focusNode;
   final FormFieldValidator<String>? validator;
   final int? maxLength; // Add maxLength property
@@ -13,7 +13,7 @@ class MyTextField extends StatefulWidget {
   MyTextField({
     this.hint,
     this.controller,
-    required this.keyboardType,
+ this.keyboardType,
     this.focusNode,
     this.validator,
     this.maxLength, // Initialize maxLength

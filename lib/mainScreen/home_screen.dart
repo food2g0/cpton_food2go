@@ -137,24 +137,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Image.asset(
                       'images/home.png',
                      // Replace 'path_to_home_icon' with the path to your home icon asset
-                      width: 24.w, // Adjust width as needed
-                      height: 24.h, // Adjust height as needed
+                      width: 20.w, // Adjust width as needed
+                      height: 20.h, // Adjust height as needed
                     ),
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'images/heart.png', // Replace 'path_to_favorites_icon' with the path to your favorites icon asset
-                      width: 24, // Adjust width as needed
-                      height: 24, // Adjust height as needed
+                      width: 20,// Adjust width as needed
+                      height: 20, // Adjust height as needed
                     ),
                     label: 'Favorites',
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'images/approved.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
-                      width: 24, // Adjust width as needed
-                      height: 24, // Adjust height as needed
+                      width: 20, // Adjust width as needed
+                      height: 20, // Adjust height as needed
                     ),
                     label: 'Orders',
                   ),
@@ -163,8 +163,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Image.asset(
                           'images/message.png',
-                          width: 24,
-                          height: 24,
+                          width: 20,
+                          height: 20,
                         ),
                         Positioned(
                           top: -9,
@@ -381,24 +381,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Image.asset(
                         'images/home-button.png',
                         color: AppColors().red,// Replace 'path_to_home_icon' with the path to your home icon asset
-                        width: 24.w, // Adjust width as needed
-                        height: 24.h, // Adjust height as needed
+                        width: 20.w, // Adjust width as needed
+                        height: 20.h, // Adjust height as needed
                       ),
                       label: 'Home',
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
                         'images/heart.png', // Replace 'path_to_favorites_icon' with the path to your favorites icon asset
-                        width: 24, // Adjust width as needed
-                        height: 24, // Adjust height as needed
+                        width: 20, // Adjust width as needed
+                        height: 20, // Adjust height as needed
                       ),
                       label: 'Favorites',
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
                         'images/approved.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
-                        width: 24, // Adjust width as needed
-                        height: 24, // Adjust height as needed
+                        width: 20, // Adjust width as needed
+                        height: 20, // Adjust height as needed
                       ),
                       label: 'Orders',
                     ),
@@ -407,8 +407,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Image.asset(
                             'images/message.png',
-                            width: 24,
-                            height: 24,
+                            width: 20,
+                            height: 20,
                           ),
                           Positioned(
                             top: -9,
