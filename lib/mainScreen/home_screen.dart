@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
-                      'images/approved.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
+                      'images/lists.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
                       width: 20, // Adjust width as needed
                       height: 20, // Adjust height as needed
                     ),
@@ -396,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
-                        'images/approved.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
+                        'images/lists.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
                         width: 20, // Adjust width as needed
                         height: 20, // Adjust height as needed
                       ),
