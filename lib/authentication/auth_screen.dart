@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/authentication/Forgot_Password.dart';
 import 'package:cpton_foodtogo/authentication/signup_page.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -177,6 +178,17 @@ class _AuthScreenState extends State<AuthScreen> {
 
 
                   ),
+                  RichText(text: TextSpan(
+                      text: "Forgot Password?",
+                      style: TextStyle(
+                        color: AppColors().black,
+                        fontFamily: "Poppins",
+                        fontSize: 12.sp,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Get.to(() => const ForgotPassword())
+                  )
+                  ),
                 ],
               ),
             ),
@@ -202,6 +214,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
 
             SizedBox(height: w * 0.08),
+
             RichText(text: TextSpan(
                 text: "Don't have an account?",
                 style: TextStyle(

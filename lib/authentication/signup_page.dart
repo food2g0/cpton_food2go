@@ -18,6 +18,7 @@ import '../CustomersWidgets/loading_dialog.dart';
 import '../global/global.dart';
 import '../mainScreen/home_screen.dart';
 import '../theme/colors.dart';
+import 'Verify_Phone_Page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -74,6 +75,30 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
 
+
+
+  // Future signUp() async
+  // {
+  //   final isValid = _formKey.currentState!.validate();
+  //   if (!isValid) return;
+  //
+  //   showDialog(context: context,
+  //   barrierDismissible: false,
+  //   builder: (context)=>
+  //   Center(
+  //     child: CircularProgressIndicator(),
+  //   ));
+  //
+  //   try{
+  //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //         email: emailController.text.trim(),
+  //         password: passwordController.text.trim());
+  //   }on FirebaseAuthException catch(e){
+  //     print(e);
+  //
+  // }
+  // Navigator.push(context, MaterialPageRoute(builder: (c)=> VerifyEmailPage()));
+  // }
 
 
 
@@ -175,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
     if (currentUser != null) {
       saveDataToFirestore(currentUser!).then((value) {
         Navigator.pop(context);
-        Route newRoute = MaterialPageRoute(builder: (c) => const HomeScreen());
+        Route newRoute = MaterialPageRoute(builder: (c) => const VerifyPhonePage());
         Navigator.pushReplacement(context, newRoute);
       });
     }
@@ -338,7 +363,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               getCurrentLocation();
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors().red,
+                                backgroundColor: AppColors().black,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 )),
@@ -351,6 +376,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 150, // Set the desired width
                   child: ElevatedButton(
                     onPressed: () {
+                      // signUp();
                       formValidation();
                     },
                     style: ElevatedButton.styleFrom(
@@ -368,7 +394,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           style: TextStyle(
                               color: AppColors().white,
                               fontFamily: "Poppins",
-
                               fontWeight: FontWeight.w600),
                         ),
 
