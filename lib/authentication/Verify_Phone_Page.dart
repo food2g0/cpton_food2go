@@ -18,62 +18,62 @@ class _VerifyPhonePageState extends State<VerifyPhonePage> {
       appBar: AppBar(
         backgroundColor: AppColors().red,
         title: Text("Phone Authentication",
-        style: TextStyle(
-          color: AppColors().white,
-          fontFamily: "Poppins",
-          fontSize: 12.sp
-        ),),
+          style: TextStyle(
+              color: AppColors().white,
+              fontFamily: "Poppins",
+              fontSize: 12.sp
+          ),),
       ),
       body: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 60),
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 60),
 
-            child: Center(
-              child: Text("Phone Authentication",
-                style: TextStyle(
-                    color: AppColors().black,
-                    fontFamily: "Poppins",
-                    fontSize: 12.sp
-                ),),
+              child: Center(
+                child: Text("Phone Authentication",
+                  style: TextStyle(
+                      color: AppColors().black,
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp
+                  ),),
 
-            ),
-          ),
-          Container(
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: "Phone Number",
-                prefix: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text("+63"),
-                ),
               ),
-              maxLength: 10,
-              keyboardType: TextInputType.number,
-              controller: phoneController,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size.fromHeight(40),
-                  shape: RoundedRectangleBorder(borderRadius:
-                  BorderRadius.circular(10)),
-                  backgroundColor: AppColors().red
+            Container(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Phone Number",
+                  prefix: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text("+63"),
+                  ),
                 ),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=> OtpScreen(phoneController.text)));
-                },
+                maxLength: 10,
+                keyboardType: TextInputType.number,
+                controller: phoneController,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(40),
+                      shape: RoundedRectangleBorder(borderRadius:
+                      BorderRadius.circular(10)),
+                      backgroundColor: AppColors().red
+                  ),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (c)=> OtpScreen(phoneController.text)));
+                  },
 
 
-                child: Text("Next",style:
-              TextStyle(color: AppColors().white),
+                  child: Text("Next",style:
+                  TextStyle(color: AppColors().white),
 
 
-            )),
-          )
-        ]),
+                  )),
+            )
+          ]),
 
     );
   }

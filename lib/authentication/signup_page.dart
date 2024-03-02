@@ -248,9 +248,9 @@ class _SignUpPageState extends State<SignUpPage> {
               height: h * 0.4,
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                image: AssetImage("images/log.png"),
-                fit: BoxFit.cover,
-              )),
+                    image: AssetImage("images/log.png"),
+                    fit: BoxFit.cover,
+                  )),
             ),
             Container(
 
@@ -280,21 +280,21 @@ class _SignUpPageState extends State<SignUpPage> {
                         : FileImage(File(imageXFile!.path)),
                     child: imageXFile == null
                         ? Icon(
-                            Icons.add_photo_alternate,
-                            size: MediaQuery.of(context).size.width * 0.10,
-                            color: Colors.grey,
-                          )
+                      Icons.add_photo_alternate,
+                      size: MediaQuery.of(context).size.width * 0.10,
+                      color: Colors.grey,
+                    )
                         : null,
                   ),
 
                 ),
                 SizedBox(height: 10.h),
                 Text("Choose your profile",
-                style: TextStyle(
-                  color: AppColors().black,
-                  fontFamily: "Poppins",
-                  fontSize: 12.sp
-                ),),
+                  style: TextStyle(
+                      color: AppColors().black,
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp
+                  ),),
                 SizedBox(height: 20.h),
                 Form(
                   key: _formKey,
@@ -306,7 +306,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: "Enter your Full Name",
                         isObscure: false,
                       ),
-                SizedBox(height: 10.h),
+                      SizedBox(height: 10.h),
                       CustomTextField(
                         controller: emailController,
                         data: Icons.email,
@@ -348,12 +348,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 40.h,
                           alignment: Alignment.center,
                           child: ElevatedButton.icon(
-                              label:  Text(
-                             ("Get my current location")
-                            ,
+                            label:  Text(
+                              ("Get my current location")
+                              ,
                               style: TextStyle(color: AppColors().white,
-                              fontFamily: "Poppins",
-                              fontSize: 12.sp),
+                                  fontFamily: "Poppins",
+                                  fontSize: 12.sp),
                             ),
                             icon: Icon(
                               Icons.location_on,
@@ -381,7 +381,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.w)
+                          borderRadius: BorderRadius.circular(10.w)
                       ),
                       backgroundColor: AppColors().red,
                       padding: const EdgeInsets.symmetric(vertical: 10),
