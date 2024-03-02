@@ -23,10 +23,11 @@ class MyMap extends StatefulWidget {
 
 class _MyMapState extends State<MyMap> {
   final loc.Location location = loc.Location();
-  late double destinationLatitude;
   late double destinationLongitude;
   late double originlatitude;
   late double originlongitude;
+  late double destinationLatitude;
+
   StreamSubscription<loc.LocationData>? _locationSubscription;
   GoogleMapController? _googleMapController;
   Marker? _origin;
@@ -126,7 +127,7 @@ class _MyMapState extends State<MyMap> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                "Rider's Name: John Doe",
+                "",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -160,13 +161,4 @@ class _MyMapState extends State<MyMap> {
 
 
 
-  // Future<void> _fetchLocationData() async {
-  //   try {
-  //     _locationSubscription = location.onLocationChanged.listen((loc.LocationData currentlocation) async {
-  //       await _updateUserLocation(currentlocation.latitude!, currentlocation.longitude!);
-  //     });
-  //   } catch (e) {
-  //     print("Error fetching location data: $e");
-  //   }
-  // }
 }
