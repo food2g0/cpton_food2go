@@ -41,34 +41,64 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  loginNow()async
-  {
-    showDialog(context: context, builder: (c) {
-      return const LoadingDialog(message: "Checking credentials",);
-    }
+  loginNow() async {
+    showDialog(
+      context: context,
+      builder: (c) {
+        return const LoadingDialog(message: "Checking credentials");
+      },
     );
 
     User? currentUser;
-    await firebaseAuth.signInWithEmailAndPassword(
+    await firebaseAuth
+        .signInWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
-    ).then((auth)
-    {
+    )
+        .then((auth) {
       currentUser = auth.user!;
     }).catchError((error) {
       Navigator.pop(context);
 
-      showDialog(context: context, builder: (c) {
-        return ErrorDialog(message: error.message.toString(),
-        );
-      }
+      showDialog(
+        context: context,
+        builder: (c) {
+          return ErrorDialog(
+            message: error.message.toString(),
+          );
+        },
       );
     });
-    if (currentUser != null)
-      {
-          readDataAndSetDataLocally(currentUser!);
+
+    if (currentUser != null) {
+      await currentUser!.reload(); // Refresh user data
+      if (currentUser!.emailVerified) {
+        readDataAndSetDataLocally(currentUser!);
+      } else {
+        // User's email is not verified
+        Navigator.pop(context); // Close loading dialog
+        showDialog(
+          context: context,
+          builder: (c) {
+            return AlertDialog(
+              title: const Text('Email Not Verified'),
+              content: const Text(
+                  'Please verify your email to log in.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
+    }
   }
+
 
   Future readDataAndSetDataLocally(User currentUser) async
   {

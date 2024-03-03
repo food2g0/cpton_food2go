@@ -18,7 +18,7 @@ import '../CustomersWidgets/loading_dialog.dart';
 import '../global/global.dart';
 import '../mainScreen/home_screen.dart';
 import '../theme/colors.dart';
-import 'Verify_Phone_Page.dart';
+import 'auth_screen.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -76,29 +76,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
 
-
-  // Future signUp() async
-  // {
-  //   final isValid = _formKey.currentState!.validate();
-  //   if (!isValid) return;
-  //
-  //   showDialog(context: context,
-  //   barrierDismissible: false,
-  //   builder: (context)=>
-  //   Center(
-  //     child: CircularProgressIndicator(),
-  //   ));
-  //
-  //   try{
-  //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //         email: emailController.text.trim(),
-  //         password: passwordController.text.trim());
-  //   }on FirebaseAuthException catch(e){
-  //     print(e);
-  //
-  // }
-  // Navigator.push(context, MaterialPageRoute(builder: (c)=> VerifyEmailPage()));
-  // }
 
 
 
@@ -184,8 +161,12 @@ class _SignUpPageState extends State<SignUpPage> {
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
     )
-        .then((auth) {
+        .then((auth) async {
       currentUser = auth.user;
+      if (currentUser != null) {
+        // Send email verification
+        await currentUser!.sendEmailVerification();
+      }
     }).catchError((error) {
       Navigator.pop(context);
       showDialog(
@@ -198,13 +179,43 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     if (currentUser != null) {
-      saveDataToFirestore(currentUser!).then((value) {
+      saveDataToFirestore(currentUser!).then((value) async {
         Navigator.pop(context);
-        Route newRoute = MaterialPageRoute(builder: (c) => const VerifyPhonePage());
-        Navigator.pushReplacement(context, newRoute);
+        // Check if email is verified before navigating
+        await currentUser!.reload(); // Refresh user data
+        if (currentUser!.emailVerified) {
+          // Navigate to home screen if email is verified
+          Route newRoute = MaterialPageRoute(builder: (c) => HomeScreen());
+          Navigator.pushReplacement(context, newRoute);
+        } else {
+          // Navigate to authentication screen if email is not verified
+          Route newRoute = MaterialPageRoute(builder: (c) => AuthScreen());
+          Navigator.pushReplacement(context, newRoute);
+          // Show dialog to prompt user to check their email for verification
+          showDialog(
+              context: context,
+              builder: (c) {
+                return AlertDialog(
+                  title: Text('Email Not Verified'),
+                  content: Text(
+                      'Please check your email to verify your account.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              });
+        }
       });
     }
   }
+
+
+
 
   Future saveDataToFirestore(User currentUser) async {
     FirebaseFirestore.instance.collection("users").doc(currentUser.uid).set({
