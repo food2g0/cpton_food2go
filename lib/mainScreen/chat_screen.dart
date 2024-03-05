@@ -7,32 +7,72 @@ import 'package:provider/provider.dart';
 import '../CustomersWidgets/Chat_page.dart';
 import '../assistantMethods/message_counter.dart'; // Assuming this is where your ChatRoomProvider is imported from
 import '../theme/colors.dart';
+import 'food_page_body.dart';
+import 'home_screen.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+
+
   const ChatScreen({Key? key}) : super(key: key);
 
   @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+
+  int _selectedIndex = 0;
+  List<Widget> _pages = [];
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the _pages list here
+    _pages = [
+      const FoodPageBody(),
+      FavoritesScreen(),
+      NotificationScreen(),
+      ChatScreen(),
+    ];
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      if (index >= 0 && index < _pages.length) {
+        _selectedIndex = index;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors().red,
-        title: Text('Messages',
-        style: TextStyle(color: AppColors().white,
-        fontSize: 12.sp,
-        fontFamily: "Poppins"),),
-      ),
-      body: FutureBuilder(
-        future: Provider.of<ChatRoomProvider>(context, listen: false)
-            .fetchUnseenMessagesCount(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return _buildUserList();
-          }
-        },
+   
+
+
+    return WillPopScope(
+      onWillPop: () async => false, // Disable back button
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors().red,
+          title: Text('Messages',
+          style: TextStyle(color: AppColors().white,
+          fontSize: 12.sp,
+          fontFamily: "Poppins"),),
+        ),
+        body: FutureBuilder(
+          future: Provider.of<ChatRoomProvider>(context, listen: false)
+              .fetchUnseenMessagesCount(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return _buildUserList();
+            }
+          },
+        ),
+
       ),
     );
   }
@@ -145,6 +185,7 @@ class ChatScreen extends StatelessWidget {
       }
     }
 
-    return Container(); // Return an empty container by default
+    return Container();
+    // Return an empty container by default
   }
 }

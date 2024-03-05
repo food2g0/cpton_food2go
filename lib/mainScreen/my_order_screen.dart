@@ -74,6 +74,17 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                       ),
                     ),
                   ),
+                  Tab(
+                    icon: Icon(Icons.delivery_dining, size: 16.sp),
+                    child: Text(
+                      'Picked',
+                      style: TextStyle(
+                        fontSize: 6.sp,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
 
                   Tab(
                     icon: Icon(Icons.delivery_dining, size: 16.sp),
@@ -86,17 +97,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                       ),
                     ),
                   ),
-                  Tab(
-                    icon: Icon(Icons.star, size: 16.sp),
-                    child: Text(
-                      'To Rate',
-                      style: TextStyle(
-                        fontSize: 6.sp,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
+
                 ],
               ),
             ),
@@ -104,8 +105,9 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
               children: [
                 _buildOrderListNormal('To Pay'),
                 _buildOrderListAccepted('Order Placed'),
+                _buildOrderListPick('Order Picked'),
                 _buildOrderListDelivered('Delivered'),
-                _buildOrderListToRate('To Rate'),
+
 
               ],
             ),
@@ -292,6 +294,62 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
         },
       );
   }
+  Widget _buildOrderListPick(String status) {
+    return
+      StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(sharedPreferences!.getString("uid"))
+            .collection("orders")
+            .where("status", isEqualTo: "To Pick")
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          // Extract orders data from snapshot
+          List<DocumentSnapshot> orders = snapshot.data!.docs;
+
+          // Build your UI using the orders data
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              // Extract order details from each document snapshot
+              dynamic productsData = orders[index].get("products");
+              List<Map<String, dynamic>> productList = [];
+              if (productsData != null && productsData is List) {
+                productList =
+                List<Map<String, dynamic>>.from(productsData);
+              }
+
+              print("Product List: $productList"); // Print productList
+
+              return Column(
+                children: [
+                  OrderCard(
+                    itemCount: productList.length,
+                    data: productList,
+                    orderID: snapshot.data!.docs[index].id,
+                    sellerName: "", // Pass the seller's name
+                    paymentDetails:
+                    snapshot.data!.docs[index].get("paymentDetails"),
+                    totalAmount: snapshot.data!.docs[index].get("totalAmount").toString(),
+                    cartItems: productList, // Pass the products list
+                  ),
+                  if (productList.length > 1)
+                    SizedBox(height: 10), // Adjust the height as needed
+                ],
+              );
+            },
+          );
+        },
+      );
+  }
+
 
   Widget _buildOrderListDelivered(String status) {
     return StreamBuilder<QuerySnapshot>(

@@ -11,11 +11,12 @@ import 'my_order_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
   final double? totalAmount;
+  final double? shippingFee;
   final String? paymentMethod;
   final String? addressID;
   final String? sellersUID;
 
-  PaymentScreen({this.totalAmount, this.paymentMethod, this.addressID, this.sellersUID});
+  PaymentScreen({this.totalAmount, this.paymentMethod, this.addressID, this.sellersUID, this.shippingFee});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -80,6 +81,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         "riderUID": "",
         "status": "ToPay",
         "orderId": orderId,
+        "shippingFee": widget.shippingFee
       });
 
       // Add order details for seller
@@ -95,6 +97,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         "riderUID": "",
         "status": "ToPay",
         "orderId": orderId,
+        "shippingFee": widget.shippingFee
       });
 
       // Clear the cart

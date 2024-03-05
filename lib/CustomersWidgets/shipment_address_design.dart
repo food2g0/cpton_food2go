@@ -114,51 +114,57 @@ class _ShipmentAddressDesignState extends State<ShipmentAddressDesign> {
           Container(
             height: 100.h,
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("location").limit(1).snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection("location")
+                  .where("orderID", isEqualTo: widget.orderID) // Filter locations by orderID
+                  .limit(1)
+                  .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
                 return ListView.builder(
-                    itemCount: snapshot.data?.docs.length ?? 0,
-                    itemBuilder: (context, index) {
-                      if (snapshot.data?.docs == null || index >= snapshot.data!.docs.length) {
-                        return Container(); // or any other widget indicating the absence of data
-                      }
-                      return Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: Center(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => MyMap(
-                                    user_id: snapshot.data!.docs[index].id,
-                                  ),
+                  itemCount: snapshot.data?.docs.length ?? 0,
+                  itemBuilder: (context, index) {
+                    if (snapshot.data?.docs == null ||
+                        index >= snapshot.data!.docs.length) {
+                      return Container(); // or any other widget indicating the absence of data
+                    }
+                    return Padding(
+                      padding: EdgeInsets.all(8.w),
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => MyMap(
+                                  user_id: snapshot.data!.docs[index].id,
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF31572c),
-                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.navigation_outlined, color: Color(0xFFFFFFFF)),
-                                Text(
-                                  "Track Order",
-                                  style: TextStyle(color: Colors.white, fontSize: 14.sp, fontFamily: "Poppins"),
-                                ),
-                              ],
-                            ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF31572c),
+                            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.navigation_outlined, color: Color(0xFFFFFFFF)),
+                              Text(
+                                "Track Order",
+                                style: TextStyle(color: Colors.white, fontSize: 14.sp, fontFamily: "Poppins"),
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    }
+                      ),
+                    );
+                  },
                 );
               },
             ),
+
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),

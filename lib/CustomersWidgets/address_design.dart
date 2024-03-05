@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../assistantMethods/address_changer.dart';
-import '../mainScreen/check_out.dart';
 import '../mainScreen/checkout_order_screen.dart';
 import '../maps/maps.dart';
 import '../models/address.dart';
@@ -14,6 +13,7 @@ class AddressDesign extends StatefulWidget {
   final int? value;
   final String? addressId;
   final double? totalAmount;
+  final double? shippingFee;
   final String? sellersUID;
 
   AddressDesign({
@@ -23,6 +23,7 @@ class AddressDesign extends StatefulWidget {
     this.addressId,
     this.totalAmount,
     this.sellersUID,
+    this.shippingFee,
   });
 
   @override
@@ -71,36 +72,31 @@ class _AddressDesignState extends State<AddressDesign> {
                   },
                 ),
                 Expanded(
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            child: Table(
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Table(
+                          children: [
+                            TableRow(
                               children: [
-                                TableRow(
-                                  children: [
-                                    Text(widget.model!.name.toString()),
-                                  ],
-                                ),
-                                TableRow(
-                                  children: [
-                                    Text(widget.model!.phoneNumber.toString()),
-                                  ],
-                                ),
-                                TableRow(
-                                  children: [
-                                    Text(widget.model!.fullAddress.toString()),
-                                  ],
-                                ),
+                                Text(widget.model!.name.toString()),
                               ],
                             ),
-                          )
-                        ],
-                      ),
+                            TableRow(
+                              children: [
+                                Text(widget.model!.phoneNumber.toString()),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Text(widget.model!.fullAddress.toString()),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -121,21 +117,24 @@ class _AddressDesignState extends State<AddressDesign> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle Proceed button action for the selected address.
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (c) => CheckoutOrderScreen(
-                              addressId: widget.addressId,
-                              sellersUID: widget.sellersUID,
-                              totalAmount: widget.totalAmount,
-                            )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) => CheckoutOrderScreen(
+                          addressId: widget.addressId,
+                          sellersUID: widget.sellersUID,
+                          totalAmount: widget.totalAmount,
+                            shippingFee: widget.shippingFee,// Pass the shippingFee here
+                        ),
+                      ),
+                    );
+                    print('Shipping fee Php${widget.shippingFee}');
                   },
                   child: Text("Choose", style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.w))),
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.w)),
+                  ),
                 ),
               ],
             )
@@ -145,6 +144,3 @@ class _AddressDesignState extends State<AddressDesign> {
     );
   }
 }
-
-
-

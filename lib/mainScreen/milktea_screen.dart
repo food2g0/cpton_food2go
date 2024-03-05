@@ -22,7 +22,7 @@ class MilkTeaScreen extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('sellers')
-            .where('sellersCategory', isEqualTo: 'MilkTea Shop')
+            .where('sellersCategory', isEqualTo: 'Milk Tea Shop')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

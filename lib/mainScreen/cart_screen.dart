@@ -31,6 +31,7 @@ class _CartScreenState extends State<CartScreen> {
   bool isEditing = false;
   List<int>? separateItemQuantityList;
   bool isCartEmpty = true; // Initially set to true
+  bool isCheckoutCompleted = false; // Track if checkout is completed
 
   double? calculateShippingFeeForItem(double distanceInKm) {
     if (widget.calculateShippingFee != null) {
@@ -62,9 +63,17 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // If checkout is completed, navigate to the home screen
+    if (isCheckoutCompleted) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      });
+    }
+
     double? defaultShippingFee = calculateShippingFeeForItem(widget.distanceInKm ?? 0.0);
-
-
 
     return Scaffold(
       backgroundColor: AppColors().backgroundWhite,
@@ -289,20 +298,35 @@ class _CartScreenState extends State<CartScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        // Set checkout completed to true
+                        isCheckoutCompleted = true;
+
+                        double? defaultShippingFee = calculateShippingFeeForItem(widget.distanceInKm ?? 0.0);
+                        double totalAmount = Provider.of<TotalAmount>(context, listen: false).tAmount + defaultShippingFee!;
+
+                        // Update perDelivery document
+                        await FirebaseFirestore.instance
+                            .collection("perDelivery")
+                            .doc("b292YYxmdWdVF729PMoB") // Use your document ID here
+                            .update({"amount": defaultShippingFee});
+
+                        // Navigate to checkout screen
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (c) => CheckOut(
-                              totalAmount: Provider.of<TotalAmount>(context, listen: false).tAmount + defaultShippingFee!,
+                              shippingFee: defaultShippingFee,
+                              totalAmount: totalAmount,
                               sellersUID: widget.sellersUID,
                             ),
                           ),
                         );
                       },
+
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)
+                            borderRadius: BorderRadius.circular(8)
                         ),
                         backgroundColor: AppColors().red,
                         minimumSize: Size(180.w, 45.h),

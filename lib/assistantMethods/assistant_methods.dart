@@ -45,6 +45,7 @@ void addItemToCart(
     String? thumbnailUrl,
     String? productTitle,
     double price,
+    // double shippingFee,
     String? selectedVariationName,
     String? selectedFlavorsName,
     String? sellersUID,

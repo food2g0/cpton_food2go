@@ -44,6 +44,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
    double distanceInKm = 0.0 ;
   int initialValue = 1;
 
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +55,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
     counterTextEditingController = TextEditingController(text: initialValue.toString());
   }
+
+
 
   String getCurrentUserUID() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -105,7 +108,22 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.model?.thumbnailUrl ?? 'default_image_url.jpg';
+    if (distanceInKm == 0.0) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors().red,
+          title: Text('Calculating distance please try to click back button',
+          style: TextStyle(
+            color: AppColors().white,
+            fontSize: 12.sp
+          ),),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(),
 
+        ),
+      );
+    }else
     return Scaffold(
       backgroundColor: AppColors().white,
       appBar: PreferredSize(
@@ -438,136 +456,68 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   }
   // String? sellersUID = await fetchSellersUID();
   void _showVariationsBottomSheet(BuildContext context) {
-    Color selectedFlavorColor = Colors.red;
-    Color selectedVariationColor = Colors.red;
-
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Your bottom sheet content
-                Text(
-                  'Variations',
-                  style: TextStyle(
-                    fontSize: 10.0.sp,
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection("items")
-                      .doc(widget.model.productsID)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Variations',
+                      style: TextStyle(
+                        fontSize: 10.0.sp,
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("items")
+                          .doc(widget.model.productsID)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
 
-                    var variations = (snapshot.data!)['variations'] ?? [];
+                        var variations = (snapshot.data!)['variations'] ?? [];
 
-                    if (variations.isNotEmpty) {
-                      return Row(
-                        children: variations.map<Widget>((variation) {
-                          String variationName = variation['name'];
-                          String firstLetter = variationName.substring(0, 1);
+                        if (variations.isNotEmpty) {
+                          return Row(
+                            children: variations.map<Widget>((variation) {
+                              String variationName = variation['name'];
+                              String firstLetter = variationName.substring(0, 1);
 
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.w),
-                                ),
-                                backgroundColor: selectedVariationName == variationName
-                                    ? selectedVariationColor // Use selected color for the selected variation button
-                                    : Colors.grey,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  variationName = variationName;
-                                  selectedVariationName = variationName;
-                                  selectedVariationPrice = variation['price'];
-                                  selectedVariationColor = Colors.green;
-                                });
-                                print('Selected variation: $variationName');
-                                print('Selected price: $selectedVariationPrice');
-                              },
-                              child: Text(
-                                firstLetter,
-                                style: TextStyle(
-                                  color: AppColors().black,
-                                  fontSize: 10.sp,
-                                  fontFamily: "Poppins",
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
-                // Add your flavor widgets here
-                Text(
-                  'Flavors',
-                  style: TextStyle(
-                    fontSize: 10.0.sp,
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection("items")
-                      .doc(widget.model.productsID)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-
-                    var flavors = (snapshot.data!)['flavors'] ?? [];
-
-                    if (flavors.isNotEmpty) {
-                      return Wrap(
-                        children: flavors.map<Widget>((flavor) {
-                          String flavorsName = flavor['name'];
-                          String firstLetter = flavorsName;
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.w),
-                                color: selectedFlavorsName == flavorsName ? Colors.green : Colors.grey,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedFlavorsName = flavorsName;
-                                  });
-                                  print('Selected flavor: $flavorsName');
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.w),
+                                    ),
+                                    backgroundColor: selectedVariationName == variationName
+                                        ? Colors.green
+                                        : Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedVariationName = variationName;
+                                      selectedVariationPrice = variation['price'];
+                                    });
+                                    print('Selected variation: $variationName');
+                                    print('Selected price: $selectedVariationPrice');
+                                  },
                                   child: Text(
                                     firstLetter,
                                     style: TextStyle(
@@ -577,129 +527,204 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                                     ),
                                   ),
                                 ),
+                              );
+                            }).toList(),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
+                    Text(
+                      'Flavors',
+                      style: TextStyle(
+                        fontSize: 10.0.sp,
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("items")
+                          .doc(widget.model.productsID)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        var flavors = (snapshot.data!)['flavors'] ?? [];
+
+                        if (flavors.isNotEmpty) {
+                          return Wrap(
+                            children: flavors.map<Widget>((flavor) {
+                              String flavorsName = flavor['name'];
+                              String firstLetter = flavorsName;
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.w),
+                                    color: selectedFlavorsName == flavorsName ? Colors.green : Colors.grey,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedFlavorsName = flavorsName;
+                                      });
+                                      print('Selected flavor: $flavorsName');
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                      child: Text(
+                                        firstLetter,
+                                        style: TextStyle(
+                                          color: AppColors().black,
+                                          fontSize: 10.sp,
+                                          fontFamily: "Poppins",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (selectedVariationPrice != null)
+                            Text(
+                              'Selected Price: ${selectedVariationPrice}',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontFamily: "Poppins",
                               ),
                             ),
-                          );
-                        }).toList(),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
-                // Add your quantity widgets here
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Image.asset(
-                        'images/minus.png',
-                        width: 26.h,
-                        height: 26.h,
-                        color: AppColors().red,
+                          SizedBox(width: 10.w,),
+                          IconButton(
+                            icon: Image.asset(
+                              'images/minus.png',
+                              width: 26.h,
+                              height: 26.h,
+                              color: AppColors().red,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
+                                if (currentValue > 1) {
+                                  counterTextEditingController.text = (currentValue - 1).toString();
+                                }
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 60.w,
+                            child: TextField(
+                              controller: counterTextEditingController,
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Image.asset(
+                              'images/adds.png',
+                              width: 26.h,
+                              height: 26.h,
+                              color: AppColors().red,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
+                                if (currentValue < 5) {
+                                  counterTextEditingController.text = (currentValue + 1).toString();
+                                }
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      onPressed: () {
-                        setState(() {
-                          int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
-                          if (currentValue > 1) {
-                            counterTextEditingController.text = (currentValue - 1).toString();
-                          }
-                        });
-                      },
                     ),
-                    SizedBox(
-                      width: 60.w,
-                      child: TextField(
-                        controller: counterTextEditingController,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+                    ElevatedButton(
+                      onPressed: (selectedVariationName != null && selectedFlavorsName != null)
+                          ? () {
+                        int itemCounter = int.tryParse(counterTextEditingController.text) ?? 1;
+
+                        if (itemCounter <= 0) {
+                          Fluttertoast.showToast(msg: "Quantity must not be 0");
+                          return;
+                        }
+
+                        if (selectedVariationPrice == null || selectedFlavorsName == null) {
+                          Fluttertoast.showToast(msg: "Please choose a variation and flavor");
+                          return;
+                        }
+
+                        double price = double.tryParse(selectedVariationPrice!) ?? 0.0;
+                        if (price <= 0.0) {
+                          Fluttertoast.showToast(msg: "Please choose a valid variation price");
+                          return;
+                        }
+
+                        print("Seller's UID: ${widget.sellersUID}");
+                        addItemToCart(
+                          widget.model.productsID,
+                          context,
+                          itemCounter,
+                          widget.model.thumbnailUrl,
+                          widget.model.productTitle,
+                          price,
+                          selectedVariationName,
+                          selectedFlavorsName,
+                          widget.sellersUID,
+                        );
+                      }
+                          : null, // Disable button if either variation or flavor is not selected
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        backgroundColor: AppColors().red,
+                      ),
+                      child: Text(
+                        'Add to Cart',
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
-                    ),
-                    IconButton(
-                      icon: Image.asset(
-                        'images/adds.png',
-                        width: 26.h,
-                        height: 26.h,
-                        color: AppColors().red,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
-                          if (currentValue < 5) {
-                            counterTextEditingController.text = (currentValue + 1).toString();
-                          }
-                        });
-                      },
-                    ),
+                    )
+
                   ],
                 ),
-                // Add to cart button
-                ElevatedButton(
-                  onPressed: (selectedVariationName != null && selectedFlavorsName != null)
-                      ? () {
-                    int itemCounter = int.tryParse(counterTextEditingController.text) ?? 1;
-
-                    if (itemCounter <= 0) {
-                      Fluttertoast.showToast(msg: "Quantity must not be 0");
-                      return;
-                    }
-
-                    if (selectedVariationPrice == null) {
-                      Fluttertoast.showToast(msg: "Please choose a variation");
-                      return;
-                    }
-
-                    double price = double.tryParse(selectedVariationPrice!) ?? 0.0;
-                    if (price <= 0.0) {
-                      Fluttertoast.showToast(msg: "Please choose variation and flavor");
-                      return;
-                    }
-
-                    print("Seller's UID: ${widget.sellersUID}");
-                    addItemToCart(
-                      widget.model.productsID,
-                      context,
-                      itemCounter,
-                      widget.model.thumbnailUrl,
-                      widget.model.productTitle,
-                      price,
-                      selectedVariationName,
-                      selectedFlavorsName,
-                      widget.sellersUID,
-                    );
-                  }
-                      : () {
-                    Fluttertoast.showToast(msg: "Please choose variation and flavors");
-                  }, // Show toast if variation or flavor is not selected
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    backgroundColor: AppColors().red,
-                  ),
-                  child: Text(
-                    'Add to Cart',
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-
-
-
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
   }
+
+
+
+
 
 
 
@@ -855,5 +880,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
       print('Error adding item to favorites: $e');
     }
+  }
+  void updateDistance(double newDistance) {
+    setState(() {
+      distanceInKm = newDistance;
+    });
   }
 }

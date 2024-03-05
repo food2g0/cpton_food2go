@@ -12,6 +12,7 @@ import 'my_order_screen.dart';
 
 class CheckoutOrderScreen extends StatefulWidget {
   final double? totalAmount;
+  final double? shippingFee;
   final String? sellersUID;
   final String? addressId;
   final String? paymentMode;
@@ -22,6 +23,7 @@ class CheckoutOrderScreen extends StatefulWidget {
     this.sellersUID,
     this.addressId,
     this.paymentMode,
+    this.shippingFee,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
   void initState() {
     super.initState();
     initializeSharedPreferences();
+    print('Php${widget.shippingFee}');
   }
 
   void initializeSharedPreferences() async {
@@ -86,6 +89,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
         "riderUID": "",
         "status": "normal",
         "orderId": orderId,
+        "shippingFee": widget.shippingFee,
         // "customerName": widget.model.name,
         // "phoneNumber": widget.model.phoneNumber,
       });
@@ -101,6 +105,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
         "sellerUID": widget.sellersUID,
         "riderUID": "",
         "status": "normal",
+        "shippingFee": widget.shippingFee,
         "orderId": orderId,
         // "customerName": widget.model.name,
         // "phoneNumber": widget.model.phoneNumber,
@@ -204,12 +209,15 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(16.w),
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: selectedPaymentMethod == null
+              ? null // Disable button if payment method is not selected
+              : () {
             if (selectedPaymentMethod == "Gcash") {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (c) => PaymentScreen(
+                    shippingFee: widget.shippingFee,
                     addressID: widget.addressId,
                     totalAmount: widget.totalAmount,
                     paymentMethod: selectedPaymentMethod,
@@ -238,6 +246,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
       ),
     );
   }
+
 
 
 }
