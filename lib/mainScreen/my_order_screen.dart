@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/CustomersWidgets/Cancelled_OrderCard.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +28,7 @@ class MyOrderScreen extends StatefulWidget {
 }
 
 class _MyOrderScreenState extends State<MyOrderScreen> {
-  final List<String> _tabs = ['To Pay', 'Picking', 'Delivered', 'To Rate'];
+  final List<String> _tabs = ['To Pay', 'Order Placed', 'Picked', 'Delivered', 'Cancelled'];
   int _selectedIndex = 0;
 
   @override
@@ -36,7 +37,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
       onWillPop: () async => false,
       child: SafeArea(
         child: DefaultTabController(
-          length: _tabs.length,
+          length: 5,
           child: Scaffold(
             backgroundColor: AppColors().white1,
             appBar: AppBar(
@@ -97,6 +98,17 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                       ),
                     ),
                   ),
+                  Tab(
+                    icon: Icon(Icons.cancel, size: 16.sp),
+                    child: Text(
+                      'Cancelled',
+                      style: TextStyle(
+                        fontSize: 6.sp,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
 
                 ],
               ),
@@ -107,6 +119,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 _buildOrderListAccepted('Order Placed'),
                 _buildOrderListPick('Order Picked'),
                 _buildOrderListDelivered('Delivered'),
+                _buildOrderListCancelled('Cancelled'),
 
 
               ],
@@ -246,7 +259,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
             .collection("users")
             .doc(sharedPreferences!.getString("uid"))
             .collection("orders")
-            .where("status", isEqualTo: "accepted")
+            .where("status", isEqualTo: "normal")
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -405,13 +418,13 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
     );
   }
 
-  Widget _buildOrderListToRate(String status) {
+  Widget _buildOrderListCancelled(String status) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection("users")
           .doc(sharedPreferences!.getString("uid"))
           .collection("orders")
-          .where("status", isEqualTo: "rated")
+          .where("status", isEqualTo: "cancel")
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -440,7 +453,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
 
             return Column(
               children: [
-                DeliveredOrderCard(
+                CancelledOrderCard(
                   itemCount: productList.length,
                   data: productList,
                   orderID: snapshot.data!.docs[index].id,

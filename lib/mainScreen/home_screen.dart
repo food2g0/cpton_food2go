@@ -16,6 +16,7 @@ import '../assistantMethods/message_counter.dart';
 import '../global/global.dart';
 import '../models/items.dart';
 import '../models/menus.dart';
+import '../push_notification/push_notification_system.dart';
 import '../theme/colors.dart';
 import 'SearchResultScreen.dart';
 import 'cart_screen.dart';
@@ -72,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchStoreLocation();
+    readCurrentRiderInformation();
     // Initialize the _pages list here
     _pages = [
       const FoodPageBody(),
@@ -79,6 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
       NotificationScreen(),
       ChatScreen(),
     ];
+  }
+  readCurrentRiderInformation()async
+  {
+    PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
+    pushNotificationSystem.initializeCloudMessaging();
+    pushNotificationSystem.generatingAndGetToken();
   }
   Future<void> _fetchStoreLocation() async {
     // Fetch the store location from Firestore collection
