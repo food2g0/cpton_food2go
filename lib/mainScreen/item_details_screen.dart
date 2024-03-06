@@ -41,9 +41,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   Color? selectedFlavorColor;
   Color? selectedVariationColor;
   late TextEditingController counterTextEditingController;
-   double distanceInKm = 0.0 ;
+  double distanceInKm = 0.0 ;
   int initialValue = 1;
-
 
   @override
   void initState() {
@@ -56,8 +55,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     counterTextEditingController = TextEditingController(text: initialValue.toString());
   }
 
-
-
   String getCurrentUserUID() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -69,7 +66,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   }
 
 
-
   double calculateShippingFee(double distanceInKm) {
     if (distanceInKm <= 4) {
       // If distance is less than or equal to 5km, shipping fee is 50
@@ -79,10 +75,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       return 50.0 + (distanceInKm - 4) * 10.0;
     }
   }
-
-// Inside the build method, you can call this method to get the shipping fee
-// Replace the line where you set the text for shipping cost with the following:
-
 
 
   // Function to calculate average rating from Firestore document snapshots
@@ -108,22 +100,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.model?.thumbnailUrl ?? 'default_image_url.jpg';
-    if (distanceInKm == 0.0) {
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors().red,
-          title: Text('Calculating distance please try to click back button',
-          style: TextStyle(
-            color: AppColors().white,
-            fontSize: 12.sp
-          ),),
-        ),
-        body: Center(
-          child: CircularProgressIndicator(),
 
-        ),
-      );
-    }else
     return Scaffold(
       backgroundColor: AppColors().white,
       appBar: PreferredSize(
@@ -724,11 +701,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
 
 
-
-
-
-
-
   Widget buildReviewItem(Map<String, dynamic> reviewData) {
     return Padding(
       padding: EdgeInsets.all(12.0),
@@ -880,10 +852,5 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
       print('Error adding item to favorites: $e');
     }
-  }
-  void updateDistance(double newDistance) {
-    setState(() {
-      distanceInKm = newDistance;
-    });
   }
 }

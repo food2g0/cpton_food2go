@@ -21,9 +21,8 @@ class CheckOut extends StatefulWidget {
   final dynamic model;
   final String? addressId;
   final String? paymentMode;
-  final double? shippingFee;
 
-  CheckOut({this.sellersUID, this.totalAmount, this.model, this.addressId, this.paymentMode, this.shippingFee});
+  CheckOut({this.sellersUID, this.totalAmount, this.model, this.addressId, this.paymentMode});
 
   @override
   State<CheckOut> createState() => _CheckOutState();
@@ -46,7 +45,6 @@ class _CheckOutState extends State<CheckOut> {
     sharedPreferences = await SharedPreferences.getInstance();
     String? uid = sharedPreferences?.getString("uid");
     print("User UID: $uid");
-    print(widget.shippingFee);
   }
 
 
@@ -127,7 +125,6 @@ class _CheckOutState extends State<CheckOut> {
                                       addressId: snapshot.data!.docs[index].id,
                                       totalAmount: widget.totalAmount,
                                       sellersUID: widget.sellersUID,
-                                      shippingFee: widget.shippingFee,
                                       model: Address.fromJson(
                                         snapshot.data!.docs[index].data()! as Map<String, dynamic>,
                                       ),

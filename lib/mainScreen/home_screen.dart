@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'images/home.png',
-                     // Replace 'path_to_home_icon' with the path to your home icon asset
+                      // Replace 'path_to_home_icon' with the path to your home icon asset
                       width: 20.w, // Adjust width as needed
                       height: 20.h, // Adjust height as needed
                     ),
@@ -223,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar:
           AppBar(
             backgroundColor: AppColors().backgroundWhite,
-          toolbarHeight: 90.h,
+            toolbarHeight: 90.h,
             iconTheme: IconThemeData(color: AppColors().white),
             elevation: 0.0,
             flexibleSpace: ClipPath(
@@ -339,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-           
+
           ),
 
           drawer:  CustomersDrawer(),
@@ -572,7 +572,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       backgroundColor: AppColors().backgroundWhite,
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: AppColors().white
+            color: AppColors().white
         ),
         title: Text(
           'Favorites',
@@ -607,9 +607,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 child: Text(
                   'No items in favorites.',
                   style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors().black1
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors().black1
                   ),
                 ),
               );

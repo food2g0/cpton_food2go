@@ -24,16 +24,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
 
-  @override
-  void initState() {
-    super.initState();
 
-    // Print the values when the widget is initialized
-    print('Total Amount: ${widget.totalAmount}');
-    print('Payment Method: ${widget.paymentMethod}');
-    print('Address ID: ${widget.addressID}');
-    print('Sellers ID: ${widget.sellersUID}');
-  }
 
 
   TextEditingController referenceNumberController = TextEditingController();
@@ -81,7 +72,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         "riderUID": "",
         "status": "ToPay",
         "orderId": orderId,
-        "shippingFee": widget.shippingFee
+        "referenceNumber": referenceNumberController.text
       });
 
       // Add order details for seller
@@ -97,7 +88,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         "riderUID": "",
         "status": "ToPay",
         "orderId": orderId,
-        "shippingFee": widget.shippingFee
+        "referenceNumber": referenceNumberController.text
       });
 
       // Clear the cart
