@@ -207,6 +207,7 @@ class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddres
       var sellerUID = orderSnapshot["sellerUID"];
       var totalAmount = orderSnapshot["totalAmount"];
       var referenceNumber = orderSnapshot["referenceNumber"];
+      var reason = orderSnapshot["disapprovalReason"];
 
       if (sellerUID is String && products is List<dynamic>) {
         List<String> foodItemIDs = [];
@@ -233,6 +234,7 @@ class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddres
           MaterialPageRoute(
             builder: (context) => ChangeReference(
   totalAmount: totalAmount,
+                reason: reason,
               orderId: widget.orderID,
               referenceNumber: referenceNumber
             ),

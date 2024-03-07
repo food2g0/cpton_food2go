@@ -10,10 +10,11 @@ import '../theme/colors.dart';
 class ChangeReference extends StatefulWidget {
   final double? totalAmount;
   final String? referenceNumber;
+  final String? reason;
   late final String? orderId;
 
 
-  ChangeReference({this.totalAmount, this.referenceNumber, this.orderId, });
+  ChangeReference({this.totalAmount, this.referenceNumber, this.orderId, this.reason, });
 
   @override
   State<ChangeReference> createState() => _ChangeReferenceState();
@@ -89,6 +90,8 @@ print(widget.orderId);
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Total Amount: ${totalAmount}'),
+            SizedBox(height: 16),
+            Text('Reason of Disaaproval : ${widget.reason}'),
             SizedBox(height: 16),
             Text('Previous Reference Number: ${widget.referenceNumber}'),
             SizedBox(height: 16),
