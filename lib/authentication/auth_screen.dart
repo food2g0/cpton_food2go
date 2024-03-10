@@ -256,7 +256,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             style: TextStyle(
                               color: AppColors().black,
                               fontFamily: "Poppins",
-                              fontSize: 8.sp,
+                              fontSize: 10.sp,
                             ),
                           ),
 
