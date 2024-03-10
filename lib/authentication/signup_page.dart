@@ -40,6 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
   var verificationId = ''.obs;
   bool isPasswordVisible = false;
   bool isPasswordVisible1 = false;
+  bool _isLoading = false;
 
   XFile? imageXFile;
   final ImagePicker _picker = ImagePicker();
@@ -53,6 +54,51 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<void> _getImage() async {
     imageXFile = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {});
+  }
+
+
+  void _getCurrentLocationWithPermissionCheck() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dialog from closing when tapped outside
+      builder: (context) => AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(), // Loading indicator
+            SizedBox(width: 20),
+            Text("Fetching location details..."),
+          ],
+        ),
+      ),
+    );
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        Navigator.of(context).pop(); // Close the loading dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Location Access Denied'),
+            content: Text('Please grant location access to use this feature.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+    }
+    getCurrentLocation();
   }
 
   getCurrentLocation() async {
@@ -73,7 +119,11 @@ class _SignUpPageState extends State<SignUpPage> {
     '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
 
     locationController.text = completeAddress;
+
+    // Close the loading dialog
+    Navigator.of(context).pop();
   }
+
 
 
 
@@ -318,6 +368,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         data: Icons.person,
                         keyboardType: TextInputType.text,
                         hintText: "Enter your Full Name",
+                        hintStyle: TextStyle(
+                          color: AppColors().black1,
+                          fontFamily: "Poppins",
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        inputTextStyle: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors().black,
+                          fontSize: 12.sp,
+                        ),
                         isObscure: false,
                       ),
                       SizedBox(height: 10.h),
@@ -325,6 +386,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         controller: emailController,
                         data: Icons.email,
                         hintText: "Enter your Email",
+                        hintStyle: TextStyle(
+                          color: AppColors().black1,
+                          fontFamily: "Poppins",
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        inputTextStyle: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors().black,
+                          fontSize: 12.sp,
+                        ),
                         isObscure: false,
                       ),
                       SizedBox(height: 10.h),
@@ -333,6 +405,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         data: Icons.phone_android,
                         keyboardType: TextInputType.number,
                         hintText: "Enter your Phone Number",
+                        hintStyle: TextStyle(
+                          color: AppColors().black1,
+                          fontFamily: "Poppins",
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        inputTextStyle: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors().black,
+                          fontSize: 12.sp,
+                        ),
                         isObscure: false,
                       ),
                       SizedBox(height: 10.h),
@@ -399,6 +482,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         data: Icons.location_city,
                         hintText: "Enter your Address",
                         isObscure: false,
+                        hintStyle: TextStyle(
+                          color: AppColors().black1,
+                          fontFamily: "Poppins",
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        inputTextStyle: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors().black,
+                          fontSize: 12.sp,
+                        ),
                         enabled: true,
                       ),
                       SizedBox(height: 10.h),
@@ -407,26 +501,30 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 40.h,
                           alignment: Alignment.center,
                           child: ElevatedButton.icon(
-                            label:  Text(
-                              ("Get my current location")
-                              ,
-                              style: TextStyle(color: AppColors().white,
-                                  fontFamily: "Poppins",
-                                  fontSize: 12.sp),
+                            label: Text(
+                              "Get my current location",
+                              style: TextStyle(
+                                color: AppColors().white,
+                                fontFamily: "Poppins",
+                                fontSize: 12.sp,
+                              ),
                             ),
                             icon: Icon(
                               Icons.location_on,
                               color: AppColors().red,
                             ),
                             onPressed: () {
-                              getCurrentLocation();
+                              _getCurrentLocationWithPermissionCheck(); // Call the method to get current location with permission check
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors().black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                )),
-                          ))
+                              backgroundColor: AppColors().black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          )
+
+                      )
                     ],
                   ),
                 ),

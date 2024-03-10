@@ -215,7 +215,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 return AlertDialog(
                                   title: Text("Terms and Conditions", style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 8.sp,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.bold
 
                                   ),),
@@ -226,16 +226,16 @@ class _AuthScreenState extends State<AuthScreen> {
                                         Text(
                                           "1. We regret to inform you that order cancellation is not supported at this time.",
                                           style: TextStyle(fontFamily: "Poppins",
-                                              fontSize: 8.sp),
+                                              fontSize: 10.sp),
                                         ),
                                         SizedBox(height: 5,),
                                         Text(
                                             "2. By placing an order, you agree to pay for the items ordered. ", style: TextStyle(fontFamily: "Poppins",
-                                        fontSize: 8.sp),),
+                                        fontSize: 10.sp),),
                                         SizedBox(height: 5,),
                                         Text(
                                           "3. Non-payment for orders may result in suspension or termination of your account", style: TextStyle(fontFamily: "Poppins",
-                                            fontSize: 8.sp),),
+                                            fontSize: 10.sp),),
                                       ],
                                     ),
                                   ),
@@ -269,7 +269,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20),
+              padding: const EdgeInsets.only(left: 20, top: 10),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: RichText(
@@ -335,7 +335,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 style: TextStyle(
                   color: AppColors().black1,
                   fontFamily: "Poppins",
-                  fontSize: 15.sp,
+                  fontSize: 12.sp,
                 ),
                 children: [
                   TextSpan(
@@ -343,7 +343,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     style: TextStyle(
                       fontFamily: "Poppins",
                       color: AppColors().black,
-                      fontSize: 16.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                     ),
                     recognizer: TapGestureRecognizer()
