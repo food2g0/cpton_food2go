@@ -40,12 +40,13 @@ class _CategoryDesignWidgetState extends State<CategoryDesignWidget> {
   }
 
   void _convertDistanceToKm() {
-    if (distanceInMeter != null) {
+    if (mounted && distanceInMeter != null) { // Check if the widget is still mounted
       setState(() {
         distanceInKm = distanceInMeter! / 1000; // Convert meters to kilometers
       });
     }
   }
+
 
   @override
   void initState() {

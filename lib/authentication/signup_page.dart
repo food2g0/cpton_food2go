@@ -38,6 +38,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController otpController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   var verificationId = ''.obs;
+  bool isPasswordVisible = false;
+  bool isPasswordVisible1 = false;
 
   XFile? imageXFile;
   final ImagePicker _picker = ImagePicker();
@@ -314,6 +316,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       CustomTextField(
                         controller: nameController,
                         data: Icons.person,
+                        keyboardType: TextInputType.text,
                         hintText: "Enter your Full Name",
                         isObscure: false,
                       ),
@@ -328,22 +331,67 @@ class _SignUpPageState extends State<SignUpPage> {
                       CustomTextField(
                         controller: phoneController,
                         data: Icons.phone_android,
+                        keyboardType: TextInputType.number,
                         hintText: "Enter your Phone Number",
                         isObscure: false,
                       ),
                       SizedBox(height: 10.h),
                       CustomTextField(
-                        controller: passwordController,
                         data: Icons.password,
                         hintText: "Enter your Password",
-                        isObscure: true,
+                        hintStyle: TextStyle(
+                          color: AppColors().black1,
+                          fontFamily: "Poppins",
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        inputTextStyle: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors().black,
+                          fontSize: 12.sp,
+                        ),
+                        isObscure: !isPasswordVisible, // Pass the opposite of isPasswordVisible to control password visibility
+                        controller: passwordController,
+                        suffixIcon: IconButton( // Add suffixIcon property
+                          onPressed: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible; // Toggle the visibility
+                            });
+                          },
+                          icon: Icon(
+                            isPasswordVisible ? Icons.visibility : Icons.visibility_off, // Show different icon based on password visibility
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
                       SizedBox(height: 10.h),
                       CustomTextField(
+                        data: Icons.password,
+                        hintText: "Enter your Password",
+                        hintStyle: TextStyle(
+                          color: AppColors().black1,
+                          fontFamily: "Poppins",
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        inputTextStyle: TextStyle(
+                          fontFamily: "Poppins",
+                          color: AppColors().black,
+                          fontSize: 12.sp,
+                        ),
+                        isObscure: !isPasswordVisible1, // Pass the opposite of isPasswordVisible to control password visibility
                         controller: confirmPasswordController,
-                        data: Icons.password_rounded,
-                        hintText: "Confirm your Password",
-                        isObscure: true,
+                        suffixIcon: IconButton( // Add suffixIcon property
+                          onPressed: () {
+                            setState(() {
+                              isPasswordVisible1 = !isPasswordVisible1; // Toggle the visibility
+                            });
+                          },
+                          icon: Icon(
+                            isPasswordVisible1 ? Icons.visibility : Icons.visibility_off, // Show different icon based on password visibility
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
                       SizedBox(height: 10.h),
                       CustomTextField(
@@ -368,7 +416,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             icon: Icon(
                               Icons.location_on,
-                              color: AppColors().black,
+                              color: AppColors().red,
                             ),
                             onPressed: () {
                               getCurrentLocation();
@@ -376,7 +424,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors().black,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(10),
                                 )),
                           ))
                     ],

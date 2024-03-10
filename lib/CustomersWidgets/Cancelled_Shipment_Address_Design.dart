@@ -43,14 +43,7 @@ class CancelledShipmentAddressDesign extends StatefulWidget {
 }
 
 class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddressDesign> {
-  final loc.Location location = loc.Location();
-  StreamSubscription<loc.LocationData>? _locationSubscription;
 
-  @override
-  void initState() {
-    super.initState();
-    _requestPermission();
-  }
 
 
 
@@ -116,7 +109,7 @@ class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddres
           Container(
             height: 100.h,
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("location").limit(1).snapshots(),
+              stream: FirebaseFirestore.instance.collection("orders").where("orderId", isEqualTo: widget.orderID).limit(1).snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
@@ -132,7 +125,7 @@ class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddres
                       child: Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            fetchData(); // Fetch data when the button is pressed
+                            fetchData(snapshot.data!.docs[index].id); // Fetch data when the button is pressed, pass the orderId
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF31572c),
@@ -152,6 +145,7 @@ class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddres
                 );
               },
             ),
+
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),
@@ -184,17 +178,8 @@ class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddres
     );
   }
 
-  _requestPermission() async {
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      print('done');
-    } else if (status.isDenied) {
-      _requestPermission();
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-    }
-  }
-  Future<void> fetchData() async {
+
+  Future<void> fetchData(String id) async {
     DocumentSnapshot orderSnapshot = await FirebaseFirestore.instance
         .collection("orders")
         .doc(widget.orderID)
@@ -235,7 +220,7 @@ class _CancelledShipmentAddressDesignState extends State<CancelledShipmentAddres
             builder: (context) => ChangeReference(
   totalAmount: totalAmount,
                 reason: reason,
-              orderId: widget.orderID,
+              orderId: orderID,
               referenceNumber: referenceNumber
             ),
           ),
