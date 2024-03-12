@@ -34,14 +34,17 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=>HomeScreen()));
+        return false;
+      },
       child: SafeArea(
         child: DefaultTabController(
           length: 5,
           child: Scaffold(
             backgroundColor: AppColors().white1,
             appBar: AppBar(
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
               backgroundColor: AppColors().red,
               title:  Text(
                 "Orders",
@@ -76,7 +79,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                     ),
                   ),
                   Tab(
-                    icon: Icon(Icons.delivery_dining, size: 16.sp),
+                    icon: Icon(Icons.check, size: 16.sp),
                     child: Text(
                       'Picked',
                       style: TextStyle(
@@ -124,72 +127,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
 
               ],
             ),
-            bottomNavigationBar: Theme(
-              data: Theme.of(context).copyWith(
-                canvasColor: AppColors().white,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors().red,
-                  ),
-                  child: BottomNavigationBar(
-                    items: <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                        icon: Image.asset(
-                          'images/home.png',
-                          // Replace 'path_to_home_icon' with the path to your home icon asset
-                          width: 24.w, // Adjust width as needed
-                          height: 24.h, // Adjust height as needed
-                        ),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Image.asset(
-                          'images/heart.png', // Replace 'path_to_favorites_icon' with the path to your favorites icon asset
-                          width: 24, // Adjust width as needed
-                          height: 24, // Adjust height as needed
-                        ),
-                        label: 'Favorites',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Image.asset(
-                          'images/bell.png', // Replace 'path_to_notifications_icon' with the path to your notifications icon asset
-                          width: 24, // Adjust width as needed
-                          height: 24, // Adjust height as needed
-                        ),
-                        label: 'Notification',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Image.asset(
-                          'images/message.png', // Replace 'path_to_messages_icon' with the path to your messages icon asset
-                          width: 24, // Adjust width as needed
-                          height: 24, // Adjust height as needed
-                        ),
-                        label: 'Messages',
-                      ),
-                    ],
-                    currentIndex: _selectedIndex,
-                    selectedItemColor: AppColors().red,
-                    unselectedItemColor: AppColors().black1,
-                    selectedLabelStyle:  TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Poppins",
-                      fontSize: 10.sp,
-                    ),
-                    unselectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Poppins",
-                    ),
-                    onTap: _onItemTapped,
-                  ),
-                ),
-              ),
-            ),
+
           ),
         ),
       ),
@@ -207,7 +145,12 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(
+              child: SizedBox(
+                  height: 24.h,
+                  width: 24.w,
+                  child: CircularProgressIndicator()),
+            );
           }
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -263,7 +206,12 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(
+              child: SizedBox(
+                  height: 24.h,
+                  width: 24.w,
+                  child: CircularProgressIndicator()),
+            );
           }
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -374,7 +322,12 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(
+            child: SizedBox(
+                height: 24.h,
+                width: 24.w,
+                child: CircularProgressIndicator()),
+          );
         }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -428,7 +381,12 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(
+            child: SizedBox(
+                height: 24.h,
+                width: 24.w,
+                child: CircularProgressIndicator()),
+          );
         }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');

@@ -1,4 +1,5 @@
 
+import 'package:cpton_foodtogo/mainScreen/about_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -119,6 +120,7 @@ class CustomersDrawer extends StatelessWidget {
               ),),
             onTap: () {
               // Handle the About item tap
+              Navigator.push(context, MaterialPageRoute(builder: (c)=>AboutScreen()));
             },
           ),
           ListTile(

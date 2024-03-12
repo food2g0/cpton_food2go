@@ -35,7 +35,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
           child: Column(
             children: [
               SizedBox(
-                height: 120.h,
+                height: 100.h,
                 width: 200.w,
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
@@ -118,35 +118,7 @@ class _FavoriteDesignWidgetState extends State<FavoriteDesignWidget> {
                 ),
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
 
-                  Padding(
-                    padding: EdgeInsets.all(4.0.w),
-                    child: Container(
-                      height: 40.h,
-                      width: 60.w,
-                      child: InkWell(
-                        onTap: () {
-                          // ... existing onTap code
-                          if (widget.onRemove != null) {
-                            widget.onRemove!();
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0.w),
-                          child: Icon(
-                            Icons.delete_outline,
-                            size: 28.sp,
-                            color: AppColors().red,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

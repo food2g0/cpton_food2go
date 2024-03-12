@@ -139,113 +139,151 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors().red,
-        title: Text(
-          "Payment",
-          style: TextStyle(
-            fontFamily: "Poppins",
-            fontSize: 12.sp,
-            color: AppColors().white1,
-          ),
-        ),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(16.w),
-        color: Colors.grey[200],
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Choose Payment Method:",
-              style: TextStyle(
-                color: AppColors().black,
-                fontFamily: "Poppins",
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            // Radio buttons for payment methods
-            RadioListTile(
-              title: Text(
-                "Pay with Gcash",
-                style: TextStyle(
-                  color: AppColors().black,
-                  fontFamily: "Poppins",
-                  fontSize: 12.sp,
-                ),
-              ),
-              value: "Gcash",
-              groupValue: selectedPaymentMethod,
-              onChanged: (value) {
-                setState(() {
-                  selectedPaymentMethod = value as String?;
-                });
-              },
-            ),
-            RadioListTile(
-              title: Text(
-                "Cash on Delivery",
-                style: TextStyle(
-                  color: AppColors().black,
-                  fontFamily: "Poppins",
-                  fontSize: 12.sp,
-                ),
-              ),
-              value: "CashOnDelivery",
-              groupValue: selectedPaymentMethod,
-              onChanged: (value) {
-                setState(() {
-                  selectedPaymentMethod = value as String?;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: ElevatedButton(
-          onPressed: selectedPaymentMethod == null
-              ? null // Disable button if payment method is not selected
-              : () {
-            if (selectedPaymentMethod == "Gcash") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (c) => PaymentScreen(
-                    shippingFee: widget.shippingFee,
-                    addressID: widget.addressId,
-                    totalAmount: widget.totalAmount,
-                    paymentMethod: selectedPaymentMethod,
-                    sellersUID: widget.sellersUID,
+    return FutureBuilder<bool>(
+      future: ordersIsEmpty(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Display a loading indicator while fetching data
+          return Center(
+            child: SizedBox(
+              height: 24.h,
+                width: 24.w,
+                child: CircularProgressIndicator()),
+          );
+        } else {
+          if (snapshot.hasError) {
+            // Display an error message if fetching data fails
+            return Text('Error: ${snapshot.error}');
+          } else {
+            // Display the screen based on the fetched data
+            final bool isOrdersEmpty = snapshot.data ?? true;
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: AppColors().red,
+                title: Text(
+                  "Payment",
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 12.sp,
+                    color: AppColors().white1,
                   ),
                 ),
-              );
-            } else {
-              addOrderDetails(context);
-            }
-          },
-          child: Text(
-            "Place Order",
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: "Poppins",
-              fontSize: 12.sp,
-            ),
-          ),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: AppColors().red,
-            minimumSize: Size(200.w, 50.h),
-          ),
-        ),
-      ),
+              ),
+              body: Container(
+                padding: EdgeInsets.all(16.w),
+                color: Colors.grey[200],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Choose Payment Method:",
+                      style: TextStyle(
+                        color: AppColors().black,
+                        fontFamily: "Poppins",
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    // Radio buttons for payment methods
+                    RadioListTile(
+                      title: Text(
+                        "Pay with Gcash",
+                        style: TextStyle(
+                          color: AppColors().black,
+                          fontFamily: "Poppins",
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                      value: "Gcash",
+                      groupValue: selectedPaymentMethod,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedPaymentMethod = value as String?;
+                        });
+                      },
+                    ),
+                    if (!isOrdersEmpty) // Check if orders collection is empty
+                      RadioListTile(
+                        title: Text(
+                          "Cash on Delivery",
+                          style: TextStyle(
+                            color: AppColors().black,
+                            fontFamily: "Poppins",
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                        value: "CashOnDelivery",
+                        groupValue: selectedPaymentMethod,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPaymentMethod = value as String?;
+                          });
+                        },
+                      ),
+                  ],
+                ),
+              ),
+              bottomNavigationBar: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: ElevatedButton(
+                  onPressed: selectedPaymentMethod == null
+                      ? null // Disable button if payment method is not selected
+                      : () {
+                    if (selectedPaymentMethod == "Gcash") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (c) => PaymentScreen(
+                            shippingFee: widget.shippingFee,
+                            addressID: widget.addressId,
+                            totalAmount: widget.totalAmount,
+                            paymentMethod: selectedPaymentMethod,
+                            sellersUID: widget.sellersUID,
+                          ),
+                        ),
+                      );
+                    } else {
+                      addOrderDetails(context);
+                    }
+                  },
+                  child: Text(
+                    "Place Order",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: "Poppins",
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors().red,
+                    minimumSize: Size(200.w, 50.h),
+                  ),
+                ),
+              ),
+            );
+          }
+        }
+      },
     );
   }
+
+
+  Future<bool> ordersIsEmpty() async {
+    // Retrieve documents within the orders collection
+    QuerySnapshot<Map<String, dynamic>> ordersSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("orders")
+        .get();
+
+    // Check if there are any documents present
+    return ordersSnapshot.docs.isEmpty;
+  }
+
 
 
 

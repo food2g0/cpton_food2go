@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 import 'dart:math';
 import '../assistantMethods/assistant_methods.dart';
@@ -43,10 +44,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   late TextEditingController counterTextEditingController;
   double distanceInKm = 0.0 ;
   int initialValue = 1;
+  bool isFavorite = false;
 
   @override
   void initState() {
     super.initState();
+    checkIfFavorite();
     distanceInKm = widget.distanceInKm as double;
     customersUID = getCurrentUserUID(); // Initialize customersUID in initState
     print('Debug: customersUID in initState: $customersUID');
@@ -54,6 +57,75 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
     counterTextEditingController = TextEditingController(text: initialValue.toString());
   }
+  Future<void> checkIfFavorite() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isFavorite = prefs.getBool(widget.model.productsID) ?? false;
+    });
+  }
+
+  Future<void> toggleFavorite(String productId, String customersUID) async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      if (isFavorite) {
+        // Remove from favorites
+        await FirebaseFirestore.instance
+            .collection('favorites')
+            .doc(customersUID)
+            .collection('items')
+            .doc(productId)
+            .delete();
+        Fluttertoast.showToast(
+          msg: 'Item removed from favorites',
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 12,
+        );
+      } else {
+        // Add to favorites
+        await FirebaseFirestore.instance
+            .collection('favorites')
+            .doc(customersUID)
+            .collection('items')
+            .doc(productId)
+            .set({
+          'productsID': widget.model.productsID,
+          'thumbnailUrl': widget.model.thumbnailUrl,
+          'productTitle': widget.model.productTitle,
+          'productPrice': widget.model.productPrice,
+          'productQuantity': widget.model.productQuantity,
+          'productDescription': widget.model.productDescription,
+          'menuID': widget.model.menuID,
+          'sellersUID': widget.sellersUID,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        Fluttertoast.showToast(
+          msg: 'Item added to favorites',
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: AppColors().red,
+          textColor: Colors.white,
+          fontSize: 12,
+        );
+      }
+
+      setState(() {
+        isFavorite = !isFavorite;
+      });
+      await prefs.setBool(productId, isFavorite); // Store favorite status locally
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error toggling favorites: $e',
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 12,
+      );
+      print('Error toggling favorites: $e');
+    }
+  }
+
+
 
   String getCurrentUserUID() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -104,71 +176,92 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     return Scaffold(
       backgroundColor: AppColors().white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(200.0), // Set the preferred height of the AppBar
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0, // Remove elevation
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-            ),
-            child: ClipRRect(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                  ),
-                ],
+          preferredSize: Size.fromHeight(200.0), // Set the preferred height of the AppBar
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: IconButton( // Add leading property to specify the back button
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.white, // Set the color to white
               ),
             ),
-          ),
-          actions: [
-            Stack(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (c) => CartScreen( calculateShippingFee: calculateShippingFee,distanceInKm: distanceInKm,sellersUID: widget.model!.sellersUID),
-                      ),
-                    );
-                  },
-                  icon: Icon(
-                    Icons.shopping_cart_rounded,
-                    color: AppColors().white,
-                  ),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.7), // Change the opacity or color as needed
+                    Colors.transparent,
+                  ],
                 ),
-                Positioned(
-                  top: 2,
-                  right: 2,
-                  child: Consumer<CartItemCounter>(
-                    builder: (context, counter, c) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors().white,
-                        ),
-                        padding: EdgeInsets.all(4.0.w), // Adjust the padding as needed
-                        child: Text(
-                          counter.count.toString(),
-                          style: TextStyle(
-                            color: AppColors().red,
-                            fontWeight: FontWeight.w900,
+              ),
+              child: ClipRRect(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                    Container(),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (c) => CartScreen(
+                            calculateShippingFee: calculateShippingFee,
+                            distanceInKm: distanceInKm,
+                            sellersUID: widget.model!.sellersUID,
                           ),
                         ),
                       );
                     },
+                    icon: Icon(
+                      Icons.shopping_cart_rounded,
+                      color: Colors.white,
+                    ),
                   ),
-                )
-              ],
-            ),
-          ],
-        ),
+                  Positioned(
+                    top: 2,
+                    right: 2,
+                    child: Consumer<CartItemCounter>(
+                      builder: (context, counter, c) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          padding: EdgeInsets.all(4.0.w),
+                          child: Text(
+                            counter.count.toString(),
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+          )
       ),
+
       body: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -231,12 +324,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  addToFavorites(widget.model.productsID, customersUID);
+                                  toggleFavorite(widget.model.productsID, customersUID);
                                 },
                                 child: Icon(
-                                  Icons.favorite_border,
-                                  size: 30.0.sp,
-                                  color: AppColors().red,
+                                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                                  size: 30.0,
+                                  color: isFavorite ? Colors.red : Colors.grey, // Change the colors as needed
                                 ),
                               ),
                             ],
@@ -816,6 +909,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   }
 
   Future<void> addToFavorites(String productsID, String customersUID) async {
+    final prefs = await SharedPreferences.getInstance();
     try {
       await FirebaseFirestore.instance
           .collection('favorites')
@@ -833,6 +927,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         'sellersUID': widget.sellersUID,
         'timestamp': FieldValue.serverTimestamp(),
       });
+      setState(() {
+        isFavorite = true;
+      });
       Fluttertoast.showToast(
         msg: 'Item added to favorites',
         gravity: ToastGravity.BOTTOM,
@@ -840,8 +937,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         textColor: Colors.white,
         fontSize: 12.sp,
       );
+      await prefs.setBool(productsID, true); // Store favorite status locally
 
-      print('Item added to favorites');
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Error adding item to favorites: $e',

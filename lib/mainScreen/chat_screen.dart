@@ -50,21 +50,35 @@ class _ChatScreenState extends State<ChatScreen> {
 
 
     return WillPopScope(
-      onWillPop: () async => false, // Disable back button
+      onWillPop: () async {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=>HomeScreen()));
+        return false;
+      },
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: AppColors().red,
-          title: Text('Messages',
-          style: TextStyle(color: AppColors().white,
-          fontSize: 12.sp,
-          fontFamily: "Poppins"),),
+          title: Text(
+            'Messages',
+            style: TextStyle(
+                color: AppColors().white,
+                fontSize: 12.sp,
+                fontFamily: "Poppins"
+            ),
+          ),
         ),
+
         body: FutureBuilder(
           future: Provider.of<ChatRoomProvider>(context, listen: false)
               .fetchUnseenMessagesCount(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: SizedBox(
+                    height: 24.h,
+                    width: 24.w,
+                    child: CircularProgressIndicator()),
+              );;
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
@@ -119,7 +133,12 @@ class _ChatScreenState extends State<ChatScreen> {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return Center(
+                child: SizedBox(
+                    height: 24.h,
+                    width: 24.w,
+                    child: CircularProgressIndicator()),
+              );;
             }
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');

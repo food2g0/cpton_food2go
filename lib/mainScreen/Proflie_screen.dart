@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,8 +39,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // Handle edit profile action
-              // You can navigate to an edit profile screen or show a modal bottom sheet for editing
+              // Show modal bottom sheet for editing
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => EditProfileSheet(userData: _userData),
+              );
             },
             icon: Icon(
               Icons.edit,
@@ -104,3 +106,105 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+class EditProfileSheet extends StatefulWidget {
+  final Future<DocumentSnapshot<Map<String, dynamic>>> userData;
+
+  const EditProfileSheet({Key? key, required this.userData}) : super(key: key);
+
+  @override
+  _EditProfileSheetState createState() => _EditProfileSheetState();
+}
+
+class _EditProfileSheetState extends State<EditProfileSheet> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial values for controllers based on user data
+    widget.userData.then((snapshot) {
+      Map<String, dynamic> userData = snapshot.data()!;
+      _nameController.text = userData['customersName'];
+      _emailController.text = userData['customersEmail'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 16.0,
+          right: 16.0,
+          top: 16.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Edit Profile',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            ElevatedButton(
+              onPressed: () {
+                // Implement update profile logic here
+                // For simplicity, just print the new values
+                print('Name: ${_nameController.text}');
+                print('Email: ${_emailController.text}');
+
+                // Save changes to the database
+                FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
+                  'customersName': _nameController.text,
+                  'customersEmail': _emailController.text,
+                }).then((value) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Profile updated successfully!'),
+                  ));
+                  Navigator.pop(context); // Close the bottom sheet after saving changes
+                }).catchError((error) {
+                  print('Failed to update profile: $error');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Failed to update profile. Please try again.'),
+                  ));
+                });
+              },
+              child: Text('Save Changes'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+}
+
