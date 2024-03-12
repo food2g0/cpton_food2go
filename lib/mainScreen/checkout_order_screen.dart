@@ -36,17 +36,75 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
 
   SharedPreferences? sharedPreferences;
   bool showAllAddresses = false; // Flag to show all addresses
+  int availableRiders = 0; // Variable to hold the count of available riders
 
   @override
   void initState() {
     super.initState();
     initializeSharedPreferences();
-    print('Php${widget.shippingFee}');
+    fetchAvailableRiders(); // Fetch available riders count
   }
 
   void initializeSharedPreferences() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
+  void fetchAvailableRiders() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> ridersSnapshot = await FirebaseFirestore.instance
+          .collection("riders")
+          .where("availability", isEqualTo: "yes") // Filter by availability
+          .get();
+
+      setState(() {
+        availableRiders = ridersSnapshot.size; // Get the count of available riders
+      });
+
+      if (availableRiders == 0) {
+        // Show an alert dialog if no riders are available
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("No Available Riders", style: TextStyle(fontFamily: "Poppins",
+            fontSize: 12.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors().black),),
+            content: Text("There are no available riders right now. Do you want to continue?",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              fontSize: 10.sp,
+              fontWeight: FontWeight.normal,
+              color: AppColors().black
+            ),),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("Cancel",
+                style: TextStyle(color: AppColors().red,
+                fontFamily: "Poppins"),),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Add logic to handle continuation
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("Continue",
+                style: TextStyle(
+                  color: AppColors().green,
+                  fontFamily: "Poppins"
+                ),),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (error) {
+      print("Error fetching available riders: $error");
+    }
+  }
+
+
 
   Future<void> addOrderDetails(BuildContext context) async {
     if (sharedPreferences == null) return;
@@ -264,6 +322,12 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
                   ),
                 ),
               ),
+              persistentFooterButtons: [
+                Text("Available Riders: $availableRiders",
+                style: TextStyle(fontFamily: "Poppins",
+                fontWeight: FontWeight.w600,
+                fontSize: 10.sp),), // Display the count of available riders
+              ],
             );
           }
         }
