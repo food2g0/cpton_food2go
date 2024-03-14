@@ -676,7 +676,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         children: [
                           if (selectedVariationPrice != null)
                             Text(
-                              'Selected Price: ${selectedVariationPrice}',
+                              'Price: ${selectedVariationPrice}',
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontFamily: "Poppins",
@@ -766,6 +766,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       }
                           : null, // Disable button if either variation or flavor is not selected
                       style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100.w, 50.h),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),

@@ -31,6 +31,7 @@ class _CartScreenState extends State<CartScreen> {
   bool isEditing = false;
   List<int>? separateItemQuantityList;
   bool isCartEmpty = true; // Initially set to true
+  double? defaultShippingFee;
 
   double? calculateShippingFeeForItem(double distanceInKm) {
     if (widget.calculateShippingFee != null) {
@@ -45,9 +46,18 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
+    calculateShippingFee();
     // Set the initial value of isCartEmpty based on the cart data
     checkCartEmpty();
   }
+  void calculateShippingFee() {
+    double? defaultShippingFee = calculateShippingFeeForItem(widget.distanceInKm ?? 0.0);
+    setState(() {
+      // Update the shipping fee
+      this.defaultShippingFee = defaultShippingFee;
+    });
+  }
+
 
   Future<void> checkCartEmpty() async {
     QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
@@ -165,7 +175,7 @@ class _CartScreenState extends State<CartScreen> {
                       quanNumber: itemCount,
                       selectedVariationName: selectedVariationName,
                       selectedFlavorsName: selectedFlavorsName,
-                      context: context,
+
                       onQuantityChanged: (newQuantity) async {
                         // Update quantity in Firestore
                         await FirebaseFirestore.instance
@@ -176,7 +186,7 @@ class _CartScreenState extends State<CartScreen> {
                             .update({"itemCounter": newQuantity});
 
                         // Recalculate subtotal and update TotalAmount provider
-                        calculateSubtotalAndUpdateTotalAmount();
+                        calculateSubtotalAndUpdateTotalAmount(context);
                       },
                       cartID: cartID, // Pass the cartID to the CartItemDesign widget
                     );
@@ -201,33 +211,7 @@ class _CartScreenState extends State<CartScreen> {
             children: [
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Sub Total:",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppColors().black1,
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Consumer<TotalAmount>(
-                        builder: (context, totalAmountProvider, _) {
-                          return Text(
-                            "${totalAmountProvider.tAmount}",
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: AppColors().black1,
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w500,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+
                   SizedBox(height: 6.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,12 +254,12 @@ class _CartScreenState extends State<CartScreen> {
                   Consumer<TotalAmount>(
                     builder: (context, totalAmountProvider, _) {
                       return Text(
-                        (totalAmountProvider.tAmount + defaultShippingFee!).toStringAsFixed(2),
+                        "${totalAmountProvider.tAmount}",
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors().black,
+                          color: AppColors().black1,
                           fontFamily: "Poppins",
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       );
                     },
@@ -331,10 +315,11 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    calculateSubtotalAndUpdateTotalAmount();
+    calculateSubtotalAndUpdateTotalAmount(context); // Pass the context to the method
   }
 
-  Future<void> calculateSubtotalAndUpdateTotalAmount() async {
+
+  Future<void> calculateSubtotalAndUpdateTotalAmount(BuildContext context) async {
     double subtotal = 0;
     QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
         .collection("users")
@@ -342,11 +327,15 @@ class _CartScreenState extends State<CartScreen> {
         .collection("cart")
         .get();
     cartSnapshot.docs.forEach((cartItem) {
-
       double price = cartItem['productPrice']; // Directly assign the value
       int quantity = cartItem['itemCounter'];
       subtotal += (price * quantity);
     });
-    Provider.of<TotalAmount>(context, listen: false).updateSubtotal(subtotal);
+
+    double? defaultShippingFee = calculateShippingFeeForItem(widget.distanceInKm ?? 0.0);
+
+    double totalAmount = subtotal + (defaultShippingFee ?? 0.0);
+    Provider.of<TotalAmount>(context, listen: false).updateSubtotal(totalAmount);
   }
+
 }

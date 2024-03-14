@@ -281,6 +281,7 @@ Future<void> calculateSubtotalAndUpdateTotalAmount(BuildContext context) async {
     int quantity = cartItem['itemCounter'];
     subtotal += (price * quantity);
   });
+  // Save a reference to the ancestor widget using didChangeDependencies
   Provider.of<TotalAmount>(context, listen: false).updateSubtotal(subtotal);
 }
 
