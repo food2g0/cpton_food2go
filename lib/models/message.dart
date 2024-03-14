@@ -4,7 +4,7 @@ class Message{
   final String senderId;
   final String senderEmail;
   final String receiverId;
-  final String message;
+ final String message;
   final Timestamp timestamp;
   final String messageId;
   final String senderName;

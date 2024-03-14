@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpton_foodtogo/mainScreen/Burger_shop.dart';
 import 'package:cpton_foodtogo/mainScreen/DessertScreen.dart';
+import 'package:cpton_foodtogo/mainScreen/Pizza_shop.dart';
+import 'package:cpton_foodtogo/mainScreen/buffet_screen.dart';
 import 'package:cpton_foodtogo/mainScreen/coffee_screen.dart';
+import 'package:cpton_foodtogo/mainScreen/japanese_restaurant.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,11 +35,13 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
   List<String> categoryImages = [
     'images/fast-food.png', // Fast food image path
-    'images/coffee.png', // Fast food image path
-    'images/tea.png', // Fast food image path
-    'images/tray.png', // Fast food image path
-    'images/desserts.png', // Fast food image path
-
+    'images/coffee.png', // Coffee image path
+    'images/tea.png', // Milk tea image path
+    'images/tray.png', // Buffet image path
+    'images/desserts.png', // Dessert image path
+    'images/asian-restaurant.png', // Japanese Restaurant image path
+    'images/pizza.png', // Pizza image path
+    'images/burger1.png', // Pizza image path
   ];
 
   List<String> categoryLabels = [
@@ -44,7 +50,11 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     'Milk Tea',
     'Buffet',
     'Dessert',
+    'Japanese',
+    'Pizza',
+    'Burger'
   ];
+
 
 
 
@@ -115,6 +125,9 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         case 3:
                         // Navigate to BuffetScreen
                         // Add code for navigation to BuffetScreen here
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => BuffetScreen()));
 
                           break;
                         case 4:
@@ -124,6 +137,22 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                               context,
                               MaterialPageRoute(builder: (context) => DessertScreen()));
                           break;
+                        case 5:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => JapaneseRestaurant()));
+                          break;
+                        case 6:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => PizaaShop()));
+                          break;
+                        case 7:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => BurgerShop()));
+                          break;
+
                         default:
                           break;
                       }
