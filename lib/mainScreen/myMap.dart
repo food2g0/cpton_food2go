@@ -121,22 +121,7 @@ class _MyMapState extends State<MyMap> {
               ),
             ),
           ),
-          Card(
-            elevation: 5.0,
-            margin: EdgeInsets.all(16.0),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Poppins",
-                ),
-              ),
-            ),
-          ),
+
         ],
       ),
     );

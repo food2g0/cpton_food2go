@@ -138,7 +138,9 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
         body: Center(
-          child: Text("The seller is not available. Please remove items from the cart."),
+          child: Text("Your cart is empty or have invalid order please clear your cart.",
+          style: TextStyle(fontFamily: "Poppins",
+          fontSize: 10.sp),),
         ),
       );
     }
@@ -356,7 +358,7 @@ class _CartScreenState extends State<CartScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (c) => CheckOut(
-                              totalAmount: Provider.of<TotalAmount>(context, listen: false).tAmount + defaultShippingFee!,
+                              totalAmount: Provider.of<TotalAmount>(context, listen: false).tAmount,
                               sellersUID: widget.sellersUID,
                             ),
                           ),

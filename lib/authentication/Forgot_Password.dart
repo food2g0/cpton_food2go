@@ -112,8 +112,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Email Not Found'),
-            content: Text('The entered email does not exist.'),
+            title: Text('Email Not Found', style: TextStyle(
+              fontFamily: "Poppins",
+              color: AppColors().red,
+              fontSize: 14.sp
+            ),),
+            content: Text('The entered email does not exist.', style: TextStyle(
+                fontFamily: "Poppins",
+                color: AppColors().black,
+                fontSize: 12.sp
+            ),),
             actions: [
               TextButton(
                 onPressed: () {

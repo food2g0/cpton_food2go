@@ -1,24 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cpton_foodtogo/mainScreen/Burger_shop.dart';
-import 'package:cpton_foodtogo/mainScreen/DessertScreen.dart';
-import 'package:cpton_foodtogo/mainScreen/Pizza_shop.dart';
-import 'package:cpton_foodtogo/mainScreen/buffet_screen.dart';
-import 'package:cpton_foodtogo/mainScreen/coffee_screen.dart';
-import 'package:cpton_foodtogo/mainScreen/japanese_restaurant.dart';
-
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../CustomersWidgets/Category_design_widget.dart';
 import '../CustomersWidgets/dimensions.dart';
-
 import '../CustomersWidgets/progress_bar.dart';
 import '../CustomersWidgets/sellers_design.dart';
-
 import '../models/menus.dart';
 import '../theme/colors.dart';
+import 'DessertScreen.dart';
 import 'fastfood_screen.dart';
 import 'milktea_screen.dart';
+import 'buffet_screen.dart';
+import 'japanese_restaurant.dart';
+import 'pizza_shop.dart';
+import 'burger_shop.dart';
+import 'coffee_screen.dart';
 
 class FoodPageBody extends StatefulWidget {
   final String? sellersUID;
@@ -31,7 +27,7 @@ class FoodPageBody extends StatefulWidget {
 
 class _FoodPageBodyState extends State<FoodPageBody> {
   PageController pageController = PageController(viewportFraction: 0.85);
-
+  bool calculatingDistance = false;
 
   List<String> categoryImages = [
     'images/fast-food.png', // Fast food image path
@@ -55,21 +51,11 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     'Burger'
   ];
 
-
-
-
-  @override
-  void dispose() {
-    super.dispose();
-    pageController.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-
           SizedBox(height: 25.h),
           Container(
             margin: EdgeInsets.only(left: 25.w),
@@ -88,8 +74,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             ),
           ),
           SizedBox(height: 10.h),
-
-
           Container(
             height: 120,
             child: ListView.builder(
@@ -107,32 +91,21 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                               MaterialPageRoute(builder: (context) => FastFoodScreen()));
                           break;
                         case 1:
-                        // Navigate to CoffeeScreen
-                        // Add code for navigation to CoffeeScreen here
                           Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => CoffeeScreen()));
                           break;
                         case 2:
-                        // Navigate to MilkTeaScreen
-                        // Add code for navigation to MilkTeaScreen here
-                        // Navigate to FastFoodScreen
                           Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => MilkTeaScreen()));
-
                           break;
                         case 3:
-                        // Navigate to BuffetScreen
-                        // Add code for navigation to BuffetScreen here
                           Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => BuffetScreen()));
-
                           break;
                         case 4:
-                        // Navigate to DessertScreen
-                        // Add code for navigation to DessertScreen here
                           Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => DessertScreen()));
@@ -152,7 +125,6 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                               context,
                               MaterialPageRoute(builder: (context) => BurgerShop()));
                           break;
-
                         default:
                           break;
                       }
@@ -178,13 +150,10 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                       ],
                     ),
                   ),
-
                 );
               },
             ),
           ),
-
-
           SizedBox(height: 25.h),
           Container(
             margin: EdgeInsets.only(left: 25.w),
@@ -205,23 +174,24 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           SizedBox(height: 10.h),
           // List of restaurants
           StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection("sellers").where("status", isEqualTo: "approved").where("open", isEqualTo: "open")
-                .snapshots(),
+            stream: FirebaseFirestore.instance.collection("sellers").where("status", isEqualTo: "approved").where("open", isEqualTo: "open").snapshots(),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: circularProgress());
+              if (!snapshot.hasData || calculatingDistance) {
+                return SizedBox(
+                  height: 220.h,
+                  child: Center(child: circularProgress()),
+                );
               } else {
                 final data = snapshot.data!.docs;
                 return SizedBox(
-                  height: 220.h, // Adjust the height as needed
+                  height: 220.h,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: data.length, // Adjust the count as needed
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
                       Menus model = Menus.fromJson(
                         data[index].data()! as Map<String, dynamic>,
                       );
-
                       return InfoDesignWidget(
                         model: model,
                         context: context,
@@ -249,12 +219,9 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               ],
             ),
           ),
-          SizedBox(height: 10.h,),
+          SizedBox(height: 10.h),
           StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection("items")
-                .where("status", isEqualTo: "available") // Filter by status
-                .snapshots(),
+            stream: FirebaseFirestore.instance.collection("items").where("status", isEqualTo: "available").snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: circularProgress());
@@ -264,17 +231,16 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of items in each row
-                    crossAxisSpacing: 8.0, // Spacing between items horizontally
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8.0,
                     mainAxisSpacing: 8.0,
-                    childAspectRatio: 0.8, // Spacing between items vertically
+                    childAspectRatio: 0.8,
                   ),
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     Menus model = Menus.fromJson(
                       data[index].data()! as Map<String, dynamic>,
                     );
-                    // Get sellersUID from the item document
                     String? sellersUID = data[index].get('sellersUID');
                     return CategoryDesignWidget(
                       model: model,
@@ -286,13 +252,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               }
             },
           ),
-
-
         ],
       ),
     );
   }
-
-
-
 }

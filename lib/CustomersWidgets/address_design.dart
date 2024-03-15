@@ -124,7 +124,7 @@ class _AddressDesignState extends State<AddressDesign> {
                           addressId: widget.addressId,
                           sellersUID: widget.sellersUID,
                           totalAmount: widget.totalAmount,
-                            shippingFee: widget.shippingFee,// Pass the shippingFee here
+
                         ),
                       ),
                     );

@@ -1,4 +1,5 @@
 
+import 'package:cpton_foodtogo/mainScreen/order_ratings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -445,6 +446,30 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.bold),
                         ),
+                        SizedBox(width: 50.w,),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Add your logic to navigate to the ratings screen
+                            // For example:
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => OrderRatingsScreen(productId: widget.model.productsID)));
+                          },
+                          style: ElevatedButton.styleFrom(
+                           backgroundColor: AppColors().red, // Set the button background color to transparent
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                            )
+                          ),
+                          child: Text(
+                            "View All Ratings",
+                            style: TextStyle(
+                              color: AppColors().white,
+                              fontSize: 10.sp,
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )
+
 
                       ],
                     ),
