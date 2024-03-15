@@ -75,7 +75,7 @@ class _MenuScreenState extends State<MenuScreen> {
       double storeLat = storeData['lat'];
       double storeLng = storeData['lng'];
       await _getDistance(storeLat, storeLng); // Wait for _getDistance to complete
-      print("Distance between user and store: $distanceInKm km"); // Print distance
+
     } else {
       print('Store not found in Firestore');
     }
