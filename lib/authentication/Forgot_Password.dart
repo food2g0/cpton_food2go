@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpton_foodtogo/theme/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -91,32 +92,79 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   }
   Future<void> resetPassword() async {
-
-    showDialog(context: context,
-        builder: (context)=>
-    Center(
-      child: CircularProgressIndicator(
-
+    showDialog(
+      context: context,
+      builder: (context) => Center(
+        child: CircularProgressIndicator(),
       ),
-    ));
+    );
+
     try {
+      // Check if the email exists in the user collection
+      var userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('customersEmail', isEqualTo: emailController.text.trim())
+          .get();
+
+      // If no user found with the given email
+      if (userSnapshot.docs.isEmpty) {
+        Navigator.of(context).pop(); // Close the loading dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Email Not Found'),
+            content: Text('The entered email does not exist.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+        return; // Exit the method
+      }
+
+      // If email exists, send the password reset email
       await FirebaseAuth.instance.sendPasswordResetEmail(
-          email: emailController.text.trim());
+        email: emailController.text.trim(),
+      );
+
       // Show toast message for success
       Fluttertoast.showToast(
-          msg: "Reset link sent successfully",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0
+        msg: 'Reset link sent successfully',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
+
       Navigator.of(context).popUntil((route) => route.isActive);
     } on FirebaseAuthException catch (e) {
       print(e);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(); // Close the loading dialog
+
       // Handle any errors here if needed
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to reset password. Please try again later.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
+
 }
