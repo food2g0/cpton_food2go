@@ -65,7 +65,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
 
   void _incrementQuantity() {
     setState(() {
-      if (quantity < 5) {
+      if (quantity < 10) {
         quantity++;
         widget.onQuantityChanged(quantity);
         _updateItemCounter(quantity);
@@ -258,7 +258,7 @@ class _CartItemDesignState extends State<CartItemDesign> {
                             SizedBox(height: 10.h,),
                             Container(
                               height: 30.h,
-                              width: 100.w,
+                              width: 120.w,
                               decoration: BoxDecoration(
                                 color: AppColors().white,
                                 borderRadius: BorderRadius.circular(10),

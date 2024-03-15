@@ -220,7 +220,7 @@ class _CartScreenState extends State<CartScreen> {
                         "Shipping Fee:",
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors().black1,
+                          color: AppColors().black,
                           fontFamily: "Poppins",
                           fontWeight: FontWeight.w500,
                         ),
@@ -229,7 +229,7 @@ class _CartScreenState extends State<CartScreen> {
                         "${defaultShippingFee?.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors().black1,
+                          color: AppColors().black,
                           fontFamily: "Poppins",
                           fontWeight: FontWeight.w500,
                         ),
@@ -257,7 +257,7 @@ class _CartScreenState extends State<CartScreen> {
                         "${totalAmountProvider.tAmount}",
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors().black1,
+                          color: AppColors().black,
                           fontFamily: "Poppins",
                           fontWeight: FontWeight.w500,
                         ),

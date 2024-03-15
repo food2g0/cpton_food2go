@@ -721,7 +721,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                             onPressed: () {
                               setState(() {
                                 int currentValue = int.tryParse(counterTextEditingController.text) ?? 1;
-                                if (currentValue < 5) {
+                                if (currentValue < 10) {
                                   counterTextEditingController.text = (currentValue + 1).toString();
                                 }
                               });
