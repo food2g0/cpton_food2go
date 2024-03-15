@@ -131,6 +131,10 @@ class _ChatPageState extends State<ChatPage> {
       padding: EdgeInsets.symmetric(horizontal: 25.w),
       child: Row(
         children: [
+          IconButton(
+            onPressed: sendImage,
+            icon: Icon(Icons.image, size: 25.sp,),
+          ),
           Expanded(
             child: TextField(
               controller: _messageController,
@@ -142,12 +146,9 @@ class _ChatPageState extends State<ChatPage> {
           ),
           IconButton(
             onPressed: sendMessage,
-            icon: Icon(Icons.send, size: 25.sp,),
+            icon: Icon(Icons.send, size: 25.sp, color: AppColors().red,),
           ),
-          IconButton(
-            onPressed: sendImage,
-            icon: Icon(Icons.image, size: 25.sp,),
-          ),
+
         ],
       ),
     );
